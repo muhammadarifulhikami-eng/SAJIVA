@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sajiva CRM - Admin Dashboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #f8f9fa;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 0, 0, 0.08); 
+      --accent-gold: #b87d4b;
+      --accent-gold-light: #8c5828;
+      --text-main: #1a1a1a;
+      --text-secondary: #555555; 
+      --text-dim: #888888;
+      --error-red: #dc2626;
+      --success-green: #16a34a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: var(--bg-dark); 
+      color: var(--text-main); 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      min-height: 100vh; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .wrapper { width: 100%; max-width: 950px; }
+
+    /* LOGIN CARD */
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto 0;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    }
+
+    .brand-name { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: 4px; }
+    .brand-sub { font-size: 0.75rem; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--accent-gold-light); margin-bottom: 6px; }
+    .form-input, .form-select { width: 100%; padding: 12px 14px; background: #fff; border: 1px solid rgba(0,0,0,0.15); border-radius: 12px; font-size: 0.9rem; outline: none; }
+    .form-input:focus, .form-select:focus { border-color: var(--accent-gold); }
+
+    .btn-primary { width: 100%; padding: 14px; background: #1a1a1a; color: #fff; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #000; }
+
+    /* DASHBOARD LAYOUT */
+    #dashboard-view { display: none; width: 100%; }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 16px 24px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    /* KPI CARDS ANALYTICS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: left;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .stat-card::before { content: ""; position: absolute; top: 0; left: 10%; right: 10%; height: 2px; background: var(--accent-gold); }
+    .stat-title { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin-top: 6px; font-family: 'Cinzel', serif; }
+
+    /* TAB SYSTEM */
+    .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; flex-wrap: wrap; }
+    .tab-btn { background: none; border: none; padding: 10px 18px; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-radius: 10px; transition: all 0.2s; }
+    .tab-btn.active { background: var(--accent-gold); color: #fff; }
+
+    /* CONTENT CARD */
+    .content-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      margin-bottom: 24px;
+    }
+
+    .section-title { font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+    /* ITEM LIST MANAGER */
+    .item-list { display: flex; flex-direction: column; gap: 12px; }
+    .item-card { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid rgba(0,0,0,0.06); padding: 16px; border-radius: 14px; gap: 15px; }
+    .item-info { flex: 1; }
+    .item-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
+    .item-info p { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+    .item-thumb { width: 90px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); }
+    .item-actions { display: flex; gap: 8px; }
+
+    .btn-sm { padding: 8px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; }
+    .btn-edit { background: rgba(184, 125, 75, 0.15); color: var(--accent-gold-light); }
+    .btn-delete { background: rgba(220, 38, 38, 0.1); color: var(--error-red); }
+    .btn-add { background: var(--accent-gold); color: #fff; padding: 10px 16px; font-size: 0.85rem; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
+    .btn-refresh { background: transparent; color: var(--error-red); border: 1px solid rgba(220, 38, 38, 0.3); padding: 10px 16px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .btn-refresh:hover { background: rgba(220, 38, 38, 0.1); }
+
+    /* GRID GALLERY ADMIN */
+    .admin-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 15px; }
+    .gallery-admin-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; position: relative; }
+    .gallery-admin-card img { width: 100%; height: 130px; object-fit: cover; }
+    .gallery-admin-body { padding: 10px; }
+    .gallery-admin-body h5 { font-size: 0.85rem; margin-bottom: 4px; }
+    .gallery-admin-body span { font-size: 0.7rem; background: rgba(184,125,75,0.15); color: var(--accent-gold-light); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    th { font-family: 'Cinzel', serif; color: var(--accent-gold-light); font-weight: 700; background: rgba(184, 125, 75, 0.05); }
+
+    /* MODAL FORM */
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
+    .modal.show { display: flex; }
+    .modal-box { background: #fff; width: 100%; max-width: 480px; border-radius: 20px; padding: 24px; position: relative; }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    
+    <!-- LOGIN VIEW -->
+    <div id="login-view" class="login-container">
+      <h1 class="brand-name">SAJIVA</h1>
+      <p class="brand-sub">CRM Admin Control Center</p>
+      
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="admin-user" class="form-input" placeholder="Masukkan ID Admin" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="admin-pass" class="form-input" placeholder="Masukkan Password" required>
+        </div>
+        <p id="login-error" style="color: var(--error-red); font-size: 0.8rem; margin-bottom: 12px; display: none;">Username atau Password salah!</p>
+        <button type="submit" class="btn-primary">LOGIN ADMIN</button>
+      </form>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view">
+      
+      <!-- HEADER -->
+      <div class="admin-header">
+        <div>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 1.3rem;">Sajiva Admin Dashboard</h2>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Kelola Promo, Event, Banner &amp; Galeri Sajiva</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button onclick="fetchRealtimeCRMData()" class="btn-refresh">🔄 Refresh Data</button>
+          <button onclick="logoutAdmin()" class="btn-sm btn-delete" style="padding: 10px 16px;">Logout</button>
+        </div>
+      </div>
+
+      <!-- ANALYTICS CARDS (REALTIME) -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Total Member CRM</div>
+          <div class="stat-value" id="stat-total-member">...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Voucher Dicetak</div>
+          <div class="stat-value" id="stat-printed-voucher">...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Ulasan Google (5★)</div>
+          <div class="stat-value" id="stat-total-reviews">...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Promo / Event Aktif</div>
+          <div class="stat-value" id="stat-active-events">4</div>
+        </div>
+      </div>
+
+      <!-- TABS NAV -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-members', event)">👥 Member &amp; Voucher</button>
+        <button class="tab-btn" onclick="switchTab('tab-events', event)">📅 Kelola Event</button>
+        <button class="tab-btn" onclick="switchTab('tab-promos', event)">🏷️ Kelola Promo</button>
+        <button class="tab-btn" onclick="switchTab('tab-banners', event)">🖼️ Kelola Banner Slide</button>
+        <button class="tab-btn" onclick="switchTab('tab-gallery', event)">📸 Kelola Gallery Sajiva</button>
+      </div>
+
+      <!-- TAB 1: DATA MEMBER REALTIME -->
+      <div id="tab-members" class="tab-content">
+        <div class="content-card">
+          <div class="section-title">
+            <span>Database Customer Sajiva Coffee CRM</span>
+            <input type="text" id="search-member" class="form-input" style="max-width: 260px; font-size: 0.8rem;" placeholder="🔍 Cari Nama / WA..." oninput="filterMemberTable()">
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Waktu Input</th>
+                  <th>Nama Customer</th>
+                  <th>Nomor WhatsApp</th>
+                  <th>Rating</th>
+                  <th>Voucher</th>
+                  <th>Status Voucher</th>
+                </tr>
+              </thead>
+              <tbody id="member-table-body">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-dim); padding: 20px;">Memuat data realtime dari Google Sheets...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: KELOLA EVENT -->
+      <div id="tab-events" class="tab-content" style="display: none;">
+        <div class="content-card">
+          <div class="section-title">
+            <span>Daftar Event Sajiva</span>
+            <button class="btn-add" onclick="openModal('event')">+ Tambah Event Baru</button>
+          </div>
+          <div class="item-list" id="event-list-container"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: KELOLA PROMO -->
+      <div id="tab-promos" class="tab-content" style="display: none;">
+        <div class="content-card">
+          <div class="section-title">
+            <span>Daftar Promo Member</span>
+            <button class="btn-add" onclick="openModal('promo')">+ Tambah Promo Baru</button>
+          </div>
+          <div class="item-list" id="promo-list-container"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: KELOLA BANNER SLIDE -->
+      <div id="tab-banners" class="tab-content" style="display: none;">
+        <div class="content-card">
+          <div class="section-title">
+            <span>Banner Slide Halaman Depan</span>
+            <button class="btn-add" onclick="openModal('banner')">+ Tambah Banner Baru</button>
+          </div>
+          <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom:15px;">
+            💡 Masukkan URL foto dari Imgur, Unsplash, Google Drive (Pastikan Akses Publik), atau sumber link lainnya.
+          </p>
+          <div class="item-list" id="banner-list-container"></div>
+        </div>
+      </div>
+
+      <!-- TAB 5: KELOLA GALLERY SAJIVA -->
+      <div id="tab-gallery" class="tab-content" style="display: none;">
+        <div class="content-card">
+          <div class="section-title">
+            <span>Kelola Galeri Foto Sajiva</span>
+            <button class="btn-add" onclick="openModal('gallery')">+ Tambah Foto Galeri</button>
+          </div>
+          <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom:15px;">
+            Kategori Galeri: <strong>Fasad, Interior, Ambience, Event, dan Kru</strong>.
+          </p>
+          <div class="admin-gallery-grid" id="gallery-list-container"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL FORM -->
+  <div class="modal" id="form-modal">
+    <div class="modal-box">
+      <h3 class="section-title" id="modal-title">Tambah Data</h3>
+      <form id="modal-form">
+        <input type="hidden" id="edit-id">
+        <input type="hidden" id="edit-type">
+
+        <div class="form-group" id="group-category" style="display:none;">
+          <label class="form-label">Kategori Galeri</label>
+          <select id="input-category" class="form-select">
+            <option value="fasad">Fasad (Tampak Depan)</option>
+            <option value="interior">Interior</option>
+            <option value="ambience">Ambience (Suasana)</option>
+            <option value="event">Event</option>
+            <option value="kru">Kru (Tim Barista/Staff)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-title">
+          <label class="form-label">Judul / Keterangan</label>
+          <input type="text" id="input-title" class="form-input" placeholder="Masukkan judul/keterangan foto">
+        </div>
+
+        <div class="form-group" id="group-url" style="display:none;">
+          <label class="form-label">URL Link Gambar (Imgur / Drive / Image Link)</label>
+          <input type="url" id="input-url" class="form-input" placeholder="https://i.imgur.com/example.jpg">
+        </div>
+
+        <div class="form-group" id="group-price">
+          <label class="form-label">Harga / Penawaran</label>
+          <input type="text" id="input-price" class="form-input" placeholder="Contoh: 285k / person">
+        </div>
+
+        <div class="form-group" id="group-date">
+          <label class="form-label">Tanggal &amp; Waktu Event</label>
+          <input type="text" id="input-date" class="form-input" placeholder="Contoh: 03 October 2026 | 10.00 - Finish">
+        </div>
+
+        <div class="form-group" id="group-desc">
+          <label class="form-label">Deskripsi Singkat</label>
+          <textarea id="input-desc" class="form-input" style="height: 80px; resize: none;" placeholder="Penjelasan detail..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn-primary" style="background: var(--accent-gold);">Simpan</button>
+          <button type="button" class="btn-primary" style="background: #ccc; color: #333;" onclick="closeModal()">Batal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec';
+    let rawCustomerList = [];
+
+    let bannerData = [
+      { id: 1, url: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000", title: "Specialty Coffee Roastery" },
+      { id: 2, url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000", title: "Warm Ambience & Artisanal Brews" }
+    ];
+
+    let galleryData = [
+      { id: 1, category: "fasad", title: "Fasad Depan Sajiva", url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800" },
+      { id: 2, category: "interior", title: "Interior Main Hall", url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800" },
+      { id: 3, category: "ambience", title: "Cozy Corner", url: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=800" },
+      { id: 4, category: "event", title: "Coffee Cupping Event", url: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=800" },
+      { id: 5, category: "kru", title: "Barista Team Sajiva", url: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800" }
+    ];
+
+    let eventData = [
+      { id: 1, title: "3D Ocean Painting", price: "285k / person", date: "03 October 2026 | 10.00 - Finish", desc: "Learn the art of resin layering to create realistic ocean waves and shorelines." },
+      { id: 2, title: "Moon Lamp Making", price: "295k / person", date: "10 October 2026 | 10.00 - Finish", desc: "Shape, texture, and illuminate your own 3D Moonlamp with guided steps." }
+    ];
+
+    let promoData = [
+      { id: 1, title: "Diskon 15% Review Reward", price: "Member Special", date: "Berlaku Setiap Hari", desc: "Beri ulasan terbaik Anda di Google Maps dan klaim voucher diskon Rp 100.000." },
+      { id: 2, title: "Buy 1 Get 1 Filter Coffee", price: "Weekly Offer", date: "Setiap Hari Selasa", desc: "Tunjukkan akun Sajiva terdaftar ini ke Barista untuk setiap pembelian V60 / Kalita." }
+    ];
+
+    // AUTHENTICATION
+    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const u = document.getElementById('admin-user').value.trim();
+      const p = document.getElementById('admin-pass').value.trim();
+
+      if (u === "Sajiva admin" && p === "SajivaCRM2026") {
+        localStorage.setItem('sajiva_admin_logged', 'true');
+        showDashboard();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    });
+
+    function checkAdminSession() {
+      if (localStorage.getItem('sajiva_admin_logged') === 'true') {
+        showDashboard();
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('dashboard-view').style.display = 'block';
+      renderEvents();
+      renderPromos();
+      renderBanners();
+      renderAdminGallery();
+      fetchRealtimeCRMData();
+      fetchBannersAndGalleryBackend();
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem('sajiva_admin_logged');
+      window.location.reload();
+    }
+
+    // FETCH REALTIME DATA
+    async function fetchRealtimeCRMData() {
+      const tableBody = document.getElementById('member-table-body');
+      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data terbaru dari Google Sheets...</td></tr>`;
+
+      try {
+        let json;
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if (res && res.status === "success" && Array.isArray(res.data)) {
+                rawCustomerList = res.data;
+                processAndRenderCRMData(rawCustomerList);
+              }
+            })
+            .getAllCustomers();
+          return;
+        } else {
+          const response = await fetch(scriptURL + "?action=getAllCustomers");
+          json = await response.json();
+        }
+
+        if (json && json.status === "success" && Array.isArray(json.data)) {
+          rawCustomerList = json.data;
+          processAndRenderCRMData(rawCustomerList);
+        } else {
+          tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Gagal mengambil data dari Google Sheets.</td></tr>';
+        }
+      } catch (e) {
+        console.error("Fetch member error:", e);
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Terjadi kesalahan koneksi saat mengambil data.</td></tr>';
+      }
+    }
+
+    async function fetchBannersAndGalleryBackend() {
+      try {
+        const bRes = await fetch(scriptURL + "?action=getBanners");
+        const bJson = await bRes.json();
+        if (bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0) {
+          bannerData = bJson.data;
+          renderBanners();
+        }
+
+        const gRes = await fetch(scriptURL + "?action=getGallery");
+        const gJson = await gRes.json();
+        if (gJson.status === "success" && Array.isArray(gJson.data) && gJson.data.length > 0) {
+          galleryData = gJson.data;
+          renderAdminGallery();
+        }
+      } catch (err) {
+        console.log("Error loading banners/gallery:", err);
+      }
+    }
+
+    function processAndRenderCRMData(data) {
+      let totalMembers = data.length;
+      let printedVouchers = 0;
+      let googleReviews = 0;
+
+      data.forEach(function(item) {
+        const vCode = item.voucher ? String(item.voucher).trim() : "";
+        if (vCode !== "" && vCode !== "-") printedVouchers++;
+        if (parseInt(item.rating) === 5) googleReviews++;
+      });
+
+      document.getElementById('stat-total-member').textContent = totalMembers.toLocaleString('id-ID');
+      document.getElementById('stat-printed-voucher').textContent = printedVouchers.toLocaleString('id-ID');
+      document.getElementById('stat-total-reviews').textContent = googleReviews.toLocaleString('id-ID');
+
+      renderMemberTable(data);
+    }
+
+    function renderMemberTable(data) {
+      const tableBody = document.getElementById('member-table-body');
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Belum ada data customer.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = data.map((index, item) => {
+        return '';
+      });
+
+      tableBody.innerHTML = data.map((item, index) => {
+        const vCode = item.voucher ? String(item.voucher).trim() : "";
+        const hasVoucher = vCode !== "" && vCode !== "-";
+        const starRating = (item.rating && item.rating !== "") ? `★ ${item.rating}` : 'Belum Memberi Rating';
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td style="font-size:0.78rem;">${item.waktu || '-'}</td>
+            <td><strong>${item.nama || '-'}</strong></td>
+            <td>${item.nohp || '-'}</td>
+            <td>${starRating}</td>
+            <td>${hasVoucher ? '<code>' + vCode + '</code>' : '-'}</td>
+            <td>${item.statusVoucher || (hasVoucher ? 'Sudah Cetak Voucher' : 'Belum Cetak Voucher')}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterMemberTable() {
+      const keyword = document.getElementById('search-member').value.toLowerCase();
+      const filtered = rawCustomerList.filter(item => 
+        (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+        (item.nohp && item.nohp.toLowerCase().includes(keyword))
+      );
+      renderMemberTable(filtered);
+    }
+
+    function switchTab(tabId, evt) {
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      if (evt) evt.target.classList.add('active');
+    }
+
+    // RENDER MANAGERS
+    function renderEvents() {
+      const container = document.getElementById('event-list-container');
+      container.innerHTML = eventData.map(item => `
+        <div class="item-card">
+          <div class="item-info">
+            <h4>${item.title} (${item.price})</h4>
+            <p>📅 ${item.date}</p>
+            <p>${item.desc}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn-sm btn-delete" onclick="deleteItem('event', ${item.id})">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPromos() {
+      const container = document.getElementById('promo-list-container');
+      container.innerHTML = promoData.map(item => `
+        <div class="item-card">
+          <div class="item-info">
+            <h4>${item.title} (${item.price})</h4>
+            <p>${item.desc}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn-sm btn-delete" onclick="deleteItem('promo', ${item.id})">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderBanners() {
+      const container = document.getElementById('banner-list-container');
+      if (bannerData.length === 0) {
+        container.innerHTML = "<p style='color:#888;'>Belum ada banner slide ditambahkan.</p>";
+        return;
+      }
+      container.innerHTML = bannerData.map(item => `
+        <div class="item-card">
+          <img src="${item.url}" class="item-thumb" onerror="this.src='https://via.placeholder.com/150'">
+          <div class="item-info">
+            <h4>${item.title || 'Slide Banner Sajiva'}</h4>
+            <p style="font-size:0.75rem; word-break:break-all; color:#777;">${item.url}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn-sm btn-delete" onclick="deleteItem('banner', ${item.id})">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminGallery() {
+      const container = document.getElementById('gallery-list-container');
+      if (galleryData.length === 0) {
+        container.innerHTML = "<p style='color:#888;'>Belum ada foto galeri.</p>";
+        return;
+      }
+      container.innerHTML = galleryData.map(item => `
+        <div class="gallery-admin-card">
+          <img src="${item.url}" onerror="this.src='https://via.placeholder.com/300'">
+          <div class="gallery-admin-body">
+            <span>${item.category}</span>
+            <h5>${item.title || 'Foto Sajiva'}</h5>
+            <button class="btn-sm btn-delete" style="width:100%; margin-top:6px;" onclick="deleteItem('gallery', ${item.id})">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // MODAL CONTROL
+    function openModal(type) {
+      document.getElementById('edit-type').value = type;
+      document.getElementById('modal-title').textContent = 
+        type === 'event' ? "Tambah Event Baru" :
+        type === 'promo' ? "Tambah Promo Baru" :
+        type === 'banner' ? "Tambah Banner Slide" : "Tambah Foto Galeri";
+      
+      document.getElementById('modal-form').reset();
+
+      document.getElementById('group-category').style.display = type === 'gallery' ? 'block' : 'none';
+      document.getElementById('group-url').style.display = (type === 'banner' || type === 'gallery') ? 'block' : 'none';
+      document.getElementById('group-price').style.display = (type === 'event' || type === 'promo') ? 'block' : 'none';
+      document.getElementById('group-date').style.display = type === 'event' ? 'block' : 'none';
+      document.getElementById('group-desc').style.display = (type === 'event' || type === 'promo') ? 'block' : 'none';
+      
+      document.getElementById('form-modal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('form-modal').classList.remove('show');
+    }
+
+    function deleteItem(type, id) {
+      if(!confirm("Yakin ingin menghapus item ini?")) return;
+
+      if (type === 'banner') {
+        bannerData = bannerData.filter(x => x.id !== id);
+        renderBanners();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_banner", id: id }) });
+      } else if (type === 'gallery') {
+        galleryData = galleryData.filter(x => x.id !== id);
+        renderAdminGallery();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_gallery", id: id }) });
+      } else if (type === 'event') {
+        eventData = eventData.filter(x => x.id !== id);
+        renderEvents();
+      } else if (type === 'promo') {
+        promoData = promoData.filter(x => x.id !== id);
+        renderPromos();
+      }
+    }
+
+    // SUBMIT MODAL FORM
+    document.getElementById('modal-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const type = document.getElementById('edit-type').value;
+
+      if (type === 'banner') {
+        const url = document.getElementById('input-url').value;
+        const title = document.getElementById('input-title').value;
+        const newObj = { id: Date.now(), url: url, title: title };
+        bannerData.push(newObj);
+        renderBanners();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title }) });
+      } 
+      else if (type === 'gallery') {
+        const category = document.getElementById('input-category').value;
+        const url = document.getElementById('input-url').value;
+        const title = document.getElementById('input-title').value;
+        const newObj = { id: Date.now(), category: category, url: url, title: title };
+        galleryData.push(newObj);
+        renderAdminGallery();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title }) });
+      }
+      else if (type === 'event') {
+        eventData.push({
+          id: Date.now(),
+          title: document.getElementById('input-title').value,
+          price: document.getElementById('input-price').value,
+          date: document.getElementById('input-date').value,
+          desc: document.getElementById('input-desc').value
+        });
+        renderEvents();
+      }
+      else if (type === 'promo') {
+        promoData.push({
+          id: Date.now(),
+          title: document.getElementById('input-title').value,
+          price: document.getElementById('input-price').value,
+          desc: document.getElementById('input-desc').value
+        });
+        renderPromos();
+      }
+
+      closeModal();
+    });
+
+    window.addEventListener('DOMContentLoaded', checkAdminSession);
+  </script>
+</body>
+</html>
