@@ -1712,7 +1712,7 @@ function setupStarRating() {
         document.getElementById('welcome-user-text').innerText = `Halo, ${customerData.nama || 'Pelanggan Setia'}!`;
         
         // Sinkronisasi status voucher dari server
-        sendDataToBackend('check_status', null, (res) => {x
+        sendDataToBackend('check_status', null, (res) => {
           if (res && res.status === "success") {
             if (res.voucherCode && res.voucherCode !== "-") {
               customerData.voucherCode = res.voucherCode;
