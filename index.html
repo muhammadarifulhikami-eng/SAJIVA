@@ -680,8 +680,14 @@
         <form id="form-register-user" style="display: none;" novalidate>
           <div class="form-group">
             <label class="form-label" for="reg-nama">Nama Anda</label>
-            <input type="text" id="reg-nama" class="form-input" placeholder="Masukkan nama panggilan" autocomplete="off">
-            <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi.</div>
+<input 
+  type="text" 
+  id="reg-nama" 
+  class="form-input" 
+  placeholder="Masukkan nama panggilan" 
+  autocomplete="off"
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+>            <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi.</div>
           </div>
           <div class="form-group">
             <label class="form-label" for="reg-email">Alamat Email</label>
