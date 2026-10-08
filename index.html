@@ -238,6 +238,66 @@
     .form-label { display: block; font-size: 0.8rem; color: var(--accent-gold-light); margin-bottom: 6px; font-weight: 600; padding-left: 2px; }
     .form-input { width: 100%; padding: 13px 15px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 12px; color: var(--text-main); font-family: inherit; font-size: 0.92rem; outline: none; transition: all 0.2s ease; }
     .form-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(184, 125, 75, 0.15); }
+	/* Wrapper & Tombol Icon Mata Password */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .form-input {
+  width: 100%;
+  padding-right: 48px !important; /* Ruang agar teks tidak tertimpa icon */
+  position: relative;
+  z-index: 1;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  z-index: 10; /* KUNCI: Harus lebih tinggi dari input agar bisa diklik */
+  pointer-events: auto; /* Memastikan bisa menerima klik */
+}
+
+.toggle-password-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  pointer-events: none; /* Klik tembus langsung ke tombol button */
+}
+
+.toggle-password-btn:hover {
+  color: var(--accent-gold);
+}
+
+/* Penyesuaian Input Tanggal & Dropdown Gender */
+input[type="date"].form-input {
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+}
     .form-input.error { border-color: var(--error-red); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1); }
     .error-text { color: var(--error-red); font-size: 0.75rem; margin-top: 5px; padding-left: 4px; display: none; }
     
@@ -667,11 +727,19 @@
             <input type="text" id="login-user-input" class="form-input" placeholder="Username, Email, atau No. HP" autocomplete="off">
             <div class="error-text" id="error-login-user">Isi kolom ini dengan benar.</div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="login-pass-input">Password</label>
-            <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
-            <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
-          </div>
+<div class="form-group">
+  <label class="form-label" for="login-pass-input">Password</label>
+  <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+    <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda" style="padding-right: 50px;">
+    <button type="button" id="btn-toggle-login-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 99; display: flex; align-items: center; justify-content: center;">
+      <svg id="svg-login-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+      </svg>
+    </button>
+  </div>
+  <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
+</div>
           <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
           <button type="button" class="btn-forgot-link" onclick="openForgotPasswordModal()">Lupa Password?</button>
         </form>
@@ -699,11 +767,38 @@
             <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
             <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid. Masukkan nomor seluler Indonesia yang benar.</div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-pass">Password</label>
-            <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Kapital, Kecil, &amp; Angka">
-            <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
-          </div>
+<!-- INPUT PASSWORD DENGAN ICON MATA -->
+<div class="form-group">
+  <label class="form-label" for="reg-pass">Password</label>
+  <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+    <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Kapital, Kecil, &amp; Angka" style="padding-right: 50px;">
+    <button type="button" id="btn-toggle-reg-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 99; display: flex; align-items: center; justify-content: center;">
+      <svg id="svg-reg-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+      </svg>
+    </button>
+  </div>
+  <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
+</div>
+
+<!-- FORM TANGGAL LAHIR (POPUP KALENDER BAWAAN HP/BROWSER) -->
+<div class="form-group">
+  <label class="form-label" for="reg-dob">Tanggal Lahir</label>
+  <input type="date" id="reg-dob" class="form-input">
+  <div class="error-text" id="error-reg-dob">Silakan pilih tanggal lahir Anda.</div>
+</div>
+
+<!-- FORM PILIH GENDER -->
+<div class="form-group">
+  <label class="form-label" for="reg-gender">Jenis Kelamin</label>
+  <select id="reg-gender" class="form-input">
+    <option value="" disabled selected>Pilih Jenis Kelamin</option>
+    <option value="Pria">Pria</option>
+    <option value="Wanita">Wanita</option>
+  </select>
+  <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
+</div>
 		  <!-- CHECKLIST TNC (KODE BARU) -->
           <div class="tnc-checkbox-group">
             <input type="checkbox" id="reg-tnc-check">
@@ -1695,6 +1790,44 @@ function setupStarRating() {
       initSlider();
       renderGallery('all');
 	  
+	  // Listener Show/Hide Password Register
+const btnToggleReg = document.getElementById('btn-toggle-reg-pass');
+if (btnToggleReg) {
+  btnToggleReg.addEventListener('click', function(e) {
+    e.preventDefault();
+    const input = document.getElementById('reg-pass');
+    const svg = document.getElementById('svg-reg-pass');
+    if (!input || !svg) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+    }
+  });
+}
+
+// Listener Show/Hide Password Login
+const btnToggleLogin = document.getElementById('btn-toggle-login-pass');
+if (btnToggleLogin) {
+  btnToggleLogin.addEventListener('click', function(e) {
+    e.preventDefault();
+    const input = document.getElementById('login-pass-input');
+    const svg = document.getElementById('svg-login-pass');
+    if (!input || !svg) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+    }
+  });
+}
+	  
 
 
 	  const nomorHapeElement = document.querySelector('#reg-nohp')
@@ -1810,6 +1943,8 @@ function setupStarRating() {
         const email = document.getElementById('reg-email').value.trim();
         const nohp = document.getElementById('reg-nohp').value.trim();
         const pass = document.getElementById('reg-pass').value.trim();
+		const dob = document.getElementById('reg-dob').value;
+		const gender = document.getElementById('reg-gender').value;
 
         let isValid = true;
 	
@@ -1849,12 +1984,30 @@ function setupStarRating() {
         } else {
           document.getElementById('error-reg-pass').style.display = 'none';
         }
+		
+		// Validasi Tanggal Lahir
+		if (!dob) {
+		document.getElementById('error-reg-dob').style.display = 'block';
+		isValid = false;
+		} else {
+		document.getElementById('error-reg-dob').style.display = 'none';
+		}
+
+		// Validasi Gender
+		if (!gender) {
+		document.getElementById('error-reg-gender').style.display = 'block';
+		isValid = false;
+		} else {
+		document.getElementById('error-reg-gender').style.display = 'none';
+		}
 
         if (isValid) {
           customerData.nama = nama;
           customerData.email = email;
           customerData.nohp = nohp;
-
+		  customerData.dob = dob;
+		  customerData.gender = gender;
+	
           localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
           sendDataToBackend('register_account', null, (res) => {
             if (res && res.status === "error") {
@@ -1954,9 +2107,6 @@ function setupStarRating() {
       });
     });
 	
-
-	
   </script>
-  
 </body>
 </html>
