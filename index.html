@@ -70,6 +70,194 @@
 
     .wrapper { width: 100%; max-width: 420px; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
     
+/* Container Input Kalender */
+.custom-datepicker-wrapper {
+  position: relative;
+  width: 100%;
+}
+.custom-datepicker-wrapper input {
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+/* Kotak Pop-up Kalender */
+.custom-calendar-popup {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  min-width: 300px;
+  background: #fdfbf7;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  padding: 18px 16px;
+  z-index: 999;
+}
+.custom-calendar-popup.show {
+  display: block;
+}
+
+/* Header Kalender */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.calendar-title-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.calendar-title-btn:hover {
+  background: rgba(184, 125, 75, 0.1);
+  color: var(--accent-gold);
+}
+.calendar-nav-group {
+  display: flex;
+  gap: 4px;
+}
+.calendar-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  transition: background 0.2s;
+}
+.calendar-nav-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Grid Tampilan Hari (Sen - Min) */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendar-cell {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-main);
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+.calendar-cell:hover:not(.disabled) {
+  background: rgba(184, 125, 75, 0.15);
+  color: var(--accent-gold-light);
+}
+.calendar-cell.muted {
+  color: #c4beb7;
+}
+.calendar-cell.disabled {
+  color: #dfdbd5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+.calendar-cell.selected {
+  border: 1.5px solid #1a2a4b;
+  color: #1a2a4b;
+  font-weight: 700;
+}
+
+/* Grid Tampilan Rentang Dekade & Bulan (3 Kolom) */
+.calendar-range-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 8px;
+  padding: 10px 0;
+}
+.calendar-range-cell {
+  padding: 12px 6px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
+}
+.calendar-range-cell:hover:not(.disabled) {
+  background: rgba(184, 125, 75, 0.1);
+  color: var(--accent-gold);
+}
+.calendar-range-cell.selected {
+  border-color: #1a2a4b;
+  color: #1a2a4b;
+}
+.calendar-range-cell.disabled {
+  color: #dfdbd5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* Container Pilihan Gender Dual-Button */
+.gender-selector-container {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.gender-btn-option {
+  flex: 1;
+  padding: 13px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gender-btn-option:hover {
+  border-color: var(--accent-gold);
+  background: #fdfaf7;
+}
+
+/* Tampilan Saat Dipilih (Elegan Sesuai Tema Sajiva) */
+.gender-btn-option.selected {
+  background: #1a1a1a;
+  color: #ffffff;
+  border-color: #1a1a1a;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+	
 	/* Styling Checklist TnC & Modal Pop-up */
 .tnc-checkbox-group {
   display: flex;
@@ -593,6 +781,51 @@ select.form-input {
       padding: 20px;
     }
     .lightbox img { max-width: 100%; max-height: 80vh; border-radius: 12px; }
+  
+  /* TAMPILAN VIEW-ONLY PROFIL ELEGAN */
+    .profile-view-box {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+    .profile-info-row {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .profile-info-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .profile-info-val {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+    .btn-edit-mode {
+      background: var(--accent-gold);
+      color: #ffffff;
+      margin-top: 6px;
+    }
+    .btn-cancel-edit {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--card-border);
+      margin-top: 8px;
+    }
+    .avatar-upload-btn.disabled-view {
+      display: none !important;
+    }
+ 
   </style>
 </head>
 <body>
@@ -713,7 +946,7 @@ select.form-input {
     <div id="page-login" class="page-view active">
       <main class="card">
 <h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA+</span></h2>
-        <p class="card-subtitle">join the club, get exclusive privilege, e-voucher, & promo</p>
+        <p class="card-subtitle">Join the club, get exclusive privilege, voucher, & promo</p>
         
         <div class="auth-tab-container">
           <button type="button" class="auth-tab-btn active" id="tab-btn-login" onclick="switchAuthTab('login')">LOGIN</button>
@@ -723,8 +956,8 @@ select.form-input {
         <!-- FORM LOGIN -->
         <form id="form-login-user" novalidate>
           <div class="form-group">
-            <label class="form-label" for="login-user-input">Username / Email / No. HP</label>
-            <input type="text" id="login-user-input" class="form-input" placeholder="Username, Email, atau No. HP" autocomplete="off">
+            <label class="form-label" for="login-user-input">Nama / Email / No. Whatsapp</label>
+            <input type="text" id="login-user-input" class="form-input" placeholder="Nama, Email, atau No. Whatsapp" autocomplete="off">
             <div class="error-text" id="error-login-user">Isi kolom ini dengan benar.</div>
           </div>
 <div class="form-group">
@@ -745,72 +978,108 @@ select.form-input {
         </form>
 
         <!-- FORM REGISTER -->
-        <form id="form-register-user" style="display: none;" novalidate>
-          <div class="form-group">
-            <label class="form-label" for="reg-nama">Nama Anda</label>
-<input 
-  type="text" 
-  id="reg-nama" 
-  class="form-input" 
-  placeholder="Masukkan nama panggilan" 
-  autocomplete="off"
-  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
->            <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-email">Alamat Email</label>
-            <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
-            <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
-            <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
-            <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid. Masukkan nomor seluler Indonesia yang benar.</div>
-          </div>
-<!-- INPUT PASSWORD DENGAN ICON MATA -->
+<form id="form-register-user" style="display: none;" novalidate>  
+<!-- Input Nama -->
+  <div class="form-group">
+    <label class="form-label" for="reg-nama">Nama Anda</label>
+    <input type="text" id="reg-nama" class="form-input" placeholder="Masukkan nama anda" autocomplete="off">
+    <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi.</div>
+  </div>
+
+  <!-- Input Email -->
+  <div class="form-group">
+    <label class="form-label" for="reg-email">Alamat Email</label>
+    <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
+    <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
+  </div>
+
+  <!-- Input No HP -->
+  <div class="form-group">
+    <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
+    <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
+    <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
+  </div>
+
+  <!-- Tanggal Lahir -->
+<!-- FORM TANGGAL LAHIR DENGAN KALENDER INTERAKTIF -->
 <div class="form-group">
-  <label class="form-label" for="reg-pass">Password</label>
-  <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
-    <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Kapital, Kecil, &amp; Angka" style="padding-right: 50px;">
-    <button type="button" id="btn-toggle-reg-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 99; display: flex; align-items: center; justify-content: center;">
-      <svg id="svg-reg-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-        <line x1="1" y1="1" x2="23" y2="23"></line>
-      </svg>
+  <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
+  <div class="custom-datepicker-wrapper">
+    <!-- Input yang tampak di layar (DD/MM/YYYY) -->
+    <input 
+      type="text" 
+      id="reg-dob-display" 
+      class="form-input" 
+      placeholder="Pilih Tanggal Lahir" 
+      readonly 
+      onclick="toggleCustomCalendar()"
+    >
+    <!-- Kolom tersembunyi untuk menyimpan format standar ISO (YYYY-MM-DD) -->
+    <input type="hidden" id="reg-dob" value="">
+
+    <!-- Pop-up Kalender -->
+    <div class="custom-calendar-popup" id="custom-calendar-popup">
+      <div class="calendar-header">
+        <button type="button" class="calendar-title-btn" id="cal-title-btn" onclick="switchCalendarView()">Okt 2026</button>
+        <div class="calendar-nav-group">
+          <button type="button" class="calendar-nav-btn" onclick="prevCalendarStep()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="calendar-nav-btn" onclick="nextCalendarStep()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      <div id="calendar-content"></div>
+    </div>
+  </div>
+  <div class="error-text" id="error-reg-dob">Usia minimal pendaftar adalah 17 tahun.</div>
+</div>
+
+  <!-- Jenis Kelamin -->
+<div class="form-group">
+  <label class="form-label">Jenis Kelamin</label>
+  <div class="gender-selector-container">
+    <button type="button" class="gender-btn-option" data-value="Pria" onclick="selectGenderOption(this, 'Pria')">
+      Pria
+    </button>
+    <button type="button" class="gender-btn-option" data-value="Wanita" onclick="selectGenderOption(this, 'Wanita')">
+      Wanita
     </button>
   </div>
-  <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
-</div>
-
-<!-- FORM TANGGAL LAHIR (POPUP KALENDER BAWAAN HP/BROWSER) -->
-<div class="form-group">
-  <label class="form-label" for="reg-dob">Tanggal Lahir</label>
-  <input type="date" id="reg-dob" class="form-input">
-  <div class="error-text" id="error-reg-dob">Silakan pilih tanggal lahir Anda.</div>
-</div>
-
-<!-- FORM PILIH GENDER -->
-<div class="form-group">
-  <label class="form-label" for="reg-gender">Jenis Kelamin</label>
-  <select id="reg-gender" class="form-input">
-    <option value="" disabled selected>Pilih Jenis Kelamin</option>
-    <option value="Pria">Pria</option>
-    <option value="Wanita">Wanita</option>
-  </select>
+  <!-- Input tersembunyi agar ID 'reg-gender' tetap terbaca oleh script submit -->
+  <input type="hidden" id="reg-gender" value="">
   <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
 </div>
-		  <!-- CHECKLIST TNC (KODE BARU) -->
-          <div class="tnc-checkbox-group">
-            <input type="checkbox" id="reg-tnc-check">
-            <label for="reg-tnc-check" class="tnc-label">
-              Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
-            </label>
-          </div>
-          <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
-            Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
-          </div>
-          <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
-        </form>
+	
+ <!-- Input Password & Eye Icon -->
+  <div class="form-group">
+    <label class="form-label" for="reg-pass">Password</label>
+    <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+      <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka" style="padding-right: 50px;">
+      <button type="button" id="btn-toggle-reg-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 10; display: flex; align-items: center; justify-content: center;">
+        <svg id="svg-reg-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
+  </div>
+  
+  <!-- Checklist TnC -->
+  <div class="tnc-checkbox-group">
+    <input type="checkbox" id="reg-tnc-check">
+    <label for="reg-tnc-check" class="tnc-label">
+      Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
+    </label>
+  </div>
+  <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
+    Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
+  </div>
+
+  <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
+</form>
       </main>
     </div>
 
@@ -1210,24 +1479,54 @@ select.form-input {
   </div>
 
   <!-- MODAL PROFILE -->
+<!-- MODAL PROFILE (VIEW-ONLY + MODE EDIT) -->
   <div class="modal-overlay" id="profile-modal">
     <div class="modal-box">
       <button type="button" class="modal-close-btn" onclick="closeProfileModal()">✕</button>
       
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Profil</h3>
+      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;" id="profile-modal-title">Profil Pengguna</h3>
+      <p style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 12px;" id="profile-modal-subtitle">Member Resmi <span class="font-trajan-sajiva">SAJIVA+</span></p>
       
       <div class="profile-avatar-wrapper">
         <div class="profile-avatar" id="avatar-container">
           <svg id="default-avatar-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           <img id="user-avatar-img" src="" alt="Foto Profil" style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
         </div>
-        <label for="input-avatar-file" class="avatar-upload-btn" title="Upload Foto">
+        <!-- Ikon upload hanya tampil saat mode edit -->
+        <label for="input-avatar-file" class="avatar-upload-btn disabled-view" id="avatar-upload-btn-el" title="Upload Foto">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </label>
         <input type="file" id="input-avatar-file" accept="image/*" style="display: none;" onchange="handleAvatarUpload(this)">
       </div>
 
-      <form id="edit-profile-form" style="text-align: left;">
+      <!-- 1. MODE VIEW-ONLY (DEFAULT TAMPIL) -->
+      <div id="profile-view-container" class="profile-view-box">
+        <div class="profile-info-row">
+          <span class="profile-info-label">Nama</span>
+          <span class="profile-info-val" id="view-nama-val">-</span>
+        </div>
+        <div class="profile-info-row">
+          <span class="profile-info-label">Email</span>
+          <span class="profile-info-val" id="view-email-val">-</span>
+        </div>
+        <div class="profile-info-row">
+          <span class="profile-info-label">Nomor WhatsApp</span>
+          <span class="profile-info-val" id="view-nohp-val">-</span>
+        </div>
+        <div class="profile-info-row">
+          <span class="profile-info-label">Tanggal Lahir</span>
+          <span class="profile-info-val" id="view-dob-val">-</span>
+        </div>
+        <div class="profile-info-row">
+          <span class="profile-info-label">Jenis Kelamin</span>
+          <span class="profile-info-val" id="view-gender-val">-</span>
+        </div>
+
+        <button type="button" class="btn-submit btn-edit-mode" onclick="switchToEditMode()">✏️ Edit Profil</button>
+      </div>
+
+      <!-- 2. MODE FORM EDIT (DISEMBUNYIKAN SECARA DEFAULT) -->
+      <form id="edit-profile-form" style="text-align: left; display: none;">
         <div class="form-group">
           <label class="form-label">Ubah Nama Kamu</label>
           <input type="text" id="edit-nama-input" class="form-input" placeholder="Nama Baru">
@@ -1241,13 +1540,33 @@ select.form-input {
           <input type="tel" id="edit-nohp-input" class="form-input" placeholder="Contoh: 08123456789" maxlength="13">
           <div class="error-text" id="error-edit-nohp">Nomor WhatsApp tidak valid!</div>
         </div>
-        <button type="submit" id="btn-save-profile" class="btn-submit" style="margin-top: 4px; padding: 12px; font-size: 0.85rem; background: var(--accent-gold);">Simpan Profil &amp; Verifikasi</button>
+
+        <div class="form-group">
+          <label class="form-label">Tanggal Lahir</label>
+          <input type="date" id="edit-dob-input" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Jenis Kelamin</label>
+          <div class="gender-selector-container">
+            <button type="button" class="gender-btn-option" id="btn-gender-pria" onclick="selectEditGender('Pria')">
+              Pria
+            </button>
+            <button type="button" class="gender-btn-option" id="btn-gender-wanita" onclick="selectEditGender('Wanita')">
+              Wanita
+            </button>
+          </div>
+          <input type="hidden" id="edit-gender-input" value="">
+        </div>
+
+        <button type="submit" id="btn-save-profile" class="btn-submit" style="margin-top: 4px; padding: 12px; font-size: 0.88rem; background: var(--accent-gold);">💾 Simpan Perubahan</button>
+        <button type="button" class="btn-submit btn-cancel-edit" onclick="switchToViewMode()">Batal</button>
       </form>
 
       <button id="btn-logout" class="btn-logout" onclick="logoutUser()">Logout / Keluar</button>
     </div>
   </div>
-
+  
   <!-- MODAL LUPA PASSWORD -->
   <div class="modal-overlay" id="forgot-modal">
     <div class="modal-box">
@@ -1297,8 +1616,8 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
     const waKasirNumber = '628111289940'; 
     const googleReviewURL = 'https://search.google.com/local/writereview?placeid=ChIJh6F2zqn-aS4R8aXYydTaxMQ';
 
-    let customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "" };
-    let tempForgotData = { email: "", generatedOtp: "" };
+let customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };    
+let tempForgotData = { email: "", generatedOtp: "" };
 
     function switchAuthTab(tab) {
       const tabLogin = document.getElementById('tab-btn-login');
@@ -1338,24 +1657,307 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
       document.getElementById('dropdown-menu').classList.toggle('show');
     }
 
-    function openProfileModal() {
-      document.getElementById('edit-nama-input').value = customerData.nama || "";
-      document.getElementById('edit-email-input').value = customerData.email || "";
-      document.getElementById('edit-nohp-input').value = customerData.nohp || "";
-      
-      const avatarImg = document.getElementById('user-avatar-img');
-      const defaultIcon = document.getElementById('default-avatar-icon');
-      if (customerData.photo && customerData.photo.trim() !== "") {
-        avatarImg.src = customerData.photo;
+function openProfileModal() {
+  document.getElementById('edit-nama-input').value = customerData.nama || "";
+  document.getElementById('edit-email-input').value = customerData.email || "";
+  document.getElementById('edit-nohp-input').value = customerData.nohp || "";
+  
+  // Set Tanggal Lahir
+  const dobInput = document.getElementById('edit-dob-input');
+  if (dobInput) {
+    dobInput.value = customerData.dob || "";
+  }
+
+  // Set Visual Tombol Gender
+  const btnPria = document.getElementById('btn-gender-pria');
+  const btnWanita = document.getElementById('btn-gender-wanita');
+  const inputGender = document.getElementById('edit-gender-input');
+
+  if (btnPria) btnPria.classList.remove('selected');
+  if (btnWanita) btnWanita.classList.remove('selected');
+
+  if (customerData.gender === 'Pria' && btnPria) {
+    btnPria.classList.add('selected');
+  } else if (customerData.gender === 'Wanita' && btnWanita) {
+    btnWanita.classList.add('selected');
+  }
+  if (inputGender) inputGender.value = customerData.gender || "";
+
+  const avatarImg = document.getElementById('user-avatar-img');
+  const defaultIcon = document.getElementById('default-avatar-icon');
+  if (customerData.photo && customerData.photo.trim() !== "") {
+    avatarImg.src = customerData.photo;
+    avatarImg.style.display = 'block';
+    defaultIcon.style.display = 'none';
+  } else {
+    avatarImg.style.display = 'none';
+    defaultIcon.style.display = 'block';
+  }
+
+  document.getElementById('profile-modal').classList.add('show');
+}
+
+// Fungsi Helper Pilihan Gender di Edit Profil
+function selectEditGender(val) {
+  const btnPria = document.getElementById('btn-gender-pria');
+  const btnWanita = document.getElementById('btn-gender-wanita');
+  const hiddenGender = document.getElementById('edit-gender-input');
+
+  if (val === 'Pria') {
+    if (btnPria) btnPria.classList.add('selected');
+    if (btnWanita) btnWanita.classList.remove('selected');
+  } else if (val === 'Wanita') {
+    if (btnWanita) btnWanita.classList.add('selected');
+    if (btnPria) btnPria.classList.remove('selected');
+  } else {
+    if (btnPria) btnPria.classList.remove('selected');
+    if (btnWanita) btnWanita.classList.remove('selected');
+  }
+
+  if (hiddenGender) hiddenGender.value = val || "";
+}
+
+// 1. Tampilkan Data Saat Modal Dibuka
+// ==========================================
+// LOGIKA PROFIL BARU (KOMPRESI FOTO & MODE VIEW/EDIT)
+// ==========================================
+
+let tempEditPhoto = "";
+
+// 1. Kompresi Foto Otomatis (Maksimal 320px JPEG, beban hanya ~20KB sehingga TIDAK ERROR FETCH)
+function handleAvatarUpload(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const maxDim = 320;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+        tempEditPhoto = compressedBase64;
+
+        const avatarImg = document.getElementById('user-avatar-img');
+        const defaultIcon = document.getElementById('default-avatar-icon');
+        avatarImg.src = compressedBase64;
         avatarImg.style.display = 'block';
         defaultIcon.style.display = 'none';
-      } else {
-        avatarImg.style.display = 'none';
-        defaultIcon.style.display = 'block';
-      }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
-      document.getElementById('profile-modal').classList.add('show');
+// 2. Buka Modal Profil (Default Mode: View-Only)
+function openProfileModal() {
+  switchToViewMode();
+  renderProfileAvatar(customerData.photo);
+  document.getElementById('profile-modal').classList.add('show');
+}
+
+function renderProfileAvatar(photoUrl) {
+  const avatarImg = document.getElementById('user-avatar-img');
+  const defaultIcon = document.getElementById('default-avatar-icon');
+  if (photoUrl && photoUrl.trim() !== "") {
+    avatarImg.src = photoUrl;
+    avatarImg.style.display = 'block';
+    defaultIcon.style.display = 'none';
+  } else {
+    avatarImg.style.display = 'none';
+    defaultIcon.style.display = 'block';
+  }
+}
+
+// Format Tanggal untuk Mode View: DD/MM/YYYY
+function formatDisplayDate(isoDate) {
+  if (!isoDate || isoDate === "-") return "-";
+  if (isoDate.includes('/')) return isoDate;
+  const parts = isoDate.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+  return isoDate;
+}
+
+// 3. Masuk ke Tampilan View-Only (Hanya Membaca Data)
+function switchToViewMode() {
+  const viewContainer = document.getElementById('profile-view-container');
+  const editForm = document.getElementById('edit-profile-form');
+  const uploadBtn = document.getElementById('avatar-upload-btn-el');
+
+  if (viewContainer) viewContainer.style.display = 'block';
+  if (editForm) editForm.style.display = 'none';
+  if (uploadBtn) uploadBtn.classList.add('disabled-view');
+  
+  const titleEl = document.getElementById('profile-modal-title');
+  if (titleEl) titleEl.innerText = "Profil Pengguna";
+
+  // Ambil data terbaru dari localStorage jika memori kosong
+  const stored = localStorage.getItem('sajiva_crm_user');
+  if (stored) {
+    try { customerData = Object.assign(customerData, JSON.parse(stored)); } catch(e){}
+  }
+
+  // Tampilkan ke teks View-Only
+  const elNama = document.getElementById('view-nama-val');
+  const elEmail = document.getElementById('view-email-val');
+  const elNohp = document.getElementById('view-nohp-val');
+  const elDob = document.getElementById('view-dob-val');
+  const elGender = document.getElementById('view-gender-val');
+
+  if (elNama) elNama.innerText = customerData.nama || "-";
+  if (elEmail) elEmail.innerText = customerData.email || "-";
+  if (elNohp) elNohp.innerText = customerData.nohp || "-";
+  if (elDob) elDob.innerText = formatDisplayDate(customerData.dob);
+  if (elGender) elGender.innerText = customerData.gender || "-";
+
+  tempEditPhoto = customerData.photo || "";
+  renderProfileAvatar(customerData.photo);
+}
+
+function switchToEditMode() {
+  const viewContainer = document.getElementById('profile-view-container');
+  const editForm = document.getElementById('edit-profile-form');
+  const uploadBtn = document.getElementById('avatar-upload-btn-el');
+
+  if (viewContainer) viewContainer.style.display = 'none';
+  if (editForm) editForm.style.display = 'block';
+  if (uploadBtn) uploadBtn.classList.remove('disabled-view');
+  
+  const titleEl = document.getElementById('profile-modal-title');
+  if (titleEl) titleEl.innerText = "Edit Profil";
+
+  // Muat data ke formulir input
+  const inNama = document.getElementById('edit-nama-input');
+  const inEmail = document.getElementById('edit-email-input');
+  const inNohp = document.getElementById('edit-nohp-input');
+  const inDob = document.getElementById('edit-dob-input');
+
+  if (inNama) inNama.value = customerData.nama || "";
+  if (inEmail) inEmail.value = customerData.email || "";
+  if (inNohp) inNohp.value = customerData.nohp || "";
+  if (inDob) inDob.value = customerData.dob || "";
+
+  selectEditGender(customerData.gender || "");
+}
+
+// 5. Pilihan Tombol Gender di Form Edit
+function selectEditGender(val) {
+  const btnPria = document.getElementById('btn-gender-pria');
+  const btnWanita = document.getElementById('btn-gender-wanita');
+  const hiddenGender = document.getElementById('edit-gender-input');
+
+  if (btnPria) btnPria.classList.remove('selected');
+  if (btnWanita) btnWanita.classList.remove('selected');
+
+  if (val === 'Pria' && btnPria) btnPria.classList.add('selected');
+  if (val === 'Wanita' && btnWanita) btnWanita.classList.add('selected');
+
+  if (hiddenGender) hiddenGender.value = val || "";
+}
+
+// 6. Simpan Form Edit ke Database & LocalStorage
+document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const newNama = document.getElementById('edit-nama-input').value.trim();
+  const newEmail = document.getElementById('edit-email-input').value.trim();
+  const newNohp = document.getElementById('edit-nohp-input').value.trim();
+  const newDob = document.getElementById('edit-dob-input') ? document.getElementById('edit-dob-input').value : "";
+  const newGender = document.getElementById('edit-gender-input') ? document.getElementById('edit-gender-input').value : "";
+  const btnSave = document.getElementById('btn-save-profile');
+
+  if (newNohp && !validateIndoPhoneNumber(newNohp)) {
+    document.getElementById('error-edit-nohp').style.display = 'block';
+    return;
+  } else {
+    document.getElementById('error-edit-nohp').style.display = 'none';
+  }
+
+  if (btnSave) {
+    btnSave.disabled = true;
+    btnSave.innerText = "Menyimpan Data...";
+  }
+
+  const finalPhoto = tempEditPhoto || customerData.photo || "";
+
+  const payloadUpdate = {
+    action: 'update_profile',
+    nama: newNama || customerData.nama,
+    email: newEmail || customerData.email,
+    nohp: newNohp || customerData.nohp,
+    oldHp: customerData.nohp,
+    dob: newDob || customerData.dob,
+    gender: newGender || customerData.gender,
+    photo: finalPhoto
+  };
+
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payloadUpdate),
+    redirect: 'follow'
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (btnSave) {
+      btnSave.disabled = false;
+      btnSave.innerText = "💾 Simpan Perubahan";
     }
+
+    customerData.nama = payloadUpdate.nama;
+    customerData.email = payloadUpdate.email;
+    customerData.nohp = payloadUpdate.nohp;
+    customerData.dob = payloadUpdate.dob;
+    customerData.gender = payloadUpdate.gender;
+    customerData.photo = payloadUpdate.photo;
+
+    localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+    document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
+    
+    switchToViewMode();
+    alert('Profil dan foto berhasil diperbarui!');
+  })
+  .catch(err => {
+    if (btnSave) {
+      btnSave.disabled = false;
+      btnSave.innerText = "💾 Simpan Perubahan";
+    }
+    console.error("Update profile error:", err);
+
+    customerData.nama = payloadUpdate.nama;
+    customerData.email = payloadUpdate.email;
+    customerData.nohp = payloadUpdate.nohp;
+    customerData.dob = payloadUpdate.dob;
+    customerData.gender = payloadUpdate.gender;
+    customerData.photo = payloadUpdate.photo;
+    localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+    
+    switchToViewMode();
+    alert('Profil tersimpan di perangkat lokal.');
+  });
+});
 
     function closeProfileModal() {
       document.getElementById('profile-modal').classList.remove('show');
@@ -1370,26 +1972,237 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
       document.getElementById('forgot-modal').classList.add('show');
     }
 
+function selectGenderOption(btn, val) {
+  // Hapus class selected dari semua tombol gender
+  document.querySelectorAll('.gender-btn-option').forEach(el => el.classList.remove('selected'));
+  
+  // Aktifkan tombol yang diklik
+  btn.classList.add('selected');
+  
+  // Set nilainya ke hidden input
+  const hiddenInput = document.getElementById('reg-gender');
+  if (hiddenInput) {
+    hiddenInput.value = val;
+  }
+  
+  // Sembunyikan pesan error jika sebelumnya muncul
+  const errGender = document.getElementById('error-reg-gender');
+  if (errGender) {
+    errGender.style.display = 'none';
+  }
+}
+
+// ========================================================
+// LOGIKA CUSTOM DATEPICKER (BATAS MINIMAL 17 TAHUN REALTIME)
+// ========================================================
+
+const monthNamesId = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const weekDaysId = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+
+// Hitung batas maksimal tanggal lahir (Maksimal hari ini dikurangi tepat 17 tahun)
+const todayDate = new Date();
+const maxAllowedDob = new Date(todayDate.getFullYear() - 17, todayDate.getMonth(), todayDate.getDate());
+
+// State Kalender (Bawaan awal langsung mengarah ke usia 17 tahun)
+let calCurrentYear = maxAllowedDob.getFullYear();
+let calCurrentMonth = maxAllowedDob.getMonth();
+let calSelectedDate = null;
+let calViewMode = "days"; // 'days' | 'months' | 'decades'
+
+function toggleCustomCalendar() {
+  const popup = document.getElementById("custom-calendar-popup");
+  if (!popup) return;
+  const isShown = popup.classList.contains("show");
+  if (isShown) {
+    popup.classList.remove("show");
+  } else {
+    popup.classList.add("show");
+    calViewMode = "days";
+    renderCalendar();
+  }
+}
+
+// Tutup pop-up jika pengguna klik di luar kalender
+document.addEventListener("click", function(e) {
+  const wrapper = document.querySelector(".custom-datepicker-wrapper");
+  const popup = document.getElementById("custom-calendar-popup");
+  if (wrapper && !wrapper.contains(e.target) && popup) {
+    popup.classList.remove("show");
+  }
+});
+
+function switchCalendarView() {
+  if (calViewMode === "days") {
+    calViewMode = "months";
+  } else if (calViewMode === "months") {
+    calViewMode = "decades";
+  } else {
+    calViewMode = "days";
+  }
+  renderCalendar();
+}
+
+function prevCalendarStep() {
+  if (calViewMode === "days") {
+    calCurrentMonth--;
+    if (calCurrentMonth < 0) {
+      calCurrentMonth = 11;
+      calCurrentYear--;
+    }
+  } else if (calViewMode === "months") {
+    calCurrentYear--;
+  } else if (calViewMode === "decades") {
+    calCurrentYear -= 30;
+  }
+  renderCalendar();
+}
+
+function nextCalendarStep() {
+  if (calViewMode === "days") {
+    // Cegah navigasi bulan jika melampaui batas 17 tahun
+    if (new Date(calCurrentYear, calCurrentMonth + 1, 1) <= new Date(maxAllowedDob.getFullYear(), maxAllowedDob.getMonth() + 1, 1)) {
+      calCurrentMonth++;
+      if (calCurrentMonth > 11) {
+        calCurrentMonth = 0;
+        calCurrentYear++;
+      }
+    }
+  } else if (calViewMode === "months") {
+    if (calCurrentYear < maxAllowedDob.getFullYear()) {
+      calCurrentYear++;
+    }
+  } else if (calViewMode === "decades") {
+    if (calCurrentYear + 30 <= maxAllowedDob.getFullYear() + 20) {
+      calCurrentYear += 30;
+    }
+  }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const titleBtn = document.getElementById("cal-title-btn");
+  const container = document.getElementById("calendar-content");
+  if (!container || !titleBtn) return;
+
+  if (calViewMode === "days") {
+    titleBtn.innerText = `${monthNamesId[calCurrentMonth]} ${calCurrentYear}`;
+    renderDaysGrid(container);
+  } else if (calViewMode === "months") {
+    titleBtn.innerText = `${calCurrentYear}`;
+    renderMonthsGrid(container);
+  } else if (calViewMode === "decades") {
+    titleBtn.innerText = "Pilih Periode Tahun";
+    renderDecadesGrid(container);
+  }
+}
+
+// 1. Tampilan Hari
+function renderDaysGrid(container) {
+  let html = `<div class="calendar-weekdays">${weekDaysId.map(d => `<span>${d}</span>`).join('')}</div><div class="calendar-days-grid">`;
+
+  const firstDayIndex = (new Date(calCurrentYear, calCurrentMonth, 1).getDay() + 6) % 7; // Mulai dari Senin
+  const totalDays = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
+  const prevMonthTotalDays = new Date(calCurrentYear, calCurrentMonth, 0).getDate();
+
+  // Hari dari bulan sebelumnya
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    html += `<div class="calendar-cell muted disabled">${prevMonthTotalDays - i}</div>`;
+  }
+
+  // Hari pada bulan aktif
+  for (let d = 1; d <= totalDays; d++) {
+    const curDateObj = new Date(calCurrentYear, calCurrentMonth, d);
+    const isDisabled = curDateObj > maxAllowedDob;
+    const isSelected = calSelectedDate &&
+      curDateObj.getFullYear() === calSelectedDate.getFullYear() &&
+      curDateObj.getMonth() === calSelectedDate.getMonth() &&
+      curDateObj.getDate() === calSelectedDate.getDate();
+
+    html += `<div class="calendar-cell ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isDisabled ? '' : `selectDate(${d})`}">${d}</div>`;
+  }
+
+  // Sisa grid untuk bulan berikutnya
+  const totalCellsRendered = firstDayIndex + totalDays;
+  const remainingCells = (7 - (totalCellsRendered % 7)) % 7;
+  for (let n = 1; n <= remainingCells; n++) {
+    html += `<div class="calendar-cell muted disabled">${n}</div>`;
+  }
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+// 2. Tampilan Bulan
+function renderMonthsGrid(container) {
+  let html = `<div class="calendar-range-grid">`;
+  for (let m = 0; m < 12; m++) {
+    const isFuture = new Date(calCurrentYear, m, 1) > maxAllowedDob;
+    const isSelected = calSelectedDate && calSelectedDate.getFullYear() === calCurrentYear && calSelectedDate.getMonth() === m;
+
+    html += `<div class="calendar-range-cell ${isFuture ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isFuture ? '' : `selectMonth(${m})`}">${monthNamesId[m].substring(0, 3)}</div>`;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+// 3. Tampilan Rentang Tahun (Gaya Gambar: 1970-1975, 1976-1980, dst.)
+function renderDecadesGrid(container) {
+  let html = `<div class="calendar-range-grid">`;
+  const ranges = [
+    [1970, 1975], [1976, 1980], [1981, 1985],
+    [1986, 1990], [1991, 1995], [1996, 2000],
+    [2001, 2005], [2006, 2010], [2011, 2015],
+    [2016, 2020], [2021, 2025], [2026, 2026]
+  ];
+
+  ranges.forEach(([start, end]) => {
+    // Nonaktifkan rentang tahun jika seluruh tahun di rentang tersebut berusia di bawah 17 tahun
+    const isDisabled = start > maxAllowedDob.getFullYear();
+    const isSelected = calCurrentYear >= start && calCurrentYear <= end;
+
+    html += `<div class="calendar-range-cell ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isDisabled ? '' : `selectRange(${start},${end})`}">${start}-${end}</div>`;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function selectRange(start, end) {
+  // Pilih tahun valid terakhir di rentang tersebut yang tidak melampaui usia 17 tahun
+  calCurrentYear = Math.min(end, maxAllowedDob.getFullYear());
+  calViewMode = "months";
+  renderCalendar();
+}
+
+function selectMonth(m) {
+  calCurrentMonth = m;
+  calViewMode = "days";
+  renderCalendar();
+}
+
+function selectDate(d) {
+  calSelectedDate = new Date(calCurrentYear, calCurrentMonth, d);
+  
+  // Format tampilan tanggal: DD/MM/YYYY
+  const dd = String(d).padStart(2, '0');
+  const mm = String(calCurrentMonth + 1).padStart(2, '0');
+  const yyyy = calCurrentYear;
+  
+  document.getElementById("reg-dob-display").value = `${dd}/${mm}/${yyyy}`;
+  document.getElementById("reg-dob").value = `${yyyy}-${mm}-${dd}`; // Disimpan ke form
+  
+  // Sembunyikan error dan tutup kalender
+  const errDob = document.getElementById("error-reg-dob");
+  if (errDob) errDob.style.display = "none";
+  
+  document.getElementById("custom-calendar-popup").classList.remove("show");
+}
+
     function closeForgotPasswordModal() {
       document.getElementById('forgot-modal').classList.remove('show');
-    }
-
-    function handleAvatarUpload(input) {
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const base64Photo = e.target.result;
-          customerData.photo = base64Photo;
-          
-          const avatarImg = document.getElementById('user-avatar-img');
-          const defaultIcon = document.getElementById('default-avatar-icon');
-          avatarImg.src = base64Photo;
-          avatarImg.style.display = 'block';
-          defaultIcon.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-      }
     }
 
     function downloadVoucherImage() {
@@ -1459,17 +2272,19 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
       document.getElementById('claim-before').innerText = `Claim Before: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
     }
 
-async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "") {
+async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
   try {
-    const payload = {
+const payload = {
       action: action,
-      nama: customerData.nama,
-      email: customerData.email,
-      nohp: customerData.nohp,
-      rating: customerData.rating,
-      feedback: feedbackText,
-      password: pass,
-      photo: customerData.photo
+      nama: customerData.nama || "",
+      email: customerData.email || "",
+      nohp: customerData.nohp || "",
+      rating: customerData.rating || "",
+      feedback: feedbackText || "",
+      password: pass || "",
+      photo: customerData.photo || "",
+      dob: typeof dob !== 'undefined' ? dob : (customerData.dob || ""),
+      gender: typeof gender !== 'undefined' ? gender : (customerData.gender || "")
     };
 
     if (action === "claim_voucher" && paramData) {
@@ -1844,16 +2659,23 @@ if (btnToggleLogin) {
         document.getElementById('top-app-bar').style.display = 'flex';
         document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama || 'Pelanggan Setia'}!`;
         
-        // Sinkronisasi status voucher dari server
+  // Sinkronisasi data profil & voucher dari server
         sendDataToBackend('check_status', null, (res) => {
           if (res && res.status === "success") {
+            if (res.existingName) customerData.nama = res.existingName;
+            if (res.existingEmail) customerData.email = res.existingEmail;
+            if (res.existingHp) customerData.nohp = res.existingHp;
+            if (res.dob) customerData.dob = res.dob;
+            if (res.gender) customerData.gender = res.gender;
+            if (res.photo) customerData.photo = res.photo;
+
             if (res.voucherCode && res.voucherCode !== "-") {
               customerData.voucherCode = res.voucherCode;
-              localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
               renderVoucherTicket(res.voucherCode);
               document.getElementById('review-form-wrapper').style.display = 'none';
               document.getElementById('review-already-claimed').style.display = 'block';
             }
+            localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
           }
         });
 
@@ -1910,12 +2732,14 @@ if (btnToggleLogin) {
               customerData.email = result.existingEmail || userInput;
               customerData.voucherCode = result.voucherCode || "";
               customerData.photo = result.photo || "";
+			  customerData.dob = result.dob || customerData.dob || "";
+			  customerData.gender = result.gender || customerData.gender || "";
 
               localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
 
               document.getElementById('main-brand-header').style.display = 'none';
               document.getElementById('top-app-bar').style.display = 'flex';
-              document.getElementById('welcome-user-text').innerText = `Halo, ${customerData.nama}!`;
+              document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
 
               if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
                 renderVoucherTicket(customerData.voucherCode);
@@ -1937,117 +2761,129 @@ if (btnToggleLogin) {
       });
 
       // SUBMIT REGISTER
-      document.getElementById('form-register-user').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nama = document.getElementById('reg-nama').value.trim();
-        const email = document.getElementById('reg-email').value.trim();
-        const nohp = document.getElementById('reg-nohp').value.trim();
-        const pass = document.getElementById('reg-pass').value.trim();
-		const dob = document.getElementById('reg-dob').value;
-		const gender = document.getElementById('reg-gender').value;
+// HANDLER SUBMIT REGISTER LENGKAP & AMAN
+const formReg = document.getElementById('form-register-user');
+if (formReg) {
+  formReg.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-        let isValid = true;
-	
-	// Tambahkan validasi checklist ini di dalam event listener submit register:
-    // 'form-register-user' -> submit listener
+    const namaInput = document.getElementById('reg-nama');
+    const emailInput = document.getElementById('reg-email');
+    const nohpInput = document.getElementById('reg-nohp');
+    const passInput = document.getElementById('reg-pass');
+    const dobInput = document.getElementById('reg-dob');
+    const genderInput = document.getElementById('reg-gender');
     const tncCheck = document.getElementById('reg-tnc-check');
-    if (!tncCheck.checked) {
-      document.getElementById('error-reg-tnc').style.display = 'block';
+    const btnSubmit = document.getElementById('btn-submit-register');
+
+    const nama = namaInput ? namaInput.value.trim() : "";
+    const email = emailInput ? emailInput.value.trim() : "";
+    const nohp = nohpInput ? nohpInput.value.trim() : "";
+    const pass = passInput ? passInput.value.trim() : "";
+    const dob = dobInput ? dobInput.value : "";
+    const gender = genderInput ? genderInput.value : "";
+
+    let isValid = true;
+
+    // 1. Validasi TnC
+    const errTnc = document.getElementById('error-reg-tnc');
+    if (tncCheck && !tncCheck.checked) {
+      if (errTnc) errTnc.style.display = 'block';
       isValid = false;
-    } else {
-      document.getElementById('error-reg-tnc').style.display = 'none';
+    } else if (errTnc) {
+      errTnc.style.display = 'none';
     }
-        if (nama.length < 3 || !validateUsername(nama)) {
-          document.getElementById('error-reg-nama').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-reg-nama').style.display = 'none';
-        }
 
-        if (!validateEmail(email)) {
-          document.getElementById('error-reg-email').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-reg-email').style.display = 'none';
-        }
+    // 2. Validasi Nama
+    const errNama = document.getElementById('error-reg-nama');
+    if (nama.length < 3) {
+      if (errNama) errNama.style.display = 'block';
+      isValid = false;
+    } else if (errNama) {
+      errNama.style.display = 'none';
+    }
 
-        if (!validateIndoPhoneNumber(nohp)) {
-          document.getElementById('error-reg-nohp').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-reg-nohp').style.display = 'none';
-        }
+    // 3. Validasi Email
+    const errEmail = document.getElementById('error-reg-email');
+    if (!validateEmail(email)) {
+      if (errEmail) errEmail.style.display = 'block';
+      isValid = false;
+    } else if (errEmail) {
+      errEmail.style.display = 'none';
+    }
 
-        if (!validatePasswordStrength(pass)) {
-          document.getElementById('error-reg-pass').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-reg-pass').style.display = 'none';
-        }
-		
-		// Validasi Tanggal Lahir
-		if (!dob) {
-		document.getElementById('error-reg-dob').style.display = 'block';
-		isValid = false;
-		} else {
-		document.getElementById('error-reg-dob').style.display = 'none';
-		}
+    // 4. Validasi No HP
+    const errNohp = document.getElementById('error-reg-nohp');
+    if (!validateIndoPhoneNumber(nohp)) {
+      if (errNohp) errNohp.style.display = 'block';
+      isValid = false;
+    } else if (errNohp) {
+      errNohp.style.display = 'none';
+    }
 
-		// Validasi Gender
-		if (!gender) {
-		document.getElementById('error-reg-gender').style.display = 'block';
-		isValid = false;
-		} else {
-		document.getElementById('error-reg-gender').style.display = 'none';
-		}
+    // 5. Validasi Password
+    const errPass = document.getElementById('error-reg-pass');
+    if (!validatePasswordStrength(pass)) {
+      if (errPass) errPass.style.display = 'block';
+      isValid = false;
+    } else if (errPass) {
+      errPass.style.display = 'none';
+    }
 
-        if (isValid) {
-          customerData.nama = nama;
-          customerData.email = email;
-          customerData.nohp = nohp;
-		  customerData.dob = dob;
-		  customerData.gender = gender;
-	
-          localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-          sendDataToBackend('register_account', null, (res) => {
-            if (res && res.status === "error") {
-              alert(res.message);
-            } else {
-              document.getElementById('main-brand-header').style.display = 'none';
-              document.getElementById('top-app-bar').style.display = 'flex';
-              document.getElementById('welcome-user-text').innerText = `Halo, ${customerData.nama}!`;
-              navigateTo('page-promo');
-            }
-          }, "", pass);
-        }
-      });
+    // 6. Validasi Tanggal Lahir
+    const errDob = document.getElementById('error-reg-dob');
+    if (!dob) {
+      if (errDob) errDob.style.display = 'block';
+      isValid = false;
+    } else if (errDob) {
+      errDob.style.display = 'none';
+    }
 
-      // EDIT PROFILE FORM
-      document.getElementById('edit-profile-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newNama = document.getElementById('edit-nama-input').value.trim();
-        const newEmail = document.getElementById('edit-email-input').value.trim();
-        const newNohp = document.getElementById('edit-nohp-input').value.trim();
+    // 7. Validasi Gender
+    const errGender = document.getElementById('error-reg-gender');
+    if (!gender) {
+      if (errGender) errGender.style.display = 'block';
+      isValid = false;
+    } else if (errGender) {
+      errGender.style.display = 'none';
+    }
 
-        if (newNohp && !validateIndoPhoneNumber(newNohp)) {
-          document.getElementById('error-edit-nohp').style.display = 'block';
-          return;
-        } else {
-          document.getElementById('error-edit-nohp').style.display = 'none';
-        }
+    // Jika ada yang belum valid, hentikan
+    if (!isValid) return;
 
-        if (newNama) customerData.nama = newNama;
-        if (newEmail) customerData.email = newEmail;
-        if (newNohp) customerData.nohp = newNohp;
+    // Kunci tombol & ubah teks loading
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = "Mendaftarkan Akun...";
+    }
 
+    // Set Data Customer
+    customerData.nama = nama;
+    customerData.email = email;
+    customerData.nohp = nohp;
+    customerData.dob = dob;
+    customerData.gender = gender;
+
+    // Kirim Data ke Backend
+    sendDataToBackend('register_account', null, function(res) {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "REGISTER";
+      }
+
+      if (res && res.status === "error") {
+        alert(res.message);
+      } else {
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-        sendDataToBackend('update_profile', null, () => {
-          document.getElementById('welcome-user-text').innerText = `Halo, ${customerData.nama}!`;
-          closeProfileModal();
-          alert("Profil berhasil diperbarui!");
-        });
-      });
-
+        document.getElementById('main-brand-header').style.display = 'none';
+        document.getElementById('top-app-bar').style.display = 'flex';
+        document.getElementById('welcome-user-text').innerText = "Halo, " + customerData.nama + "!";
+        navigateTo('page-promo');
+      }
+    }, "", pass, dob, gender);
+  });
+}
+ 
       // FORGOT PASSWORD STEP 1
       document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
         e.preventDefault();
