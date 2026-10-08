@@ -960,7 +960,7 @@
     <!-- 4. HALAMAN EVENT -->
     <div id="page-event" class="page-view">
       <main class="card">
-        <h2 class="card-headline">Sajiva Events</h2>
+		<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>        
         
         <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -981,8 +981,8 @@
     <!-- 5. HALAMAN GALLERY SAJIVA -->
     <div id="page-gallery" class="page-view">
       <main class="card">
-        <h2 class="card-headline">Gallery Sajiva</h2>
-        <p class="card-subtitle">Dokumentasi suasana, event, dan kreasi kopi Sajiva</p>
+		<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Gallery</h2>        
+        <p class="card-subtitle"></p>
 
         <div class="gallery-categories-app">
           <button class="cat-btn-app active" onclick="filterGallery('all', event)">Semua</button>
@@ -1709,7 +1709,7 @@ function setupStarRating() {
         customerData = JSON.parse(savedUser);
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
-        document.getElementById('welcome-user-text').innerText = `Halo, ${customerData.nama || 'Pelanggan Setia'}!`;
+        document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama || 'Pelanggan Setia'}!`;
         
         // Sinkronisasi status voucher dari server
         sendDataToBackend('check_status', null, (res) => {
