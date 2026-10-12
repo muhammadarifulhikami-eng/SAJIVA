@@ -2273,11 +2273,14 @@ async function fetchGoogleEmailOnly(accessToken) {
 }
 
 // 2. Alur Pemrosesan Email
+// 2. Alur Pemrosesan Email dari Google
 function processGoogleEmail(email) {
-  // SKENARIO A: DARI FORM REGISTER (Hanya auto-input kolom email, tidak login, tidak pindah halaman)
+  const cleanEmail = String(email || "").toLowerCase().trim();
+
+  // SKENARIO A: DARI FORM REGISTER (HANYA AUTO-INPUT EMAIL, TIDAK BOLEH PINDAH HALAMAN)
   if (googleAuthMode === 'register') {
-    sendDataToBackend('check_google_account', { email: email }, (result) => {
-      // Jika email ternyata sudah punya akun lengkap
+    sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
+      // Jika ternyata email SUDAH ADA di database dan punya no HP:
       if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
         showElegantAlert(
           "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
@@ -2288,20 +2291,20 @@ function processGoogleEmail(email) {
           }
         );
       } else {
-        // HANYA ISI KOLOM EMAIL & TETAP DI FORM REGISTER
-        populateEmailOnly(email);
+        // JIKA BELUM TERDAFTAR: HANYA ISI KOLOM EMAIL, TETAP DI FORM REGISTER
+        populateEmailOnly(cleanEmail);
       }
     });
     return;
   }
 
-  // SKENARIO B: DARI FORM LOGIN (Masuk dengan Google)
+  // SKENARIO B: DARI FORM LOGIN (MASUK DENGAN GOOGLE)
   if (googleAuthMode === 'login') {
-    sendDataToBackend('check_google_account', { email: email }, (result) => {
+    sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
+      // Hanya login jika email BENAR-BENAR ada di database
       if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
-        // Sudah ada akun lengkap -> Langsung login
         customerData.nama = result.existingName || "";
-        customerData.email = email;
+        customerData.email = cleanEmail;
         customerData.nohp = result.existingHp;
         customerData.voucherCode = result.voucherCode || "";
         customerData.photo = result.photo || "";
@@ -2312,14 +2315,14 @@ function processGoogleEmail(email) {
         document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
         navigateTo('page-promo');
       } else {
-        // Belum terdaftar -> Arahkan ke register dan auto-input emailnya
+        // Jika belum ada di database, tolak login dan arahkan ke pendaftaran
         showElegantAlert(
-          "Akun Anda belum terdaftar. Silakan lengkapi pendaftaran terlebih dahulu.",
+          "Akun Anda belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
           "Belum Terdaftar",
           "✦",
           () => {
             navigateTo('page-auth-register');
-            populateEmailOnly(email);
+            populateEmailOnly(cleanEmail);
           }
         );
       }
@@ -3133,9 +3136,10 @@ function validateEmail(email) {
       document.getElementById('claim-before').innerText = `Claim Before: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
     }
 
+// GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
 async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
   try {
-const payload = {
+    let payload = {
       action: action,
       nama: customerData.nama || "",
       email: customerData.email || "",
@@ -3148,10 +3152,18 @@ const payload = {
       gender: typeof gender !== 'undefined' ? gender : (customerData.gender || "")
     };
 
+    // PERBAIKAN PENTING: Jika aksinya adalah cek akun Google, kosongkan identitas lokal lainnya
+    if (action === "check_google_account" && paramData && paramData.email) {
+      payload = {
+        action: "check_google_account",
+        email: paramData.email
+      };
+    }
+
     if (action === "claim_voucher" && paramData) {
       payload.voucher = paramData;
     }
-
+    
     // 1. Eksekusi jika berada di dalam lingkungan Google Apps Script Web App
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
