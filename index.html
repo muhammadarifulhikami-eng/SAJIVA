@@ -2227,10 +2227,10 @@ function initGoogleAuth() {
   if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
     googleTokenClient = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+      scope: 'https://www.googleapis.com/auth/userinfo.email', // HANYA EMAIL
       callback: (tokenResponse) => {
         if (tokenResponse && tokenResponse.access_token) {
-          fetchGoogleProfile(tokenResponse.access_token);
+          fetchGoogleEmailOnly(tokenResponse.access_token);
         }
       },
     });
@@ -2251,38 +2251,60 @@ function handleGoogleAuthTrigger(mode) {
 }
 
 // Ambil info nama & email dari API Google
-async function fetchGoogleProfile(accessToken) {
+// 1. Ambil HANYA email dari Google
+async function fetchGoogleEmailOnly(accessToken) {
   try {
     const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const profile = await res.json();
-    
-    const email = profile.email;
-    const name = profile.name || "";
-    const photo = profile.picture || "";
+    const email = profile.email || "";
 
-    processGoogleUserData(email, name, photo);
+    if (!email) {
+      showElegantAlert("Gagal mendapatkan email dari akun Google.", "Error", "✕");
+      return;
+    }
+
+    processGoogleEmail(email);
   } catch (err) {
-    console.error("Gagal mengambil data akun Google:", err);
-    showElegantAlert("Gagal terhubung dengan profil Google Anda.", "Error", "✕");
+    console.error("Gagal mengambil email Google:", err);
+    showElegantAlert("Gagal terhubung dengan akun Google Anda.", "Error", "✕");
   }
 }
 
-// Proses Alur Logika Sesuai Syarat
-function processGoogleUserData(email, name, photo) {
-  // Cek ke backend apakah email ini sudah ada dan punya nomor HP lengkap
-  sendDataToBackend('check_google_account', { email: email }, (result) => {
-    
-    // Skenario 1: ALUR LOGIN
-    if (googleAuthMode === 'login') {
+// 2. Alur Pemrosesan Email
+function processGoogleEmail(email) {
+  // SKENARIO A: DARI FORM REGISTER (Hanya auto-input kolom email, tidak login, tidak pindah halaman)
+  if (googleAuthMode === 'register') {
+    sendDataToBackend('check_google_account', { email: email }, (result) => {
+      // Jika email ternyata sudah punya akun lengkap
       if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
-        // Akun sudah lengkap -> Langsung Login berhasil
-        customerData.nama = result.existingName || name;
+        showElegantAlert(
+          "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
+          "Sudah Terdaftar",
+          "✦",
+          () => {
+            navigateTo('page-auth-login');
+          }
+        );
+      } else {
+        // HANYA ISI KOLOM EMAIL & TETAP DI FORM REGISTER
+        populateEmailOnly(email);
+      }
+    });
+    return;
+  }
+
+  // SKENARIO B: DARI FORM LOGIN (Masuk dengan Google)
+  if (googleAuthMode === 'login') {
+    sendDataToBackend('check_google_account', { email: email }, (result) => {
+      if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
+        // Sudah ada akun lengkap -> Langsung login
+        customerData.nama = result.existingName || "";
         customerData.email = email;
         customerData.nohp = result.existingHp;
         customerData.voucherCode = result.voucherCode || "";
-        customerData.photo = result.photo || photo;
+        customerData.photo = result.photo || "";
         customerData.dob = result.dob || "";
         customerData.gender = result.gender || "";
 
@@ -2290,50 +2312,41 @@ function processGoogleUserData(email, name, photo) {
         document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
         navigateTo('page-promo');
       } else {
-        // Akun belum ada atau nomor HP belum lengkap -> Arahkan ke form register
-        showElegantAlert("Akun belum terdaftar lengkap. Silakan lengkapi nomor WhatsApp Anda terlebih dahulu.", "Lengkapi Data", "✦", () => {
-          navigateTo('page-auth-register');
-          populateRegisterForm(name, email, photo);
-        });
+        // Belum terdaftar -> Arahkan ke register dan auto-input emailnya
+        showElegantAlert(
+          "Akun Anda belum terdaftar. Silakan lengkapi pendaftaran terlebih dahulu.",
+          "Belum Terdaftar",
+          "✦",
+          () => {
+            navigateTo('page-auth-register');
+            populateEmailOnly(email);
+          }
+        );
       }
-    } 
-    
-    // Skenario 2: ALUR REGISTRASI
-    else if (googleAuthMode === 'register') {
-      if (result && result.status === "success" && result.existingHp) {
-        // Ternyata sudah punya akun lengkap
-        showElegantAlert("Akun Google ini sudah terdaftar lengkap. Mengalihkan ke akun Anda...", "Sudah Terdaftar", "✓", () => {
-          customerData = Object.assign(customerData, result);
-          localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-          navigateTo('page-promo');
-        });
-      } else {
-        // Otomatis isi Nama & Email, kunci agar tidak perlu diketik ulang
-        populateRegisterForm(name, email, photo);
-        showElegantAlert("Email Google berhasil terhubung! Silakan lengkapi Nomor WhatsApp & tanggal lahir Anda.", "Berhasil Terhubung", "✓");
-      }
-    }
-  });
+    });
+  }
 }
 
-// Isi otomatis kolom formulir register
-function populateRegisterForm(name, email, photo) {
-  const inNama = document.getElementById('reg-nama');
+// 3. Fungsi Pengisian Otomatis Kolom Email Saja (Persis Union)
+function populateEmailOnly(email) {
   const inEmail = document.getElementById('reg-email');
-  
-  if (inNama && name) inNama.value = name;
   if (inEmail && email) {
     inEmail.value = email;
-    inEmail.readOnly = true; // Kunci email Google agar valid
-    inEmail.style.backgroundColor = "#f5f5f5";
-  }
-  if (photo) customerData.photo = photo;
+    inEmail.readOnly = true; // Kunci agar email Google tidak diedit manual
+    inEmail.style.backgroundColor = "rgba(0, 0, 0, 0.04)";
+    inEmail.style.cursor = "not-allowed";
 
-  // Fokuskan langsung ke input nomor HP
-  const inNohp = document.getElementById('reg-nohp');
-  if (inNohp) inNohp.focus();
+    // Bersihkan pesan error jika sempat muncul
+    const errEmail = document.getElementById('error-reg-email');
+    if (errEmail) errEmail.style.display = 'none';
+  }
+
+  // Fokuskan kursor ke kolom Nama Lengkap
+  const inNama = document.getElementById('reg-nama');
+  if (inNama && !inNama.value.trim()) {
+    inNama.focus();
+  }
 }
-  
 const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec";
     const waKasirNumber = '628111289940'; 
     const googleReviewURL = 'https://search.google.com/local/writereview?placeid=ChIJh6F2zqn-aS4R8aXYydTaxMQ';
