@@ -678,11 +678,12 @@ select.form-input {
 /* Watermark Paling Bawah */
 .footer-dev-copyright {
   margin-top: 18px;
-  margin-bottom: 6px;
+  margin-bottom: 18px;
   font-size: 0.68rem;
   letter-spacing: 1px;
+  opacity: 0.65; /* Dibuat lebih transparan / samar */
   color: #a39587;
-  text-align: center;
+  text-align: Right;
 }
     /* BANNER SLIDER */
     .banner-slider-container {
@@ -898,6 +899,343 @@ select.form-input {
       display: none !important;
     }
  
+/* =================================================== */
+/* HERO SLIDER FULL-SCREEN & OVERLAY (GAYA UNION)     */
+/* =================================================== */
+/* Pastikan container selalu di tengah layar monitor secara konsisten */
+.auth-fullscreen-view {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  background: #0d0d0d;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Wajib pakai flex saat active agar tidak tertimpa display: block */
+.auth-fullscreen-view.active {
+  display: flex !important;
+}
+
+/* Wadah 9:16 seukuran layar ponsel */
+.auth-slider-fullscreen {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  max-height: 100dvh;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.85);
+}
+
+.auth-slider-fullscreen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.15) 25%,
+    rgba(0, 0, 0, 0.25) 50%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Track Animasi Slide */
+.auth-slides {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.auth-slide {
+  min-width: 100%;
+  height: 100%;
+}
+
+.auth-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 1. Overlay Atas: Branding Inara */
+.auth-overlay-top {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 20px) + 24px);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.auth-inara-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
+}
+
+.auth-inara-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.auth-inara-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.auth-inara-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #ffffff;
+}
+
+.auth-inara-tag {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 5px;
+  color: #ffffff;
+}
+
+/* 2. Overlay Tengah: Logo SAJIVA+ */
+.auth-overlay-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.auth-center-brand {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  color: #ffffff;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.9)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9));
+}
+
+.brand-main-text {
+  font-size: 2.75rem;
+  font-weight: 600;
+  letter-spacing: 8px;
+  line-height: 1;
+}
+
+.brand-plus-accent {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #ffffff;
+  margin-left: 2px;
+  margin-top: -6px;
+}
+
+/* 3. Overlay Bawah: Tagline & Tombol */
+.auth-overlay-bottom-union {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 20px) + 24px);
+  left: 20px;
+  right: 20px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-union-tagline {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 330px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.auth-union-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.btn-union-cta {
+  flex: 1;
+  padding: 14px 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px; /* Sudut tegas khas referensi Union */
+  transition: all 0.2s ease;
+}
+
+/* Tombol Login: Putih Bersih */
+.btn-union-login {
+  background: #ffffff;
+  color: #1a1a1a;
+  border: 1.5px solid #ffffff;
+}
+
+.btn-union-login:active {
+  transform: scale(0.97);
+  background: #ebebeb;
+}
+
+/* Tombol Register: Gelap dengan Outline / Border Copper Accent */
+.btn-union-register {
+  background: rgba(20, 20, 20, 0.85);
+  color: #ffffff;
+  border: 1.5px solid var(--copper-amber); /* Highlight Border Copper */
+  box-shadow: 0 0 14px rgba(184, 125, 75, 0.4); /* Glow lembut */
+}
+
+.btn-union-register:active {
+  transform: scale(0.97);
+  background: #111111;
+}
+ 
+ /* ========================================= */
+/* MODAL POPUP ELEGAN (CUSTOM ALERT / CONFIRM) */
+/* ========================================= */
+.elegant-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.elegant-modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.elegant-modal-card {
+  background: #fdfbf7;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 28px;
+  padding: 30px 24px 26px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(184, 125, 75, 0.15);
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.elegant-modal-overlay.show .elegant-modal-card {
+  transform: scale(1);
+}
+
+/* Lingkaran Ikon di Bagian Atas */
+.elegant-modal-icon-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fdf3e7;
+  border: 1px solid rgba(184, 125, 75, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 1.7rem;
+  color: var(--accent-gold);
+}
+
+/* Judul Modal (Cinzel) */
+.elegant-modal-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Teks Pesan Deskripsi */
+.elegant-modal-desc {
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+/* Wadah Tombol Aksi */
+.elegant-modal-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.elegant-modal-btn {
+  flex: 1;
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.elegant-modal-btn.primary {
+  background: #b87d4b;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(184, 125, 75, 0.35);
+}
+.elegant-modal-btn.primary:hover {
+  background: #9f6535;
+}
+.elegant-modal-btn.primary:active {
+  transform: scale(0.97);
+}
+
+.elegant-modal-btn.secondary {
+  background: #ffffff;
+  color: #444444;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.elegant-modal-btn.secondary:hover {
+  background: #f7f7f7;
+}
+ 
   </style>
 </head>
 <body>
@@ -1007,154 +1345,218 @@ select.form-input {
       </button>
     </div>
 
-    <!-- BRAND LOGO HEADER -->
-    <header class="brand-container" id="main-brand-header">
+<!-- BRAND LOGO HEADER (Disembunyikan pada landing, tampil saat form aktif) -->
+    <header class="brand-container" id="main-brand-header" style="display: none;">
       <h1 class="brand-name">SAJIVA+</h1>
       <div class="brand-meta"><span>ESTD</span><span class="divider"></span><span>2016</span></div>
       <p class="brand-subtext">ARTISAN ROASTERY</p>
     </header>
 
-    <!-- 0. LOGIN / REGISTER PAGE -->
-    <div id="page-login" class="page-view active">
+<!-- 0. LANDING AUTH HERO (DILETAKKAN DI LUAR WRAPPER AGAR SELALU DI TENGAH LAYAR) -->
+  <div id="page-login" class="page-view active auth-fullscreen-view">
+    <div class="auth-slider-fullscreen" id="auth-banner-slider">
+
+      <!-- Slides Foto Full Bleed 9:16 -->
+      <div class="auth-slides" id="auth-banner-slides">
+        <div class="auth-slide">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1200" alt="Sajiva Atmosphere">
+        </div>
+        <div class="auth-slide">
+          <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200" alt="Specialty Coffee">
+        </div>
+        <div class="auth-slide">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200" alt="Artisan Space">
+        </div>
+      </div>
+
+      <!-- Overlay Atas -->
+      <div class="auth-overlay-top">
+        <div class="auth-inara-branding">
+          <span class="auth-inara-sub">PART OF</span>
+          <div class="auth-inara-main">
+            <span class="auth-inara-title">INĀRA</span>
+            <span class="auth-inara-tag">GROUP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay Tengah -->
+      <div class="auth-overlay-center">
+        <div class="auth-center-brand">
+          <span class="brand-main-text">SAJIVA</span>
+          <span class="brand-plus-accent">+</span>
+        </div>
+      </div>
+
+      <!-- Overlay Bawah -->
+      <div class="auth-overlay-bottom-union">
+        <p class="auth-union-tagline">
+          Join the club, get exclusive privilege, voucher, &amp; promo
+        </p>
+
+        <div class="auth-union-actions">
+          <button type="button" class="btn-union-cta btn-union-login" onclick="openAuthView('login')">
+            LOGIN
+          </button>
+          <button type="button" class="btn-union-cta btn-union-register" onclick="openAuthView('register')">
+            REGISTER
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTAINER KONTEN REGULER (WRAPPER) -->
+  <div class="wrapper">
+    
+    <!-- TOP APP BAR -->
+    <div class="top-app-bar" id="top-app-bar">
+      <!-- (Isi top-app-bar tetap sama seperti kode Anda) -->
+    </div>
+
+    <!-- BRAND LOGO HEADER LUAR -->
+    <header class="brand-container" id="main-brand-header" style="display: none;">
+      <h1 class="brand-name">SAJIVA+</h1>
+      <div class="brand-meta"><span>ESTD</span><span class="divider"></span><span>2016</span></div>
+      <p class="brand-subtext">ARTISAN ROASTERY</p>
+    </header>
+
+    <!-- 0A. HALAMAN FORM LOGIN -->
+    <div id="page-auth-login" class="page-view">
       <main class="card">
-<h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA+</span></h2>
-        <p class="card-subtitle">Join the club, get exclusive privilege, voucher, & promo</p>
-        
-        <div class="auth-tab-container">
-          <button type="button" class="auth-tab-btn active" id="tab-btn-login" onclick="switchAuthTab('login')">LOGIN</button>
-          <button type="button" class="auth-tab-btn" id="tab-btn-register" onclick="switchAuthTab('register')">REGISTER</button>
+        <div style="text-align: left; width: 100%;">
+          <button type="button" class="btn-back-auth" onclick="navigateTo('page-login')">
+            ←
+          </button>
         </div>
 
-        <!-- FORM LOGIN -->
+        <h2 class="card-headline">Masuk ke Akun</h2>
+        <p class="card-subtitle">Silakan masukkan data akun Sajiva Anda</p>
+
         <form id="form-login-user" novalidate>
           <div class="form-group">
             <label class="form-label" for="login-user-input">Nama / Email / No. Whatsapp</label>
             <input type="text" id="login-user-input" class="form-input" placeholder="Nama, Email, atau No. Whatsapp" autocomplete="off">
             <div class="error-text" id="error-login-user">Isi kolom ini dengan benar.</div>
           </div>
-<div class="form-group">
-  <label class="form-label" for="login-pass-input">Password</label>
-  <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
-    <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda" style="padding-right: 50px;">
-    <button type="button" id="btn-toggle-login-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 99; display: flex; align-items: center; justify-content: center;">
-      <svg id="svg-login-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-        <line x1="1" y1="1" x2="23" y2="23"></line>
-      </svg>
-    </button>
-  </div>
-  <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
-</div>
+          <div class="form-group">
+            <label class="form-label" for="login-pass-input">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
+              <button type="button" id="btn-toggle-login-pass" class="toggle-password-btn">
+                <svg id="svg-login-pass" viewBox="0 0 24 24">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
+          </div>
           <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
           <button type="button" class="btn-forgot-link" onclick="openForgotPasswordModal()">Lupa Password?</button>
         </form>
-
-        <!-- FORM REGISTER -->
-<form id="form-register-user" style="display: none;" novalidate>  
-<!-- Input Nama -->
-  <div class="form-group">
-    <label class="form-label" for="reg-nama">Nama Anda</label>
-    <input type="text" id="reg-nama" class="form-input" placeholder="Masukkan nama anda" autocomplete="off">
-    <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi.</div>
-  </div>
-
-  <!-- Input Email -->
-  <div class="form-group">
-    <label class="form-label" for="reg-email">Alamat Email</label>
-    <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
-    <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
-  </div>
-
-  <!-- Input No HP -->
-  <div class="form-group">
-    <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
-    <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
-    <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
-  </div>
-
-  <!-- Tanggal Lahir -->
-<!-- FORM TANGGAL LAHIR DENGAN KALENDER INTERAKTIF -->
-<div class="form-group">
-  <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
-  <div class="custom-datepicker-wrapper">
-    <!-- Input yang tampak di layar (DD/MM/YYYY) -->
-    <input 
-      type="text" 
-      id="reg-dob-display" 
-      class="form-input" 
-      placeholder="Pilih Tanggal Lahir" 
-      readonly 
-      onclick="toggleCustomCalendar()"
-    >
-    <!-- Kolom tersembunyi untuk menyimpan format standar ISO (YYYY-MM-DD) -->
-    <input type="hidden" id="reg-dob" value="">
-
-    <!-- Pop-up Kalender -->
-    <div class="custom-calendar-popup" id="custom-calendar-popup">
-      <div class="calendar-header">
-        <button type="button" class="calendar-title-btn" id="cal-title-btn" onclick="switchCalendarView()">Okt 2026</button>
-        <div class="calendar-nav-group">
-          <button type="button" class="calendar-nav-btn" onclick="prevCalendarStep()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button type="button" class="calendar-nav-btn" onclick="nextCalendarStep()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
-        </div>
-      </div>
-      <div id="calendar-content"></div>
-    </div>
-  </div>
-  <div class="error-text" id="error-reg-dob">Usia minimal pendaftar adalah 17 tahun.</div>
-</div>
-
-  <!-- Jenis Kelamin -->
-<div class="form-group">
-  <label class="form-label">Jenis Kelamin</label>
-  <div class="gender-selector-container">
-    <button type="button" class="gender-btn-option" data-value="Pria" onclick="selectGenderOption(this, 'Pria')">
-      Pria
-    </button>
-    <button type="button" class="gender-btn-option" data-value="Wanita" onclick="selectGenderOption(this, 'Wanita')">
-      Wanita
-    </button>
-  </div>
-  <!-- Input tersembunyi agar ID 'reg-gender' tetap terbaca oleh script submit -->
-  <input type="hidden" id="reg-gender" value="">
-  <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
-</div>
-	
- <!-- Input Password & Eye Icon -->
-  <div class="form-group">
-    <label class="form-label" for="reg-pass">Password</label>
-    <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
-      <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka" style="padding-right: 50px;">
-      <button type="button" id="btn-toggle-reg-pass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 6px; z-index: 10; display: flex; align-items: center; justify-content: center;">
-        <svg id="svg-reg-pass" style="pointer-events: none; width: 22px; height: 22px; stroke: #888888; stroke-width: 1.8; fill: none;" viewBox="0 0 24 24">
-          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-          <line x1="1" y1="1" x2="23" y2="23"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
-  </div>
-  
-  <!-- Checklist TnC -->
-  <div class="tnc-checkbox-group">
-    <input type="checkbox" id="reg-tnc-check">
-    <label for="reg-tnc-check" class="tnc-label">
-      Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
-    </label>
-  </div>
-  <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
-    Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
-  </div>
-
-  <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
-</form>
       </main>
     </div>
 
+    <!-- 0B. HALAMAN FORM REGISTER -->
+    <div id="page-auth-register" class="page-view">
+      <main class="card">
+        <div style="text-align: left; width: 100%;">
+          <button type="button" class="btn-back-auth" onclick="navigateTo('page-login')">
+            ←
+          </button>
+        </div>
+
+        <h2 class="card-headline">Daftar Akun Baru</h2>
+        <p class="card-subtitle">Lengkapi identitas untuk menikmati privilege eksklusif</p>
+
+        <form id="form-register-user" novalidate>  
+          <div class="form-group">
+            <label class="form-label" for="reg-nama">Nama Lengkap</label>
+            <input type="text" id="reg-nama" class="form-input" placeholder="Masukkan nama anda" autocomplete="off">
+            <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi (min. 3 karakter).</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Alamat Email</label>
+            <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
+            <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
+            <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
+            <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
+            <div class="custom-datepicker-wrapper">
+              <input type="text" id="reg-dob-display" class="form-input" placeholder="Pilih Tanggal Lahir" readonly onclick="toggleCustomCalendar()">
+              <input type="hidden" id="reg-dob" value="">
+
+              <div class="custom-calendar-popup" id="custom-calendar-popup">
+                <div class="calendar-header">
+                  <button type="button" class="calendar-title-btn" id="cal-title-btn" onclick="switchCalendarView()">Okt 2026</button>
+                  <div class="calendar-nav-group">
+                    <button type="button" class="calendar-nav-btn" onclick="prevCalendarStep()">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button type="button" class="calendar-nav-btn" onclick="nextCalendarStep()">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                  </div>
+                </div>
+                <div id="calendar-content"></div>
+              </div>
+            </div>
+            <div class="error-text" id="error-reg-dob">Usia minimal pendaftar adalah 17 tahun.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Jenis Kelamin</label>
+            <div class="gender-selector-container">
+              <button type="button" class="gender-btn-option" data-value="Pria" onclick="selectGenderOption(this, 'Pria')">
+                Pria
+              </button>
+              <button type="button" class="gender-btn-option" data-value="Wanita" onclick="selectGenderOption(this, 'Wanita')">
+                Wanita
+              </button>
+            </div>
+            <input type="hidden" id="reg-gender" value="">
+            <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
+          </div>
+            
+          <div class="form-group">
+            <label class="form-label" for="reg-pass">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka">
+              <button type="button" id="btn-toggle-reg-pass" class="toggle-password-btn">
+                <svg id="svg-reg-pass" viewBox="0 0 24 24">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
+          </div>
+          
+          <div class="tnc-checkbox-group">
+            <input type="checkbox" id="reg-tnc-check">
+            <label for="reg-tnc-check" class="tnc-label">
+              Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
+            </label>
+          </div>
+          <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
+            Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
+          </div>
+
+          <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
+        </form>
+      </main>
+    </div>
+	
     <!-- 1. HALAMAN PROMO -->
     <div id="page-promo" class="page-view">
       <main class="card">
@@ -1184,8 +1586,8 @@ select.form-input {
 
         <div class="promo-banner">
           <span class="promo-tag">Member Special</span>
-          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 15% Review Reward</div>
-          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Beri ulasan terbaik Anda di Google Maps dan klaim voucher diskon Rp 100.000 sekarang.</div>
+          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
           <button onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 10px; font-size: 0.82rem; background: var(--accent-gold);">Lihat Voucher / Review</button>
         </div>
 
@@ -1522,8 +1924,8 @@ select.form-input {
               <span style="font-size: 2.5rem; font-weight: 500; line-height: 0.9;">100.000</span>
             </div>
 
-            <div style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 4px; font-weight: 600;">Enjoy 15% Discount</div>
-            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;">Minimum Spending Rp 100.000 <br> Before Tax &amp; Service</div>
+            <div style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 4px; font-weight: 600;">Enjoy 10% Discount</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;">No Minimum Spending <br> Before Tax &amp; Service</div>
                     
             <div class="qr-container">
               <div class="qr-box" id="qrcode-box"></div>
@@ -1681,18 +2083,6 @@ select.form-input {
     </div>
   </div>
   
-<!-- KOMPONEN PART OF INARA GROUP -->
-<div class="inara-footer-wrapper">
-  <span class="inara-label-part">Part of</span>
-  <div class="inara-brand-row">
-    
-    <!-- Tipografi INĀRA GROUP -->
-    <div class="inara-text-logo">
-      <span class="inara-name">INĀRA</span>
-      <span class="inara-group-tag">GROUP</span>
-    </div>
-  </div>
-</div>
 <!-- FOOTER PALING BAWAH -->
   <footer class="footer-dev-copyright">
     &copy; Hikami-Dev
@@ -1707,12 +2097,22 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
 let customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };    
 let tempForgotData = { email: "", generatedOtp: "" };
 let navigationHistory = [];
+let elegantAlertCallback = null;
 
+// Fungsi membuka form Login atau Register
+function openAuthView(type) {
+  if (type === 'login') {
+    navigateTo('page-auth-login');
+  } else if (type === 'register') {
+    navigateTo('page-auth-register');
+  }
+}
+
+// Pastikan fungsi navigateTo mengatur visibilitas brand header & wrapper
 function navigateTo(pageId, isBackAction = false) {
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
 
-  // Catat riwayat halaman jika ini bukan aksi back
   if (!isBackAction && currentId && currentId !== pageId) {
     navigationHistory.push(currentId);
     history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
@@ -1722,6 +2122,85 @@ function navigateTo(pageId, isBackAction = false) {
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
+  }
+
+  // Atur header brand logo
+  const brandHeader = document.getElementById('main-brand-header');
+  if (brandHeader) {
+    if (pageId === 'page-login') {
+      brandHeader.style.display = 'none';
+    } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
+      brandHeader.style.display = 'flex';
+    }
+  }
+
+  const dropdown = document.getElementById('dropdown-menu');
+  if (dropdown) dropdown.classList.remove('show');
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+// Fungsi untuk memunculkan popup elegan pengganti alert()
+function showElegantAlert(message, title = "Pemberitahuan", icon = "✦", callback = null) {
+  const modal = document.getElementById('elegant-alert-modal');
+  const titleEl = document.getElementById('elegant-alert-title');
+  const msgEl = document.getElementById('elegant-alert-message');
+  const iconEl = document.getElementById('elegant-alert-icon');
+  
+  if (!modal) {
+    alert(message); // Fallback jika elemen belum termuat
+    return;
+  }
+
+  // Set icon otomatis sesuai konteks jika tidak ditentukan
+  if (icon === "✦") {
+    if (/salah|gagal|error|tidak ditemukan/i.test(message)) {
+      icon = "✕";
+    } else if (/berhasil|sukses/i.test(message)) {
+      icon = "✓";
+    }
+  }
+
+  titleEl.innerText = title;
+  msgEl.innerText = message;
+  iconEl.innerText = icon;
+  elegantAlertCallback = callback;
+
+  modal.classList.add('show');
+}
+
+// Tutup popup
+function closeElegantAlert() {
+  const modal = document.getElementById('elegant-alert-modal');
+  if (modal) modal.classList.remove('show');
+  if (typeof elegantAlertCallback === 'function') {
+    elegantAlertCallback();
+    elegantAlertCallback = null;
+  }
+}
+
+function navigateTo(pageId, isBackAction = false) {
+  const currentActivePage = document.querySelector('.page-view.active');
+  const currentId = currentActivePage ? currentActivePage.id : null;
+
+  if (!isBackAction && currentId && currentId !== pageId) {
+    navigationHistory.push(currentId);
+    history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
+  }
+
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+  }
+
+  // Tampilkan / sembunyikan header logo Sajiva+ luar secara dinamis
+  const brandHeader = document.getElementById('main-brand-header');
+  if (brandHeader) {
+    if (pageId === 'page-login') {
+      brandHeader.style.display = 'none'; // Sembunyi di landing full screen
+    } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
+      brandHeader.style.display = 'flex'; // Muncul kembali di form input
+    }
   }
 
   const dropdown = document.getElementById('dropdown-menu');
@@ -2590,6 +3069,25 @@ function setupStarRating() {
       { id: 5, category: "kru", title: "Barista Team Sajiva", url: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800" }
     ];
 
+// Autoplay Slider Khusus Landing Auth (Otomatis Penuh)
+let authCurrentSlide = 0;
+let authSliderInterval = null;
+
+function initAuthSlider() {
+  const slides = document.querySelectorAll('.auth-slide');
+  const totalAuthSlides = slides.length;
+  if (totalAuthSlides <= 1) return;
+
+  const slidesContainer = document.getElementById('auth-banner-slides');
+
+  if (authSliderInterval) clearInterval(authSliderInterval);
+  authSliderInterval = setInterval(() => {
+    authCurrentSlide = (authCurrentSlide + 1) % totalAuthSlides;
+    if (slidesContainer) {
+      slidesContainer.style.transform = `translateX(-${authCurrentSlide * 100}%)`;
+    }
+  }, 3500); // Berganti otomatis setiap 3.5 detik
+}
     function initSlider() {
       const slides = document.querySelectorAll('.banner-slide');
       totalSlides = slides.length;
@@ -2720,6 +3218,7 @@ history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
     // INIT APP
     document.addEventListener("DOMContentLoaded", () => {
       setupStarRating();
+	  initAuthSlider(); // <-- Tambahkan baris ini
       initSlider();
       renderGallery('all');
 	  
@@ -2872,7 +3371,7 @@ if (btnToggleLogin) {
 
               navigateTo('page-promo');
             } else {
-              alert(result.message || "Gagal login. Username, Email, atau Password salah.");
+              showElegantAlert(result.message || "Password atau akun yang Anda masukkan salah!", "Gagal Masuk", "✕");
             }
           }, "", passInput);
         }
@@ -2990,7 +3489,7 @@ if (formReg) {
       }
 
       if (res && res.status === "error") {
-        alert(res.message);
+        showElegantAlert(res.message, "Registrasi Gagal", "✕");
       } else {
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
         document.getElementById('main-brand-header').style.display = 'none';
@@ -3122,7 +3621,7 @@ window.addEventListener('popstate', function(event) {
   if (navigationHistory.length > 0) {
     const prevPage = navigationHistory.pop();
     navigateTo(prevPage, true);
-  } else {
+} else {
     // Jika sudah di halaman paling awal, tahan agar pengguna tidak keluar
     const activePage = document.querySelector('.page-view.active');
     const isLoginState = activePage && activePage.id === 'page-login';
@@ -3137,6 +3636,17 @@ window.addEventListener('popstate', function(event) {
 });
 	
   </script>
+  <!-- POPUP NOTIFIKASI ELEGAN -->
+<div class="elegant-modal-overlay" id="elegant-alert-modal">
+  <div class="elegant-modal-card">
+    <div class="elegant-modal-icon-badge" id="elegant-alert-icon">✦</div>
+    <h3 class="elegant-modal-title" id="elegant-alert-title">Pemberitahuan</h3>
+    <p class="elegant-modal-desc" id="elegant-alert-message">Pesan notifikasi...</p>
+    <div class="elegant-modal-actions">
+      <button type="button" class="elegant-modal-btn primary" id="elegant-alert-btn" onclick="closeElegantAlert()">Oke</button>
+    </div>
+  </div>
+</div>
   
 </body>
 </html>
