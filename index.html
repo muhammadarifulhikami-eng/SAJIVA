@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<!-- Google Identity Services SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sajiva+</title>
@@ -41,7 +43,93 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    
+    /* Tombol Back Minimalis & Seamless */
+.btn-back-auth {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 6px;
+  margin-left: -6px; /* Menyejajarkan posisi dengan tepi konten */
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: var(--text-main);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-back-auth svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--text-main);
+  stroke-width: 2;
+  fill: none;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.btn-back-auth:hover svg {
+  stroke: var(--accent-gold);
+  transform: translateX(-3px); /* Efek meluncur ke kiri saat disentuh/di-hover */
+}
+
+.btn-back-auth:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+	
+	
+	/* Garis Pemisah ATAU */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0 14px;
+  width: 100%;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.15);
+}
+.auth-divider span {
+  padding: 0 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* Tombol Google Bersih & Elegan */
+.btn-google-auth {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+.btn-google-auth:hover {
+  background: #fbfbfb;
+  border-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.btn-google-auth:active {
+  transform: scale(0.98);
+}
+	
     body { 
       background-color: var(--bg-dark); 
       color: var(--text-main); 
@@ -1426,9 +1514,12 @@ select.form-input {
     <div id="page-auth-login" class="page-view">
       <main class="card">
         <div style="text-align: left; width: 100%;">
-          <button type="button" class="btn-back-auth" onclick="navigateTo('page-login')">
-            ←
-          </button>
+<button type="button" class="btn-back-auth" onclick="navigateTo('page-login')" title="Kembali">
+  <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+</button>
         </div>
 
         <h2 class="card-headline">Masuk ke Akun</h2>
@@ -1456,6 +1547,18 @@ select.form-input {
           <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
           <button type="button" class="btn-forgot-link" onclick="openForgotPasswordModal()">Lupa Password?</button>
         </form>
+
+<!-- OPSI MASUK DENGAN GOOGLE -->
+<div class="auth-divider"><span>ATAU</span></div>
+<button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('login')">
+  <svg width="18" height="18" viewBox="0 0 24 24">
+    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+  </svg>
+  <span>Masuk dengan Google</span>
+</button>
       </main>
     </div>
 
@@ -1463,9 +1566,12 @@ select.form-input {
     <div id="page-auth-register" class="page-view">
       <main class="card">
         <div style="text-align: left; width: 100%;">
-          <button type="button" class="btn-back-auth" onclick="navigateTo('page-login')">
-            ←
-          </button>
+<button type="button" class="btn-back-auth" onclick="navigateTo('page-login')" title="Kembali">
+  <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+</button>
         </div>
 
         <h2 class="card-headline">Daftar Akun Baru</h2>
@@ -1562,6 +1668,18 @@ select.form-input {
 
           <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
         </form>
+		
+		<div class="auth-divider"><span>ATAU</span></div>
+<button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('register')">
+  <svg width="18" height="18" viewBox="0 0 24 24">
+    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+  </svg>
+  <span>Daftar dengan Google</span>
+</button>
+
       </main>
     </div>
 	
@@ -2098,6 +2216,124 @@ select.form-input {
 </body>
 
   <script>
+  // Ganti dengan Google Client ID Anda dari Google Cloud Console
+const GOOGLE_CLIENT_ID = "98719741980-iilfutierest6186q7vsrbgln7opbvph.apps.googleusercontent.com";
+
+let googleAuthMode = "login"; // 'login' | 'register'
+let googleTokenClient = null;
+
+// Inisialisasi Google Token Client saat halaman siap
+function initGoogleAuth() {
+  if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+    googleTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+      callback: (tokenResponse) => {
+        if (tokenResponse && tokenResponse.access_token) {
+          fetchGoogleProfile(tokenResponse.access_token);
+        }
+      },
+    });
+  }
+}
+
+// Panggil trigger tombol
+function handleGoogleAuthTrigger(mode) {
+  googleAuthMode = mode;
+  if (!googleTokenClient) {
+    initGoogleAuth();
+  }
+  if (googleTokenClient) {
+    googleTokenClient.requestAccessToken({ prompt: 'select_account' });
+  } else {
+    showElegantAlert("Layanan Google SDK sedang dimuat. Mohon tunggu beberapa detik.", "Pemberitahuan", "✦");
+  }
+}
+
+// Ambil info nama & email dari API Google
+async function fetchGoogleProfile(accessToken) {
+  try {
+    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const profile = await res.json();
+    
+    const email = profile.email;
+    const name = profile.name || "";
+    const photo = profile.picture || "";
+
+    processGoogleUserData(email, name, photo);
+  } catch (err) {
+    console.error("Gagal mengambil data akun Google:", err);
+    showElegantAlert("Gagal terhubung dengan profil Google Anda.", "Error", "✕");
+  }
+}
+
+// Proses Alur Logika Sesuai Syarat
+function processGoogleUserData(email, name, photo) {
+  // Cek ke backend apakah email ini sudah ada dan punya nomor HP lengkap
+  sendDataToBackend('check_google_account', { email: email }, (result) => {
+    
+    // Skenario 1: ALUR LOGIN
+    if (googleAuthMode === 'login') {
+      if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
+        // Akun sudah lengkap -> Langsung Login berhasil
+        customerData.nama = result.existingName || name;
+        customerData.email = email;
+        customerData.nohp = result.existingHp;
+        customerData.voucherCode = result.voucherCode || "";
+        customerData.photo = result.photo || photo;
+        customerData.dob = result.dob || "";
+        customerData.gender = result.gender || "";
+
+        localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+        document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
+        navigateTo('page-promo');
+      } else {
+        // Akun belum ada atau nomor HP belum lengkap -> Arahkan ke form register
+        showElegantAlert("Akun belum terdaftar lengkap. Silakan lengkapi nomor WhatsApp Anda terlebih dahulu.", "Lengkapi Data", "✦", () => {
+          navigateTo('page-auth-register');
+          populateRegisterForm(name, email, photo);
+        });
+      }
+    } 
+    
+    // Skenario 2: ALUR REGISTRASI
+    else if (googleAuthMode === 'register') {
+      if (result && result.status === "success" && result.existingHp) {
+        // Ternyata sudah punya akun lengkap
+        showElegantAlert("Akun Google ini sudah terdaftar lengkap. Mengalihkan ke akun Anda...", "Sudah Terdaftar", "✓", () => {
+          customerData = Object.assign(customerData, result);
+          localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+          navigateTo('page-promo');
+        });
+      } else {
+        // Otomatis isi Nama & Email, kunci agar tidak perlu diketik ulang
+        populateRegisterForm(name, email, photo);
+        showElegantAlert("Email Google berhasil terhubung! Silakan lengkapi Nomor WhatsApp & tanggal lahir Anda.", "Berhasil Terhubung", "✓");
+      }
+    }
+  });
+}
+
+// Isi otomatis kolom formulir register
+function populateRegisterForm(name, email, photo) {
+  const inNama = document.getElementById('reg-nama');
+  const inEmail = document.getElementById('reg-email');
+  
+  if (inNama && name) inNama.value = name;
+  if (inEmail && email) {
+    inEmail.value = email;
+    inEmail.readOnly = true; // Kunci email Google agar valid
+    inEmail.style.backgroundColor = "#f5f5f5";
+  }
+  if (photo) customerData.photo = photo;
+
+  // Fokuskan langsung ke input nomor HP
+  const inNohp = document.getElementById('reg-nohp');
+  if (inNohp) inNohp.focus();
+}
+  
 const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec";
     const waKasirNumber = '628111289940'; 
     const googleReviewURL = 'https://search.google.com/local/writereview?placeid=ChIJh6F2zqn-aS4R8aXYydTaxMQ';
@@ -3238,6 +3474,7 @@ history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
       setupStarRating();
 	  initAuthSlider(); // <-- Tambahkan baris ini
       initSlider();
+	  initGoogleAuth();
       renderGallery('all');
 	  
 	  // Listener Show/Hide Password Register
