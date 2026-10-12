@@ -2216,6 +2216,51 @@ select.form-input {
 </body>
 
   <script>
+  // 1. Menonaktifkan Menu Klik Kanan
+document.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+});
+
+// 2. Memblokir Pintasan Keyboard Populer untuk DevTools & View Source
+document.addEventListener('keydown', function (e) {
+  // Blokir F12
+  if (e.key === 'F12' || e.keyCode === 123) {
+    e.preventDefault();
+    return false;
+  }
+
+  // Blokir Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (DevTools)
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+    e.preventDefault();
+    return false;
+  }
+
+  // Blokir Ctrl+U (View Page Source) & Ctrl+S (Save Page)
+  if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    return false;
+  }
+
+  // Dukungan untuk macOS (Command + Option + I / J / U)
+  if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// 3. Jebakan Debugger Loop (Membekukan eksekusi jika DevTools berhasil dibuka)
+(function () {
+  function blockDevTools() {
+    setInterval(function () {
+      // Perintah debugger akan menjeda browser secara paksa jika tab Console/Sources aktif
+      (function () {}.constructor("debugger")());
+    }, 200);
+  }
+  try {
+    blockDevTools();
+  } catch (err) {}
+})();
+  
   // Ganti dengan Google Client ID Anda dari Google Cloud Console
 const GOOGLE_CLIENT_ID = "98719741980-iilfutierest6186q7vsrbgln7opbvph.apps.googleusercontent.com";
 
