@@ -3184,7 +3184,7 @@ function validateEmail(email) {
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
 async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
   try {
-    let payload = {
+let payload = {
       action: action,
       nama: customerData.nama || "",
       email: customerData.email || "",
@@ -3192,6 +3192,7 @@ async function sendDataToBackend(action, paramData, callback, feedbackText = "",
       rating: customerData.rating || "",
       feedback: feedbackText || "",
       password: pass || "",
+      otp: (paramData && paramData.otp) ? paramData.otp : "", // <-- Tambahkan baris ini
       photo: customerData.photo || "",
       dob: typeof dob !== 'undefined' ? dob : (customerData.dob || ""),
       gender: typeof gender !== 'undefined' ? gender : (customerData.gender || "")
@@ -3884,14 +3885,14 @@ if (formReg) {
         });
       });
 
-      // FORGOT PASSWORD STEP 2
+// FORGOT PASSWORD STEP 2
       document.getElementById('form-forgot-step2').addEventListener('submit', (e) => {
         e.preventDefault();
         const otpInput = document.getElementById('forgot-otp-input').value.trim();
         const newPass = document.getElementById('forgot-new-pass').value.trim();
         const confirmPass = document.getElementById('forgot-confirm-pass').value.trim();
 
-        if (otpInput !== tempForgotData.generatedOtp) {
+        if (!otpInput || otpInput.length !== 4) {
           document.getElementById('error-forgot-otp').style.display = 'block';
           return;
         } else {
@@ -3906,7 +3907,9 @@ if (formReg) {
         }
 
         customerData.email = tempForgotData.email;
-        sendDataToBackend('reset_password', null, (res) => {
+        
+        // Panggil backend dengan menyertakan otpInput
+        sendDataToBackend('reset_password', { otp: otpInput }, (res) => {
           if (res && res.status === "success") {
             alert("Password berhasil diperbarui! Silakan login kembali.");
             closeForgotPasswordModal();
@@ -3915,8 +3918,6 @@ if (formReg) {
           }
         }, "", newPass);
       });
-    });
-	
 // ========================================================
 // HANDLER TOMBOL BACK HP / SMARTPHONE (MENCEGAH KELUAR APLIKASI)
 // ========================================================
