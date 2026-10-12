@@ -1060,10 +1060,11 @@ select.form-input {
   bottom: calc(env(safe-area-inset-bottom, 20px) + 24px);
   left: 20px;
   right: 20px;
-  z-index: 3;
+  z-index: 10; /* Tingkatkan z-index agar selalu di atas gradient mask */
   display: flex;
   flex-direction: column;
   align-items: center;
+  pointer-events: auto; /* Pastikan area ini menerima klik */
 }
 
 .auth-union-tagline {
@@ -1082,6 +1083,9 @@ select.form-input {
   gap: 12px;
   width: 100%;
   max-width: 400px;
+  position: relative;
+  z-index: 20; /* Pastikan tombol berada di lapisan terdepan */
+  pointer-events: auto;
 }
 
 .btn-union-cta {
@@ -1092,8 +1096,11 @@ select.form-input {
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
-  border-radius: 4px; /* Sudut tegas khas referensi Union */
+  border-radius: 4px;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 30; /* Lapisan paling atas */
+  pointer-events: auto; /* Wajib aktif agar event klik terpicu */
 }
 
 /* Tombol Login: Putih Bersih */
@@ -1345,13 +1352,6 @@ select.form-input {
       </button>
     </div>
 
-<!-- BRAND LOGO HEADER (Disembunyikan pada landing, tampil saat form aktif) -->
-    <header class="brand-container" id="main-brand-header" style="display: none;">
-      <h1 class="brand-name">SAJIVA+</h1>
-      <div class="brand-meta"><span>ESTD</span><span class="divider"></span><span>2016</span></div>
-      <p class="brand-subtext">ARTISAN ROASTERY</p>
-    </header>
-
 <!-- 0. LANDING AUTH HERO (DILETAKKAN DI LUAR WRAPPER AGAR SELALU DI TENGAH LAYAR) -->
   <div id="page-login" class="page-view active auth-fullscreen-view">
     <div class="auth-slider-fullscreen" id="auth-banner-slider">
@@ -1394,14 +1394,14 @@ select.form-input {
           Join the club, get exclusive privilege, voucher, &amp; promo
         </p>
 
-        <div class="auth-union-actions">
-          <button type="button" class="btn-union-cta btn-union-login" onclick="openAuthView('login')">
-            LOGIN
-          </button>
-          <button type="button" class="btn-union-cta btn-union-register" onclick="openAuthView('register')">
-            REGISTER
-          </button>
-        </div>
+<div class="auth-union-actions">
+  <button type="button" class="btn-union-cta btn-union-login" onclick="navigateTo('page-auth-login')">
+    LOGIN
+  </button>
+  <button type="button" class="btn-union-cta btn-union-register" onclick="navigateTo('page-auth-register')">
+    REGISTER
+  </button>
+</div>
       </div>
 
     </div>
@@ -1474,7 +1474,15 @@ select.form-input {
         <form id="form-register-user" novalidate>  
           <div class="form-group">
             <label class="form-label" for="reg-nama">Nama Lengkap</label>
-            <input type="text" id="reg-nama" class="form-input" placeholder="Masukkan nama anda" autocomplete="off">
+            <!-- KODE BARU: Langsung bersihkan angka/simbol saat diketik -->
+<input 
+  type="text" 
+  id="reg-nama" 
+  class="form-input" 
+  placeholder="Masukkan nama anda" 
+  autocomplete="off"
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+>
             <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi (min. 3 karakter).</div>
           </div>
 
@@ -2099,7 +2107,7 @@ let tempForgotData = { email: "", generatedOtp: "" };
 let navigationHistory = [];
 let elegantAlertCallback = null;
 
-// Fungsi membuka form Login atau Register
+/// Fungsi membuka form Login atau Register dari tombol Hero
 function openAuthView(type) {
   if (type === 'login') {
     navigateTo('page-auth-login');
@@ -2108,7 +2116,7 @@ function openAuthView(type) {
   }
 }
 
-// Pastikan fungsi navigateTo mengatur visibilitas brand header & wrapper
+// Fungsi Navigasi Tunggal Terpadu
 function navigateTo(pageId, isBackAction = false) {
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
@@ -2118,20 +2126,28 @@ function navigateTo(pageId, isBackAction = false) {
     history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
   }
 
+  // Sembunyikan semua halaman aktif
   document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+
+  // Tampilkan halaman target
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
   }
 
-  // Atur header brand logo
+  // Atur visibilitas header
   const brandHeader = document.getElementById('main-brand-header');
-  if (brandHeader) {
-    if (pageId === 'page-login') {
-      brandHeader.style.display = 'none';
-    } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
-      brandHeader.style.display = 'flex';
-    }
+  const topAppBar = document.getElementById('top-app-bar');
+
+  if (pageId === 'page-login') {
+    if (brandHeader) brandHeader.style.display = 'none';
+    if (topAppBar) topAppBar.style.display = 'none';
+  } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
+    if (brandHeader) brandHeader.style.display = 'flex';
+    if (topAppBar) topAppBar.style.display = 'none';
+  } else {
+    if (brandHeader) brandHeader.style.display = 'none';
+    if (topAppBar) topAppBar.style.display = 'flex';
   }
 
   const dropdown = document.getElementById('dropdown-menu');
@@ -2836,10 +2852,12 @@ function selectDate(d) {
       //return /^(0811|0812|0813|0821|0822|0823|0851|0852|0853|0814|0815|0816|0855|0856|0857|0858|0817|0818|0819|0859|0877|0878|0831|0832|0833|0838|0895|0896|0897|0898|0899|0881|0882|0883|0884|0885|0886|0887|0888|0889)[0-9]{6,9}$/.test(number);
     }
 
-    function validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
+ // KODE BARU: Validasi format & domain email populer
+function validateEmail(email) {
+  if (!email) return false;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|yahoo\.co\.id|outlook\.com|hotmail\.com|icloud\.com)$/i;
+  return emailRegex.test(email.trim());
+}
     function validatePasswordStrength(pass) {
       const hasUpper = /[A-Z]/.test(pass);
       const hasLower = /[a-z]/.test(pass);
@@ -3261,6 +3279,38 @@ if (btnToggleLogin) {
 }
 	  
 
+// Filter Realtime: Hanya Huruf dan Spasi untuk Nama Lengkap
+const regNamaInput = document.getElementById('reg-nama');
+if (regNamaInput) {
+  // 1. Tangani ketikan keyboard secara langsung
+  regNamaInput.addEventListener('keydown', (e) => {
+    // Tombol fungsi navigasi & kontrol yang tetap diizinkan
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+      return;
+    }
+    // Cegah jika tombol yang ditekan bukan huruf (A-Z / a-z) atau spasi
+    if (!/^[a-zA-Z\s]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  // 2. Tangani jika pengguna melakukan copy-paste teks yang memuat angka/simbol
+  regNamaInput.addEventListener('input', () => {
+    regNamaInput.value = regNamaInput.value.replace(/[^a-zA-Z\s]/g, '');
+  });
+}
+
+const regEmailInput = document.getElementById('reg-email');
+if (regEmailInput) {
+  regEmailInput.addEventListener('input', () => {
+    const errEmail = document.getElementById('error-reg-email');
+    if (validateEmail(regEmailInput.value)) {
+      errEmail.style.display = 'none';
+      regEmailInput.classList.remove('error');
+    }
+  });
+}
 
 	  const nomorHapeElement = document.querySelector('#reg-nohp')
 	  nomorHapeElement.addEventListener('keydown', (e) => {
@@ -3617,23 +3667,33 @@ window.addEventListener('popstate', function(event) {
     return;
   }
 
-  // 6. Navigasi Halaman Sebelumnya
+// 6. Navigasi Halaman Sebelumnya
   if (navigationHistory.length > 0) {
     const prevPage = navigationHistory.pop();
     navigateTo(prevPage, true);
-} else {
-    // Jika sudah di halaman paling awal, tahan agar pengguna tidak keluar
+  } else {
     const activePage = document.querySelector('.page-view.active');
-    const isLoginState = activePage && activePage.id === 'page-login';
+    const isAuthArea = activePage && (
+      activePage.id === 'page-login' ||
+      activePage.id === 'page-auth-login' ||
+      activePage.id === 'page-auth-register'
+    );
 
-    if (!isLoginState && activePage && activePage.id !== 'page-promo') {
-      navigateTo('page-promo', true);
+    if (isAuthArea) {
+      if (activePage.id !== 'page-login') {
+        navigateTo('page-login', true);
+      } else {
+        history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
+      }
     } else {
-      // Pertahankan riwayat agar penekanan back berikutnya tetap di dalam aplikasi
-      history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
+      if (activePage && activePage.id !== 'page-promo') {
+        navigateTo('page-promo', true);
+      } else {
+        history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
+      }
     }
   }
-});
+}); // <-- Pastikan ditutup dengan }); lengkap
 	
   </script>
   <!-- POPUP NOTIFIKASI ELEGAN -->
