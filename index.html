@@ -610,8 +610,80 @@ select.form-input {
 
     .btn-logout { width: 100%; padding: 12px; background: #fee2e2; color: var(--error-red); border: 1px solid #fca5a5; border-radius: 12px; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-top: 14px; }
 
-    .watermark { position: fixed; bottom: 12px; right: 16px; font-size: 10px; color: #8c5828; z-index: 99; pointer-events: none; }
-  
+/* FOOTER BRANDING: PART OF INARA GROUP */
+.inara-footer-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.inara-label-part {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.inara-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #1a1a1a;
+}
+
+/* Logo Bunga Geometris Presisi Inara Group */
+.inara-logo-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tipografi Presisi INĀRA GROUP */
+.inara-text-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  user-select: none;
+}
+
+.inara-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 3.5px;
+  color: #111111;
+  text-transform: uppercase;
+}
+
+.inara-group-tag {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 6px;
+  color: #111111;
+  text-transform: uppercase;
+}
+
+/* Watermark Paling Bawah */
+.footer-dev-copyright {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  color: #a39587;
+  text-align: center;
+}
     /* BANNER SLIDER */
     .banner-slider-container {
       position: relative;
@@ -1608,8 +1680,24 @@ select.form-input {
       </form>
     </div>
   </div>
-
-  <div class="watermark">© Hikami Dev</div>
+  
+<!-- KOMPONEN PART OF INARA GROUP -->
+<div class="inara-footer-wrapper">
+  <span class="inara-label-part">Part of</span>
+  <div class="inara-brand-row">
+    
+    <!-- Tipografi INĀRA GROUP -->
+    <div class="inara-text-logo">
+      <span class="inara-name">INĀRA</span>
+      <span class="inara-group-tag">GROUP</span>
+    </div>
+  </div>
+</div>
+<!-- FOOTER PALING BAWAH -->
+  <footer class="footer-dev-copyright">
+    &copy; Hikami-Dev
+  </footer>
+</body>
 
   <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec";
@@ -1618,7 +1706,29 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
 
 let customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };    
 let tempForgotData = { email: "", generatedOtp: "" };
+let navigationHistory = [];
 
+function navigateTo(pageId, isBackAction = false) {
+  const currentActivePage = document.querySelector('.page-view.active');
+  const currentId = currentActivePage ? currentActivePage.id : null;
+
+  // Catat riwayat halaman jika ini bukan aksi back
+  if (!isBackAction && currentId && currentId !== pageId) {
+    navigationHistory.push(currentId);
+    history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
+  }
+
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+  }
+
+  const dropdown = document.getElementById('dropdown-menu');
+  if (dropdown) dropdown.classList.remove('show');
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
     function switchAuthTab(tab) {
       const tabLogin = document.getElementById('tab-btn-login');
       const tabReg = document.getElementById('tab-btn-register');
@@ -1696,6 +1806,8 @@ function openProfileModal() {
 
   document.getElementById('profile-modal').classList.add('show');
 }
+
+history.pushState({ modal: 'profile' }, '');
 
 // Fungsi Helper Pilihan Gender di Edit Profil
 function selectEditGender(val) {
@@ -1971,6 +2083,9 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
       document.getElementById('forgot-step-desc').innerText = "Masukkan Email terdaftar Anda. Kode OTP akan dikirimkan langsung ke Inbox Email Anda.";
       document.getElementById('forgot-modal').classList.add('show');
     }
+	
+	history.pushState({ modal: 'tnc' }, ''); // di dalam openTnCModal
+history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
 
 function selectGenderOption(btn, val) {
   // Hapus class selected dari semua tombol gender
@@ -2582,6 +2697,8 @@ function setupStarRating() {
       img.src = url;
       lb.style.display = 'flex';
     }
+	
+	history.pushState({ modal: 'lightbox' }, '');
 
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
@@ -2597,7 +2714,8 @@ function setupStarRating() {
         document.getElementById('error-reg-tnc').style.display = 'none';
       }
     }
-
+history.pushState({ modal: 'tnc' }, ''); // di dalam openTnCModal
+history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
 
     // INIT APP
     document.addEventListener("DOMContentLoaded", () => {
@@ -2943,6 +3061,82 @@ if (formReg) {
       });
     });
 	
+// ========================================================
+// HANDLER TOMBOL BACK HP / SMARTPHONE (MENCEGAH KELUAR APLIKASI)
+// ========================================================
+
+// Pasang state awal saat web pertama kali dibuka
+if (!history.state) {
+  history.replaceState({ pageId: 'initial', type: 'page' }, '', window.location.pathname);
+}
+
+window.addEventListener('popstate', function(event) {
+  // 1. Cek jika Lightbox Gambar sedang terbuka
+  const lb = document.getElementById('lightbox');
+  if (lb && lb.style.display === 'flex') {
+    closeLightbox();
+    return;
+  }
+
+  // 2. Cek jika Dropdown Menu sedang terbuka
+  const dropMenu = document.getElementById('dropdown-menu');
+  if (dropMenu && dropMenu.classList.contains('show')) {
+    dropMenu.classList.remove('show');
+    return;
+  }
+
+  // 3. Cek jika Pop-up Kalender sedang terbuka
+  const calPopup = document.getElementById('custom-calendar-popup');
+  if (calPopup && calPopup.classList.contains('show')) {
+    calPopup.classList.remove('show');
+    return;
+  }
+
+  // 4. Cek jika Modal Profil sedang terbuka
+  const profileModal = document.getElementById('profile-modal');
+  if (profileModal && profileModal.classList.contains('show')) {
+    const editForm = document.getElementById('edit-profile-form');
+    // Jika sedang di mode edit profil, back akan mengembalikan ke mode view dulu
+    if (editForm && editForm.style.display === 'block') {
+      switchToViewMode();
+    } else {
+      closeProfileModal();
+    }
+    return;
+  }
+
+  // 5. Cek jika Modal Lupa Password atau TnC terbuka
+  const forgotModal = document.getElementById('forgot-modal');
+  if (forgotModal && forgotModal.classList.contains('show')) {
+    closeForgotPasswordModal();
+    return;
+  }
+
+  const tncModal = document.getElementById('tnc-modal');
+  if (tncModal && tncModal.classList.contains('show')) {
+    closeTnCModal(false);
+    return;
+  }
+
+  // 6. Navigasi Halaman Sebelumnya
+  if (navigationHistory.length > 0) {
+    const prevPage = navigationHistory.pop();
+    navigateTo(prevPage, true);
+  } else {
+    // Jika sudah di halaman paling awal, tahan agar pengguna tidak keluar
+    const activePage = document.querySelector('.page-view.active');
+    const isLoginState = activePage && activePage.id === 'page-login';
+
+    if (!isLoginState && activePage && activePage.id !== 'page-promo') {
+      navigateTo('page-promo', true);
+    } else {
+      // Pertahankan riwayat agar penekanan back berikutnya tetap di dalam aplikasi
+      history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
+    }
+  }
+});
+	
   </script>
+  
 </body>
 </html>
