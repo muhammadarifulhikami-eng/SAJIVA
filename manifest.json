@@ -1,20 +1,22 @@
 {
-  "name": "Sajiva Coffee Review",
-  "short_name": "Sajiva Review",
-  "start_url": "./index.html",
+  "name": "SAJIVA+",
+  "short_name": "SAJIVA+",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#0f0d0c",
-  "theme_color": "#d4a373",
+  "background_color": "#fbf9f4",
+  "theme_color": "#fbf9f4",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icon-192.png?v=2.0.0",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-512.png?v=2.0.0",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
