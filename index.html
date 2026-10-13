@@ -43,7 +43,197 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    /* Tombol Back Minimalis & Seamless */
+  
+/* ===================================================
+   SAJIVA+ BOTTOM SHEET PWA INSTALL BANNER
+   =================================================== */
+
+/* Backdrop semi-transparan */
+.sajiva-sheet-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sajiva-sheet-backdrop.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Container Bottom Sheet */
+.sajiva-install-sheet {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(105%);
+  width: 100%;
+  max-width: 440px;
+  background: #fdfbf7; /* Warm luxury cream */
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 12px 24px calc(24px + env(safe-area-inset-bottom, 12px));
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.22);
+  border-top: 1px solid rgba(184, 125, 75, 0.25);
+  z-index: 9999;
+  text-align: center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.sajiva-install-sheet.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Handle Bar di bagian atas */
+.sheet-drag-handle {
+  width: 44px;
+  height: 4px;
+  background: #d8ceb8;
+  border-radius: 99px;
+  margin: 0 auto 18px;
+}
+
+/* Tipografi Judul & Deskripsi */
+.sheet-title {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sheet-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: #665f58;
+  line-height: 1.55;
+  margin: 0 auto 22px;
+  max-width: 330px;
+}
+
+/* 3 Badge Kepercayaan Lingkaran */
+.sheet-trust-badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.trust-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.trust-icon-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b87d4b 0%, #8c5828 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 14px rgba(184, 125, 75, 0.35);
+}
+
+.trust-icon-circle svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-badge-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #2b2520;
+  text-transform: uppercase;
+  line-height: 1.35;
+  letter-spacing: 0.3px;
+}
+
+/* Tombol Aksi Gradasi Copper/Gold */
+.btn-sheet-install {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #a77747 0%, #7d512a 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(140, 88, 40, 0.38);
+  transition: transform 0.15s ease, filter 0.2s ease;
+}
+
+.btn-sheet-install:active {
+  transform: scale(0.98);
+  filter: brightness(0.95);
+}
+
+/* Panduan Tambah Layar Utama untuk iOS Safari */
+.ios-banner-steps {
+  background: #f4eee2;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.ios-step-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: #3b332b;
+  margin-bottom: 8px;
+}
+.ios-step-row:last-child {
+  margin-bottom: 0;
+}
+
+.ios-step-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* Tombol Nanti Saja / Tutup */
+.btn-sheet-dismiss {
+  background: none;
+  border: none;
+  color: #8c827a;
+  font-size: 0.75rem;
+  margin-top: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 6px;
+}
+
+  /* Tombol Back Minimalis & Seamless */
 .btn-back-auth {
   display: inline-flex;
   align-items: center;
@@ -2216,6 +2406,83 @@ select.form-input {
 </body>
 
   <script>
+  let deferredPrompt = null;
+
+// Deteksi apakah sedang dibuka di iOS Safari
+function isIosSafari() {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  const isIos = /iphone|ipad|ipod/.test(userAgent);
+  const isWebview = navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+  return isIos && !isWebview;
+}
+
+// Buka bottom sheet
+function showInstallSheet() {
+  const sheet = document.getElementById('universal-install-sheet');
+  const backdrop = document.getElementById('pwa-backdrop');
+  if (sheet && backdrop) {
+    sheet.classList.add('show');
+    backdrop.classList.add('show');
+  }
+}
+
+// Tutup bottom sheet
+function dismissInstallSheet() {
+  const sheet = document.getElementById('universal-install-sheet');
+  const backdrop = document.getElementById('pwa-backdrop');
+  if (sheet && backdrop) {
+    sheet.classList.remove('show');
+    backdrop.classList.remove('show');
+    // Jangan munculkan lagi selama 2 hari setelah ditutup
+    localStorage.setItem('sajiva_sheet_dismissed', Date.now());
+  }
+}
+
+// 1. Tangkap Event PWA Install di Android / Chrome
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const lastDismissed = localStorage.getItem('sajiva_sheet_dismissed');
+  const twoDays = 2 * 24 * 60 * 60 * 1000;
+  if (lastDismissed && (Date.now() - lastDismissed < twoDays)) {
+    return; // Masih dalam masa jeda
+  }
+
+  // Tampilkan area tombol Android
+  document.getElementById('android-install-area').style.display = 'block';showInstallSheet();
+  document.getElementById('ios-install-area').style.display = 'none';
+
+  // Munculkan pop-up setelah 1.5 detik agar halaman selesai dimuat
+  setTimeout(showInstallSheet, 1500);
+});
+
+// 2. Fungsi Klik Tombol "PASANG APLIKASI SAJIVA+"
+async function triggerAndroidInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      dismissInstallSheet();
+    }
+    deferredPrompt = null;
+  }
+}
+
+// 3. Fallback Khusus iPhone (iOS)
+document.addEventListener('DOMContentLoaded', () => {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (!isStandalone && isIosSafari()) {
+    const lastDismissed = localStorage.getItem('sajiva_sheet_dismissed');
+    const twoDays = 2 * 24 * 60 * 60 * 1000;
+    if (!lastDismissed || (Date.now() - lastDismissed > twoDays)) {
+      document.getElementById('android-install-area').style.display = 'none';
+      document.getElementById('ios-install-area').style.display = 'block';
+      setTimeout(showInstallSheet, 2000);
+    }
+  }
+});
+  
   // 1. Menonaktifkan Menu Klik Kanan
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
@@ -4015,6 +4282,88 @@ window.addEventListener('popstate', function(event) {
       <button type="button" class="elegant-modal-btn primary" id="elegant-alert-btn" onclick="closeElegantAlert()">Oke</button>
     </div>
   </div>
+</div>
+  
+  <!-- BACKDROP GELAP -->
+<div id="pwa-backdrop" class="sajiva-sheet-backdrop" onclick="dismissInstallSheet()"></div>
+
+<!-- BOTTOM SHEET CONTAINER -->
+<div id="universal-install-sheet" class="sajiva-install-sheet">
+  <div class="sheet-drag-handle"></div>
+
+  <div class="sheet-title" data-i18n="install_title">APLIKASI RESMI SAJIVA+</div>
+  
+  <p class="sheet-desc" data-i18n="install_desc">
+    Pasang Sajiva+ di layar utama ponsel Anda. Akses promo, menu, RSVP, dan e-voucher jadi lebih cepat.
+  </p>
+
+  <!-- 3 BADGE IKON LINGKARAN EMAS -->
+  <div class="sheet-trust-badges">
+    <!-- Badge 1: Roastery Resmi -->
+    <div class="trust-badge-item">
+      <div class="trust-icon-circle">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="6"/>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+        </svg>
+      </div>
+      <span class="trust-badge-label" data-i18n="badge_official">RESMI DARI<br>SAJIVA ROASTERY</span>
+    </div>
+
+    <!-- Badge 2: Sangat Ringan -->
+    <div class="trust-badge-item">
+      <div class="trust-icon-circle">
+        <svg viewBox="0 0 24 24">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </div>
+      <span class="trust-badge-label" data-i18n="badge_light">SANGAT<br>RINGAN (&lt;1 MB)</span>
+    </div>
+
+    <!-- Badge 3: Aman & Terverifikasi -->
+    <div class="trust-badge-item">
+      <div class="trust-icon-circle">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <span class="trust-badge-label" data-i18n="badge_safe">100%<br>TERVERIFIKASI DAN AMAN</span>
+    </div>
+  </div>
+
+  <!-- AREA AKSI TOMBOL ANDROID / CHROME -->
+  <div id="android-install-area" style="display: none;">
+    <button type="button" class="btn-sheet-install" onclick="triggerAndroidInstall()" data-i18n="install_btn">
+      PASANG APLIKASI SAJIVA+
+    </button>
+  </div>
+
+  <!-- AREA PETUNJUK SAFARI / IPHONE -->
+  <div id="ios-install-area" class="ios-banner-steps" style="display: none;">
+    <div class="ios-step-row">
+      <div class="ios-step-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b87d4b" stroke-width="2">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <span>1. Ketuk ikon <strong>Bagikan (Share)</strong> di bar Safari bawah.</span>
+    </div>
+    <div class="ios-step-row">
+      <div class="ios-step-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b87d4b" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+      </div>
+      <span>2. Gulir ke bawah lalu pilih <strong>Tambah ke Layar Utama</strong>.</span>
+    </div>
+  </div>
+
+  <button type="button" class="btn-sheet-dismiss" onclick="dismissInstallSheet()">Nanti Saja</button>
 </div>
   
 </body>
