@@ -45,6 +45,36 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
+/* Sembunyikan banner & tooltip Google Translate agar UI tetap bersih */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+/* Sembunyikan garis sorot teks Google Translate */
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Tanda + Pangkat Khusus Navbar & Welcome */
+.brand-plus-sup {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.55em;
+  font-weight: 400;
+  vertical-align: super;
+  margin-left: 1px;
+  letter-spacing: normal;
+  line-height: 0;
+}
+
 /* ===================================================
    SPLASH SCREEN IDENTIK LOGIN SLIDER (BACKGROUND KREM)
    =================================================== */
@@ -139,6 +169,46 @@
   vertical-align: super;
   letter-spacing: normal;    /* Abaikan tracking lebar agar tidak terdorong */
   color: #1a1a1a;
+}
+  
+  /* Kapsul Pilihan Bahasa di Pojok Kanan Atas Slider/Hero */
+.lang-switch-hero {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 16px) + 16px);
+  right: 18px;
+  z-index: 50; /* Berada di atas slider, tetapi di bawah splash screen */
+  display: flex;
+  align-items: center;
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 99px;
+  padding: 4px 10px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.lang-btn.active {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.lang-sep {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.7rem;
+  user-select: none;
 }
   
 /* ===================================================
@@ -743,6 +813,68 @@
       cursor: pointer;
       transition: background 0.15s;
     }
+	
+	/* Item Ganti Bahasa di Bagian Bawah Dropdown */
+.dropdown-item-lang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lang-label-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.lang-label-group svg {
+  flex-shrink: 0;
+  stroke: var(--text-main);
+}
+
+/* Kapsul Mini ID | EN */
+.lang-pill-menu {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 99px;
+  padding: 2px 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.lang-pill-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #888888;
+  cursor: pointer;
+  padding: 3px 6px;
+  line-height: 1;
+  border-radius: 99px;
+  transition: all 0.2s ease;
+}
+
+.lang-pill-btn.active {
+  background: #1a1a1a;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.lang-pill-sep {
+  font-size: 0.65rem;
+  color: #d1d5db;
+  margin: 0 1px;
+  user-select: none;
+}
     .dropdown-item:last-child { border-bottom: none; }
     .dropdown-item:active, .dropdown-item.active { background: rgba(184, 125, 75, 0.1); color: var(--accent-gold-light); }
     .dropdown-item svg { flex-shrink: 0; stroke: var(--text-main); }
@@ -1638,52 +1770,112 @@ select.form-input {
   </div>
 </div>
 
-  <!-- MODAL PRIVASI & TNC -->
+<!-- ======================================================== -->
+<!-- SCRIPT INDEPENDEN: JAMINAN 100% SPLASH HILANG DALAM 3 DETIK -->
+<!-- (Ditaruh tepat di bawah splash screen agar tidak terpengaruh error bawah) -->
+<!-- ======================================================== -->
+<script>
+  (function() {
+    function forceDismissSplash() {
+      var splash = document.getElementById('app-splash-screen');
+      if (splash) {
+        splash.classList.add('fade-out');
+        splash.style.pointerEvents = 'none';
+        setTimeout(function() {
+          splash.style.display = 'none'; // Hapus total agar tidak menutupi tombol
+        }, 600);
+      }
+    }
+    // Tepat 3 detik pasti hilang dan tombol bisa diklik
+    setTimeout(forceDismissSplash, 3000);
+    window.addEventListener('load', function() {
+      setTimeout(forceDismissSplash, 3000);
+    });
+  })();
+</script>
+
+<!-- MODAL PRIVASI & TNC DUAL LANGUAGE -->
   <div class="modal-overlay" id="tnc-modal">
     <div class="modal-box" style="max-width: 420px;">
       <button type="button" class="modal-close-btn" onclick="closeTnCModal()">✕</button>
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px;">
+      
+      <!-- JUDUL -->
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px;" id="tnc-modal-title">
         Komitmen Privasi &amp; Perlindungan Data Anda
       </h3>
       
-<div class="tnc-modal-body" style="max-height: 380px; overflow-y: auto; text-align: left; padding-right: 6px;">
-  <p style="font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-size: 0.9rem;">
-    KEBIJAKAN PRIVASI DAN SYARAT KETENTUAN PENGGUNAAN APLIKASI SAJIVA
-  </p>
+      <!-- 1. KONTEN BAHASA INDONESIA -->
+      <div id="tnc-body-id" class="tnc-modal-body" style="max-height: 380px; overflow-y: auto; text-align: left; padding-right: 6px;">
+        <p style="font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-size: 0.9rem;">
+          KEBIJAKAN PRIVASI DAN SYARAT KETENTUAN PENGGUNAAN APLIKASI SAJIVA
+        </p>
 
-  <p><strong>1. PENDAHULUAN DAN KOMITMEN PERLINDUNGAN DATA</strong><br>
-  Selamat datang di aplikasi Sajiva ("Aplikasi"). Kebijakan Privasi dan Syarat Ketentuan ini ("Ketentuan") merupakan perjanjian yang mengikat secara hukum antara Anda sebagai Pengguna ("Pengguna" atau "Anda") dan pengelola Aplikasi Sajiva ("Kami" atau "Sajiva"). Kami berkomitmen penuh untuk melindungi privasi, kerahasiaan, serta data pribadi Pengguna sesuai dengan Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP), Undang-Undang Informasi dan Transaksi Elektronik (UU ITE), serta peraturan perundang-undangan terkait lainnya yang berlaku di Wilayah Negara Republik Indonesia.</p>
+        <p><strong>1. PENDAHULUAN DAN KOMITMEN PERLINDUNGAN DATA</strong><br>
+        Selamat datang di aplikasi Sajiva ("Aplikasi"). Kebijakan Privasi dan Syarat Ketentuan ini ("Ketentuan") merupakan perjanjian yang mengikat secara hukum antara Anda sebagai Pengguna ("Pengguna" atau "Anda") dan pengelola Aplikasi Sajiva ("Kami" atau "Sajiva"). Kami berkomitmen penuh untuk melindungi privasi, kerahasiaan, serta data pribadi Pengguna sesuai dengan Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP), Undang-Undang Informasi dan Transaksi Elektronik (UU ITE), serta peraturan perundang-undangan terkait lainnya yang berlaku di Wilayah Negara Republik Indonesia.</p>
 
-  <p><strong>2. PEROLEHAN DAN PENGUMPULAN DATA PRIBADI</strong><br>
-  Dengan melakukan pendaftaran akun, mengakses, atau menggunakan layanan Aplikasi Sajiva, Pengguna secara sadar, tegas, dan tanpa paksaan memberikan persetujuan (explicit consent) kepada Sajiva untuk memperoleh, mengumpulkan, mengolah, menganalisis, dan menyimpan data pribadi Pengguna. Data pribadi yang dikumpulkan meliputi, namun tidak terbatas pada: (a) Nama lengkap atau nama panggilan; (b) Alamat surat elektronik (email); (c) Nomor telepon seluler atau nomor WhatsApp; (d) Informasi kredensial akun (password terenkripsi); (e) Data riwayat transaksi, klaim e-voucher, penggunaan promo, dan aktivitas dalam Aplikasi; serta (f) Data teknis perangkat seperti alamat IP, jenis perangkat, dan identifikasi sistem operasi.</p>
+        <p><strong>2. PEROLEHAN DAN PENGUMPULAN DATA PRIBADI</strong><br>
+        Dengan melakukan pendaftaran akun, mengakses, atau menggunakan layanan Aplikasi Sajiva, Pengguna secara sadar, tegas, dan tanpa paksaan memberikan persetujuan (explicit consent) kepada Sajiva untuk memperoleh, mengumpulkan, mengolah, menganalisis, dan menyimpan data pribadi Pengguna. Data pribadi yang dikumpulkan meliputi, namun tidak terbatas pada: (a) Nama lengkap atau nama panggilan; (b) Alamat surat elektronik (email); (c) Nomor telepon seluler atau nomor WhatsApp; (d) Informasi kredensial akun (password terenkripsi); (e) Data riwayat transaksi, klaim e-voucher, penggunaan promo, dan aktivitas dalam Aplikasi; serta (f) Data teknis perangkat seperti alamat IP, jenis perangkat, dan identifikasi sistem operasi.</p>
 
-  <p><strong>3. TUJUAN PENGOLAHAN DATA DAN KOMUNIKASI PEMASARAN</strong><br>
-  Sajiva mengolah data pribadi Pengguna untuk tujuan operasional dan pengembangan layanan, yang mencakup:</p>
-  <ul style="padding-left: 18px; margin-bottom: 12px;">
-    <li><strong>Pengoperasian Layanan Utama:</strong> Pemrosesan registrasi akun, verifikasi identitas, penyediaan katalog menu, serta penerbitan dan penukaran e-voucher atau kupon promosi.</li>
-    <li><strong>Komunikasi Pemasaran dan Promosi:</strong> Dengan mengonfirmasi pendaftaran akun pada Aplikasi Sajiva, Pengguna memberikan izin dan persetujuan penuh kepada Sajiva untuk menggunakan kontak yang terdaftar (termasuk nomor WhatsApp dan alamat email) guna mengirimkan notifikasi interaktif, buletin, materi promosi, penawaran khusus, program loyalitas, serta informasi komersial lainnya yang diselenggarakan oleh Sajiva atau mitra resminya.</li>
-    <li><strong>Pengembangan dan Analisis Sistem:</strong> Pengoptimalan performa Aplikasi, perbaikan kendala teknis, serta analisis tren dan preferensi Pengguna demi peningkatan kualitas layanan Sajiva.</li>
-  </ul>
+        <p><strong>3. TUJUAN PENGOLAHAN DATA DAN KOMUNIKASI PEMASARAN</strong><br>
+        Sajiva mengolah data pribadi Pengguna untuk tujuan operasional dan pengembangan layanan, yang mencakup:</p>
+        <ul style="padding-left: 18px; margin-bottom: 12px;">
+          <li><strong>Pengoperasian Layanan Utama:</strong> Pemrosesan registrasi akun, verifikasi identitas, penyediaan katalog menu, serta penerbitan dan penukaran e-voucher atau kupon promosi.</li>
+          <li><strong>Komunikasi Pemasaran dan Promosi:</strong> Dengan mengonfirmasi pendaftaran akun pada Aplikasi Sajiva, Pengguna memberikan izin dan persetujuan penuh kepada Sajiva untuk menggunakan kontak yang terdaftar (termasuk nomor WhatsApp dan alamat email) guna mengirimkan notifikasi interaktif, buletin, materi promosi, penawaran khusus, program loyalitas, serta informasi komersial lainnya yang diselenggarakan oleh Sajiva atau mitra resminya.</li>
+          <li><strong>Pengembangan dan Analisis Sistem:</strong> Pengoptimalan performa Aplikasi, perbaikan kendala teknis, serta analisis tren dan preferensi Pengguna demi peningkatan kualitas layanan Sajiva.</li>
+        </ul>
 
-  <p><strong>4. KERAHASIAAN, ENKRIPSI, DAN KEAMANAN DATA</strong><br>
-  Sajiva menerapkan standar keamanan teknis dan organisasional yang memadai guna melindungi data pribadi Pengguna dari akses tanpa izin, pemrosesan yang tidak sah, kehilangan, kerusakan, atau pengungkapan yang melanggar hukum. Seluruh data disimpan dalam sistem server terenkripsi (high-grade encryption protocol). Sajiva menjamin tidak akan menjual, menyewakan, memindahtangankan, atau mendistribusikan data pribadi Pengguna kepada pihak ketiga mana pun tanpa dasar hukum atau persetujuan tertulis dari Pengguna, kecuali diwajibkan oleh ketentuan hukum yang berlaku atau atas perintah resmi dari instansi penegak hukum di Indonesia.</p>
+        <p><strong>4. KERAHASIAAN, ENKRIPSI, DAN KEAMANAN DATA</strong><br>
+        Sajiva menerapkan standar keamanan teknis dan organisasional yang memadai guna melindungi data pribadi Pengguna dari akses tanpa izin, pemrosesan yang tidak sah, kehilangan, kerusakan, atau pengungkapan yang melanggar hukum. Seluruh data disimpan dalam sistem server terenkripsi (high-grade encryption protocol). Sajiva menjamin tidak akan menjual, menyewakan, memindahtangankan, atau mendistribusikan data pribadi Pengguna kepada pihak ketiga mana pun tanpa dasar hukum atau persetujuan tertulis dari Pengguna, kecuali diwajibkan oleh ketentuan hukum yang berlaku atau atas perintah resmi dari instansi penegak hukum di Indonesia.</p>
 
-  <p><strong>5. PENGECUALIAN DAN PENGUNGKAPAN KEPADA MITRA PENYEDIA LAYANAN</strong><br>
-  Pengguna memahami dan menyetujui bahwa Sajiva dapat membagikan data pribadi terbatas kepada penyedia jasa pihak ketiga (third-party service providers) yang bekerja sama langsung dengan Sajiva semata-mata untuk mendukung kelancaran operasional Aplikasi (seperti penyedia gerbang pembayaran, layanan pengiriman pesan singkat/WhatsApp gateway, dan penyedia infrastruktur server). Seluruh mitra pihak ketiga tersebut terikat oleh kewajiban kerahasiaan dan standar perlindungan data yang setara.</p>
+        <p><strong>5. PENGECUALIAN DAN PENGUNGKAPAN KEPADA MITRA PENYEDIA LAYANAN</strong><br>
+        Pengguna memahami dan menyetujui bahwa Sajiva dapat membagikan data pribadi terbatas kepada penyedia jasa pihak ketiga (third-party service providers) yang bekerja sama langsung dengan Sajiva semata-mata untuk mendukung kelancaran operasional Aplikasi (seperti penyedia gerbang pembayaran, layanan pengiriman pesan singkat/WhatsApp gateway, dan penyedia infrastruktur server). Seluruh mitra pihak ketiga tersebut terikat oleh kewajiban kerahasiaan dan standar perlindungan data yang setara.</p>
 
-  <p><strong>6. HAK PENGGUNA DAN PENGATURAN NOTIFIKASI</strong><br>
-  Pengguna memiliki hak untuk memperbarui, mengoreksi, atau memohon penghapusan data pribadi yang tersimpan pada sistem Sajiva sesuai dengan ketentuan perundang-undangan yang berlaku. Apabila Pengguna berkeinginan untuk menghentikan penerimaan notifikasi pemasaran dan promosi di kemudian hari, Pengguna dapat mengajukan permohonan pembatalan langganan (opt-out) melalui tautan yang tersedia pada pesan promosi atau menghubungi Layanan Pelanggan Sajiva.</p>
+        <p><strong>6. HAK PENGGUNA DAN PENGATURAN NOTIFIKASI</strong><br>
+        Pengguna memiliki hak untuk memperbarui, mengoreksi, atau memohon penghapusan data pribadi yang tersimpan pada sistem Sajiva sesuai dengan ketentuan perundang-undangan yang berlaku. Apabila Pengguna berkeinginan untuk menghentikan penerimaan notifikasi pemasaran dan promosi di kemudian hari, Pengguna dapat mengajukan permohonan pembatalan langganan (opt-out) melalui tautan yang tersedia pada pesan promosi atau menghubungi Layanan Pelanggan Sajiva.</p>
 
-  <p><strong>7. PERUBAHAN KEBIJAKAN PRIVASI DAN PERSETUJUAN AKHIR</strong><br>
-  Sajiva berhak untuk mengubah, memperbarui, atau memodifikasi Ketentuan ini sewaktu-waktu tanpa pemberitahuan terpisah sebelumnya. Perubahan akan berlaku efektif sejak ditayangkan pada Aplikasi. Dengan melanjutkan proses pendaftaran, mengklik tombol persetujuan, atau menggunakan Aplikasi Sajiva, Pengguna menyatakan telah membaca, memahami, menerima, dan menyetujui seluruh syarat, ketentuan, dan Kebijakan Privasi yang tercantum di atas secara penuh dan tanpa syarat.</p>
-</div>
+        <p><strong>7. PERUBAHAN KEBIJAKAN PRIVASI DAN PERSETUJUAN AKHIR</strong><br>
+        Sajiva berhak untuk mengubah, memperbarui, atau memodifikasi Ketentuan ini sewaktu-waktu tanpa pemberitahuan terpisah sebelumnya. Perubahan akan berlaku efektif sejak ditayangkan pada Aplikasi. Dengan melanjutkan proses pendaftaran, mengklik tombol persetujuan, atau menggunakan Aplikasi Sajiva, Pengguna menyatakan telah membaca, memahami, menerima, dan menyetujui seluruh syarat, ketentuan, dan Kebijakan Privasi yang tercantum di atas secara penuh dan tanpa syarat.</p>
+      </div>
 
-      <button type="button" class="btn-submit" style="background: var(--accent-gold); margin-top: 10px;" onclick="closeTnCModal(true)">
+      <!-- 2. KONTEN BAHASA INGGRIS -->
+      <div id="tnc-body-en" class="tnc-modal-body" style="max-height: 380px; overflow-y: auto; text-align: left; padding-right: 6px; display: none;">
+        <p style="font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-size: 0.9rem;">
+          PRIVACY POLICY AND TERMS OF SERVICE OF SAJIVA APPLICATION
+        </p>
+
+        <p><strong>1. INTRODUCTION AND COMMITMENT TO DATA PROTECTION</strong><br>
+        Welcome to Sajiva application ("Application"). This Privacy Policy and Terms of Service ("Terms") constitute a legally binding agreement between you as the User ("User" or "You") and the management of Sajiva Application ("We" or "Sajiva"). We are committed to protecting User privacy, confidentiality, and personal data in accordance with the Law of the Republic of Indonesia Number 27 of 2022 on Personal Data Protection (UU PDP), the Electronic Information and Transactions Law (UU ITE), and other applicable statutory regulations in Indonesia.</p>
+
+        <p><strong>2. ACQUISITION AND COLLECTION OF PERSONAL DATA</strong><br>
+        By registering an account, accessing, or utilizing the services of the Sajiva Application, the User consciously, explicitly, and voluntarily gives consent to Sajiva to collect, process, analyze, and store personal data. The collected personal data includes, but is not limited to: (a) Full name or nickname; (b) Email address; (c) Mobile phone or WhatsApp number; (d) Account credentials (encrypted password); (e) Transaction history, e-voucher claims, promo usage, and app activities; and (f) Technical device data such as IP address, device type, and operating system identifiers.</p>
+
+        <p><strong>3. DATA PROCESSING PURPOSES AND MARKETING COMMUNICATIONS</strong><br>
+        Sajiva processes personal data for operational and service development purposes, which include:</p>
+        <ul style="padding-left: 18px; margin-bottom: 12px;">
+          <li><strong>Core Service Operations:</strong> Account registration processing, identity verification, menu catalog provision, and the issuance/redemption of promotional e-vouchers.</li>
+          <li><strong>Marketing &amp; Promotional Communications:</strong> By completing account registration on Sajiva, the User gives explicit authorization and consent to Sajiva to use registered contacts (including WhatsApp number and email) to receive interactive notifications, newsletters, promotional material, exclusive privileges, and commercial offers from Sajiva or its official partners.</li>
+          <li><strong>System Improvement &amp; Analytics:</strong> Optimizing Application performance, resolving technical errors, and analyzing User preferences to elevate service standards.</li>
+        </ul>
+
+        <p><strong>4. CONFIDENTIALITY, ENCRYPTION, AND DATA SECURITY</strong><br>
+        Sajiva implements strict technical and organizational security measures to protect User data against unauthorized access, loss, damage, or unlawful disclosure. All data is securely stored within high-grade encrypted server infrastructure. Sajiva guarantees it will never sell, lease, transfer, or distribute User personal data to third parties without legal grounds or explicit written consent, unless mandated by applicable laws or official court orders in Indonesia.</p>
+
+        <p><strong>5. DISCLOSURE TO THIRD-PARTY SERVICE PROVIDERS</strong><br>
+        The User acknowledges and agrees that Sajiva may share limited personal data with third-party service providers directly partnering with Sajiva solely to ensure operational execution (such as payment gateways, WhatsApp messaging gateways, and cloud server providers). All external service providers are bound by strict confidentiality and data protection obligations.</p>
+
+        <p><strong>6. USER RIGHTS AND NOTIFICATION PREFERENCES</strong><br>
+        Users reserve the right to update, amend, or request the deletion of their personal data stored within Sajiva's systems according to statutory regulations. If the User wishes to opt out of marketing announcements in the future, requests can be submitted via unsubscribe links in messages or by reaching Sajiva Customer Support.</p>
+
+        <p><strong>7. REVISIONS TO PRIVACY POLICY AND ACCEPTANCE</strong><br>
+        Sajiva reserves the right to amend, update, or modify these Terms at any time without separate prior notice. Changes take effect upon publication within the Application. By continuing registration, clicking agreement buttons, or using Sajiva, the User acknowledges having read, understood, and consented to these Terms and Privacy Policy unconditionally.</p>
+      </div>
+
+      <!-- TOMBOL KONFIRMASI -->
+      <button type="button" class="btn-submit" id="tnc-btn-agree" style="background: var(--accent-gold); margin-top: 10px;" onclick="closeTnCModal(true)">
         Mengerti
       </button>
     </div>
   </div>
-
   <div class="wrapper">
     
     <!-- TOP APP BAR -->
@@ -1704,40 +1896,57 @@ select.form-input {
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-about')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-			<span>About Us</span>          
+			<span>Tentang Kami</span>          
 		  </div>
           <div class="dropdown-item" onclick="navigateTo('page-event')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <span>Event</span>
+            <span>Acara</span>
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-gallery')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
               <circle cx="12" cy="13" r="4"></circle>
             </svg>
-            <span>Gallery</span>
+            <span>Galeri</span>
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-review-us')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <span>Review Us</span>
+            <span>Ulas Kami</span>
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-feedback')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <span>Feedback</span>
+            <span>Kritik & Saran</span>
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-rsvp')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            <span>Reservation</span>
+            <span>Reservasi</span>
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-my-voucher')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M12 12h.01"></path><path d="M17 12h.01"></path><path d="M7 12h.01"></path></svg>
-            <span>My Voucher</span>
+            <span>Voucher Saya</span>
+          </div>
+		  <!-- TAMBAHAN: Item Ganti Bahasa dengan Kapsul Toggle ID | EN -->
+          <div class="dropdown-item-lang">
+            <div class="lang-label-group">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <span id="nav-lang-label">Bahasa</span>
+            </div>
+            <div class="lang-pill-menu">
+              <button type="button" class="lang-pill-btn active" id="menu-lang-id" onclick="changeLanguage('id')">ID</button>
+              <span class="lang-pill-sep">|</span>
+              <button type="button" class="lang-pill-btn" id="menu-lang-en" onclick="changeLanguage('en')">EN</button>
+            </div>
           </div>
         </div>
-      </div>
+</div>
 
-      <div style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--text-main);">SAJIVA+</div>
-
+<div style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--text-main);">
+  SAJIVA<sup class="brand-plus-sup">+</sup>
+</div>
       <button class="top-bar-btn" onclick="openProfileModal()">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </button>
@@ -1759,6 +1968,13 @@ select.form-input {
           <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200" alt="Artisan Space">
         </div>
       </div>
+
+<!-- Masukkan persis di dalam container slider foto login -->
+<div class="lang-switch-hero">
+  <button type="button" class="lang-btn active" id="lang-btn-id" onclick="changeLanguage('id')">ID</button>
+  <span class="lang-sep">|</span>
+  <button type="button" class="lang-btn" id="lang-btn-en" onclick="changeLanguage('en')">EN</button>
+</div>
 
       <!-- Overlay Atas -->
       <div class="auth-overlay-top">
@@ -1801,10 +2017,7 @@ select.form-input {
   <!-- CONTAINER KONTEN REGULER (WRAPPER) -->
   <div class="wrapper">
     
-    <!-- TOP APP BAR -->
-    <div class="top-app-bar" id="top-app-bar">
-      <!-- (Isi top-app-bar tetap sama seperti kode Anda) -->
-    </div>
+
 
     <!-- BRAND LOGO HEADER LUAR -->
     <header class="brand-container" id="main-brand-header" style="display: none;">
@@ -1828,7 +2041,7 @@ select.form-input {
         <h2 class="card-headline">Masuk ke Akun</h2>
         <p class="card-subtitle">Silakan masukkan data akun Sajiva Anda</p>
 
-        <form id="form-login-user" novalidate>
+        <form id="form-login-user" novalidate onsubmit="return false;">
           <div class="form-group">
             <label class="form-label" for="login-user-input">Nama / Email / No. Whatsapp</label>
             <input type="text" id="login-user-input" class="form-input" placeholder="Nama, Email, atau No. Whatsapp" autocomplete="off">
@@ -1836,15 +2049,15 @@ select.form-input {
           </div>
           <div class="form-group">
             <label class="form-label" for="login-pass-input">Password</label>
-            <div class="password-input-wrapper">
-              <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
-              <button type="button" id="btn-toggle-login-pass" class="toggle-password-btn">
-                <svg id="svg-login-pass" viewBox="0 0 24 24">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                  <line x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-              </button>
-            </div>
+<div class="password-input-wrapper">
+  <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
+  <button type="button" id="btn-toggle-login-pass" class="toggle-password-btn" onclick="toggleLoginPass(event)">
+    <svg id="svg-login-pass" viewBox="0 0 24 24">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
+  </button>
+</div>
             <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
           </div>
           <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
@@ -1880,7 +2093,7 @@ select.form-input {
         <h2 class="card-headline">Daftar Akun Baru</h2>
         <p class="card-subtitle">Lengkapi identitas untuk menikmati privilege eksklusif</p>
 
-        <form id="form-register-user" novalidate>  
+        <form id="form-register-user" novalidate onsubmit="return false;">  
           <div class="form-group">
             <label class="form-label" for="reg-nama">Nama Lengkap</label>
             <!-- KODE BARU: Langsung bersihkan angka/simbol saat diketik -->
@@ -1947,15 +2160,15 @@ select.form-input {
             
           <div class="form-group">
             <label class="form-label" for="reg-pass">Password</label>
-            <div class="password-input-wrapper">
-              <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka">
-              <button type="button" id="btn-toggle-reg-pass" class="toggle-password-btn">
-                <svg id="svg-reg-pass" viewBox="0 0 24 24">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                  <line x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-              </button>
-            </div>
+ <div class="password-input-wrapper">
+  <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka">
+  <button type="button" id="btn-toggle-reg-pass" class="toggle-password-btn" onclick="toggleRegPass(event)">
+    <svg id="svg-reg-pass" viewBox="0 0 24 24">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
+  </button>
+</div>
             <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
           </div>
           
@@ -1989,7 +2202,8 @@ select.form-input {
     <!-- 1. HALAMAN PROMO -->
     <div id="page-promo" class="page-view">
       <main class="card">
-<h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA+</span></h2>        <p class="card-subtitle" id="welcome-user-text">Selamat datang kembali!</p>
+<h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA<sup class="brand-plus-sup">+</sup></span></h2>
+<p class="card-subtitle" id="welcome-user-text">Selamat datang kembali!</p>
 		
         <div class="banner-slider-container" id="banner-slider">
           <button class="slider-btn prev" onclick="prevSlide()">❮</button>
@@ -2182,43 +2396,75 @@ select.form-input {
       </main>
     </div>
 
-    <!-- 3. HALAMAN ABOUT -->
+ <!-- 3. HALAMAN ABOUT -->
     <div id="page-about" class="page-view">
       <main class="card">
-		<h2 class="card-headline">About <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span></h2>        
+        <h2 class="card-headline">About <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span></h2>        
         <p class="card-subtitle"></p>
         
-        <div style="text-align: left; margin-bottom: 18px;">
-          <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">A GLIMPSE OF SAJIVA</div>
-          <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify; margin-bottom: 8px;">
-            Sajiva Coffee Company established in 2016 as an artisan coffee shop and handmade ceramic workshop. We declare ourselves as a coffee company that provides all of your coffee needs from an exquisite coffee, coffee beans, brewing tools, and ceramic tablewares. We handcraft our ceramics individually one at a time, which make it truly unique and one-of-a-kind.
-          </p>
-          <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
-            We also serve comfort food, dimsum, pastry, rice, noodle, and pasta menus for your enjoyment.
-          </p>
+        <!-- KONTEN VERSI BAHASA INDONESIA -->
+        <div id="about-content-id" style="display: block;">
+          <div style="text-align: left; margin-bottom: 18px;">
+            <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">SEKILAS TENTANG SAJIVA</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify; margin-bottom: 8px;">
+              Sajiva Coffee Company didirikan pada tahun 2016 sebagai kedai kopi artisan dan lokakarya keramik buatan tangan. Kami mendedikasikan diri sebagai perusahaan kopi yang menyediakan segala kebutuhan kopi Anda, mulai dari kopi istimewa, biji kopi pilihan, alat seduh, hingga peralatan makan keramik. Kami membuat setiap keramik secara manual satu per satu, menjadikannya benar-benar unik dan istimewa.
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
+              Kami juga menyajikan menu comfort food, dimsum, pastry, aneka nasi, mie, dan pasta untuk menemani santap Anda.
+            </p>
+          </div>
+
+          <div style="text-align: left; margin-bottom: 20px;">
+            <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">ROASTERY KAMI</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
+              Menjadi roastery artisan berarti menghargai jiwa dari setiap biji kopi. Kami mengkurasi dan meroasting green bean berkualitas secara mandiri di fasilitas kami, menjaga setiap keunikan cita rasa dari tiap masa panen. Dedikasi tanpa kompromi ini memungkinkan kami menyajikan bukan sekadar minuman, melainkan mahakarya rasa yang diracik sepenuh hati.
+            </p>
+          </div>
+
+          <div style="text-align: left; font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Lokasi Outlet Kami</div>
+          <div style="background: #ffffff; border-radius: 14px; padding: 14px; text-align: left; border: 1px solid rgba(0,0,0,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
+            📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
+            Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
+            ⏰ <strong>Jam Operasional:</strong> 08.00 - 22.00 WIB<br>
+            📞 <strong>Telepon / WA:</strong> +62 811-1289-940
+          </div>
         </div>
 
-        <div style="text-align: left; margin-bottom: 20px;">
-          <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">OUR ROASTERY</div>
-          <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
-            To be an artisan roastery is to respect the soul of every coffee bean. We meticulously source and roast our green beans in-house, honoring the delicate nuances of each harvest. This unwavering dedication allows us to serve you not just a beverage, but a carefully crafted masterpiece of flavor.
-          </p>
+        <!-- KONTEN VERSI BAHASA INGGRIS -->
+        <div id="about-content-en" style="display: none;">
+          <div style="text-align: left; margin-bottom: 18px;">
+            <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">A GLIMPSE OF SAJIVA</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify; margin-bottom: 8px;">
+              Sajiva Coffee Company established in 2016 as an artisan coffee shop and handmade ceramic workshop. We declare ourselves as a coffee company that provides all of your coffee needs from an exquisite coffee, coffee beans, brewing tools, and ceramic tablewares. We handcraft our ceramics individually one at a time, which make it truly unique and one-of-a-kind.
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
+              We also serve comfort food, dimsum, pastry, rice, noodle, and pasta menus for your enjoyment.
+            </p>
+          </div>
+
+          <div style="text-align: left; margin-bottom: 20px;">
+            <div style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">OUR ROASTERY</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; text-align: justify;">
+              To be an artisan roastery is to respect the soul of every coffee bean. We meticulously source and roast our green beans in-house, honoring the delicate nuances of each harvest. This unwavering dedication allows us to serve you not just a beverage, but a carefully crafted masterpiece of flavor.
+            </p>
+          </div>
+
+          <div style="text-align: left; font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Our Store Location</div>
+          <div style="background: #ffffff; border-radius: 14px; padding: 14px; text-align: left; border: 1px solid rgba(0,0,0,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
+            📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
+            Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
+            ⏰ <strong>Opening Hours:</strong> 08.00 - 22.00 WIB<br>
+            📞 <strong>Phone / WA:</strong> +62 811-1289-940
+          </div>
         </div>
 
-        <div style="text-align: left; font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Our Store Location</div>
-        <div style="background: #ffffff; border-radius: 14px; padding: 14px; text-align: left; border: 1px solid rgba(0,0,0,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
-          📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
-          Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
-          ⏰ <strong>Jam Operasional:</strong> 08.00 - 22.00 WIB<br>
-          📞 <strong>Telepon / WA:</strong> +62 811-1289-940
-        </div>
-
+        <!-- TOMBOL AKSI -->
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya..." target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 13px; font-size: 0.85rem;">
+          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya..." target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-wa">
             💬 Hubungi via WhatsApp
           </a>
 
-          <a href="https://www.google.com/maps/place/Sajiva+Coffee+%26+Ceramics/data=!4m2!3m1!1s0x0:0xc4c4dad4c9d8a5f1?sa=X&ved=1t:2428&ictx=111" target="_blank" class="btn-action btn-google" style="text-decoration: none; padding: 13px; font-size: 0.85rem;">
+          <a href="https://www.google.com/maps/place/Sajiva+Coffee+%26+Ceramics/data=!4m2!3m1!1s0x0:0xc4c4dad4c9d8a5f1?sa=X&ved=1t:2428&ictx=111" target="_blank" class="btn-action btn-google" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-maps">
             🗺️ Petunjuk Arah (Google Maps)
           </a>
         </div>
@@ -2594,9 +2840,18 @@ window.addEventListener('appinstalled', () => {
 });
 
 // 4. Deteksi khusus iPhone / iOS Safari
+// 4. Deteksi khusus iPhone / iOS Safari & Inisialisasi Aplikasi
 document.addEventListener('DOMContentLoaded', () => {
+  // Bungkus dalam try-catch agar jika kamus ada salah ketik/error, halaman tetap jalan lancar!
+  try {
+    const savedLang = localStorage.getItem('sajiva_lang') || 'id';
+    changeLanguage(savedLang);
+  } catch (err) {
+    console.warn("Gagal inisialisasi bahasa:", err);
+  }
+
+  // PWA Sheet Handler
   if (isAlreadyInstalled()) {
-    // Pastikan sheet tidak tampil sama sekali jika sudah terpasang
     const sheet = document.getElementById('universal-install-sheet');
     const backdrop = document.getElementById('pwa-backdrop');
     if (sheet) sheet.classList.remove('show');
@@ -2609,14 +2864,310 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('ios-install-area').style.display = 'block';
     setTimeout(showInstallSheet, 1500);
   }
-  // --- MASUKKAN DI SINI ---
-  const splash = document.getElementById('app-splash-screen');
-  if (splash) {
-    setTimeout(() => {
-      splash.classList.add('fade-out');
-    }, 3000);
-  }
 });
+
+function toggleLoginPass(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('login-pass-input');
+  const svg = document.getElementById('svg-login-pass');
+  if (!input || !svg) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  } else {
+    input.type = 'password';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  }
+}
+
+function toggleRegPass(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('reg-pass');
+  const svg = document.getElementById('svg-reg-pass');
+  if (!input || !svg) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  } else {
+    input.type = 'password';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  }
+}
+
+// ==========================================
+// KAMUS TAMBAHAN LENGKAP SAJIVA+ (ID <-> EN)
+// ==========================================
+const idToEnMap = {
+  // --- Halaman About Us & Tombol Kontak ---
+  "Hubungi via WhatsApp": "Contact via WhatsApp",
+"Petunjuk Arah (Google Maps)": "Directions (Google Maps)", // <-- KOMA SUDAH DIPASANG  "Jam Operasional:": "Opening Hours:",
+  "Telepon / WA:": "Phone / WA:",
+  "Our Store Location": "Our Store Location",
+
+  // --- Modal Profil Pengguna ---
+  "Profil Pengguna": "User Profile",
+  "Edit Profil": "Edit Profile",
+  "NAMA": "NAME",
+  "Nama": "Name",
+  "EMAIL": "EMAIL",
+  "NOMOR WHATSAPP": "WHATSAPP NUMBER",
+  "TANGGAL LAHIR": "DATE OF BIRTH",
+  "JENIS KELAMIN": "GENDER",
+  "Pria": "Male",
+  "Wanita": "Female",
+  "Log Out": "Log Out",
+  "Logout / Keluar": "Log Out",
+  "Ubah Nama Kamu": "Change Your Name",
+  "Nama Baru": "New Name",
+  "Ubah Alamat Email": "Change Email Address",
+  "Email Baru": "New Email",
+  "Ubah Nomor WhatsApp": "Change WhatsApp Number",
+  "Simpan Perubahan": "Save Changes",
+  "💾 Simpan Perubahan": "💾 Save Changes",
+  "Batal": "Cancel",
+
+  // --- Galeri & Kategori ---
+  "Semua": "All",
+  "Fasad": "Facade",
+  "Interior": "Interior",
+  "Ambience": "Ambience",
+  "Kru": "Crew",
+  "Fasad Depan Sajiva": "Sajiva Front Facade",
+  "Interior Main Hall": "Main Hall Interior",
+  "Cozy Corner": "Cozy Corner",
+  "Coffee Cupping": "Coffee Cupping",
+  "Barista Team Sajiva": "Sajiva Barista Team",
+
+  // --- Autentikasi (Login & Register) ---
+  "Masuk ke Akun": "Log In to Account",
+  "Silakan masukkan data akun Sajiva Anda": "Please enter your Sajiva account credentials",
+  "Nama / Email / No. Whatsapp": "Name / Email / WhatsApp No.",
+  "Nama, Email, atau No. Whatsapp": "Name, Email, or WhatsApp No.",
+  "Password": "Password",
+  "Masukkan Password Anda": "Enter your password",
+  "LOGIN": "LOG IN",
+  "Lupa Password?": "Forgot Password?",
+  "ATAU": "OR",
+  "Masuk dengan Google": "Sign in with Google",
+  "Daftar dengan Google": "Sign up with Google",
+  "Daftar Akun Baru": "Register New Account",
+  "Lengkapi identitas untuk menikmati privilege eksklusif": "Complete your details to enjoy exclusive privileges",
+  "Nama Lengkap": "Full Name",
+  "Masukkan nama anda": "Enter your full name",
+  "Alamat Email": "Email Address",
+  "Contoh: nama@gmail.com": "e.g. name@gmail.com",
+  "Nomor WhatsApp": "WhatsApp Number",
+  "Contoh: 08123456789": "e.g. 08123456789",
+  "Tanggal Lahir": "Date of Birth",
+  "Pilih Tanggal Lahir": "Select Date of Birth",
+  "Jenis Kelamin": "Gender",
+  "Kombinasi Huruf Kapital, Huruf Kecil, & Angka": "Combination of Uppercase, Lowercase, & Numbers",
+  "Saya menyetujui": "I agree to the",
+  "Syarat & Ketentuan serta Kebijakan Privasi": "Terms & Conditions and Privacy Policy",
+  "Sajiva.": "of Sajiva.",
+  "REGISTER": "SIGN UP",
+  "SIGN UP": "SIGN UP",
+  "LOG IN": "LOG IN",
+  
+  // --- Halaman About Us (Paragraf & Judul) ---
+  "SEKILAS TENTANG SAJIVA": "A GLIMPSE OF SAJIVA",
+  "A GLIMPSE OF SAJIVA": "A GLIMPSE OF SAJIVA",
+  
+  "Sajiva Coffee Company didirikan pada tahun 2016 sebagai kedai kopi artisan dan lokakarya keramik buatan tangan. Kami mendedikasikan diri sebagai perusahaan kopi yang menyediakan segala kebutuhan kopi Anda, mulai dari kopi istimewa, biji kopi pilihan, alat seduh, hingga peralatan makan keramik. Kami membuat setiap keramik secara manual satu per satu, menjadikannya benar-benar unik dan istimewa.": 
+  "Sajiva Coffee Company established in 2016 as an artisan coffee shop and handmade ceramic workshop. We declare ourselves as a coffee company that provides all of your coffee needs from an exquisite coffee, coffee beans, brewing tools, and ceramic tablewares. We handcraft our ceramics individually one at a time, which make it truly unique and one-of-a-kind.",
+
+  "Kami juga menyajikan menu comfort food, dimsum, pastry, aneka nasi, mie, dan pasta untuk menemani santap Anda.":
+  "We also serve comfort food, dimsum, pastry, rice, noodle, and pasta menus for your enjoyment.",
+
+  "ROASTERY KAMI": "OUR ROASTERY",
+  "OUR ROASTERY": "OUR ROASTERY",
+
+  "Menjadi roastery artisan berarti menghargai jiwa dari setiap biji kopi. Kami mengkurasi dan meroasting green bean berkualitas secara mandiri di fasilitas kami, menjaga setiap keunikan cita rasa dari tiap masa panen. Dedikasi tanpa kompromi ini memungkinkan kami menyajikan bukan sekadar minuman, melainkan mahakarya rasa yang diracik sepenuh hati.":
+  "To be an artisan roastery is to respect the soul of every coffee bean. We meticulously source and roast our green beans in-house, honoring the delicate nuances of each harvest. This unwavering dedication allows us to serve you not just a beverage, but a carefully crafted masterpiece of flavor.",
+
+  "Lokasi Outlet Kami": "Our Store Location",
+  "Our Store Location": "Our Store Location",
+
+  "Jam Operasional:": "Opening Hours:",
+  "Opening Hours:": "Opening Hours:",
+  "Telepon / WA:": "Phone / WA:",
+  "Phone / WA:": "Phone / WA:",
+  "Hubungi via WhatsApp": "Contact via WhatsApp",
+  "Petunjuk Arah (Google Maps)": "Directions (Google Maps)",
+
+  // --- Navigasi & Halaman Utama ---
+  "Tentang Kami": "About Us",
+  "Galeri": "Gallery",
+  "Ulas Kami": "Review Us",
+  "Kritik & Saran": "Feedback",
+  "Reservasi": "Reservation",
+  "Voucher Saya": "My Vouchers",
+  "Acara": "Event",
+  "Promo": "Promotion",
+  "Menu": "Menu",
+  "Welcome to": "Welcome to",
+  "💬 Hubungi via WhatsApp": "💬 Contact via WhatsApp",
+  "Hubungi via WhatsApp": "Contact via WhatsApp",
+  "🗺️ Petunjuk Arah (Google Maps)": "🗺️ Directions (Google Maps)",
+  "Petunjuk Arah (Google Maps)": "Directions (Google Maps)",
+  "Opening Hours:": "Opening Hours:",
+  "Jam Operasional:": "Opening Hours:",
+  "Phone / WA:": "Phone / WA:",
+  "Telepon / WA:": "Phone / WA:",
+  "Selamat datang kembali!": "Welcome back!",
+  "Member Special": "Member Special",
+  "Diskon 10% Review Reward": "10% Off Review Reward",
+  "Review sekarang, dapatkan voucher diskon hingga Rp100.000!": "Review now, get a discount voucher up to Rp100,000!",
+  "Lihat Voucher / Review": "View Voucher / Review",
+  "Weekly Offer": "Weekly Offer",
+  "Buy 1 Get 1 Filter Coffee": "Buy 1 Get 1 Filter Coffee",
+  "Setiap hari Selasa, tunjukkan akun Sajiva terdaftar ini ke Barista kami untuk setiap pembelian V60 / Kalita.": "Every Tuesday, show this registered Sajiva account to our barista for every V60 / Kalita purchase.",
+
+  // --- Review, Voucher & Feedback ---
+  "Review": "Review",
+  "Berikan penilaian Anda untuk layanan dan produk kami:": "Rate your experience with our services and products:",
+  "Pilih Bintang": "Select Star",
+  "Lanjutkan": "Continue",
+  "Tulis Ulasan di Google Review": "Write a Review on Google",
+  "Hubungi CS / WhatsApp Pengaduan": "Contact CS / Support via WhatsApp",
+  "Voucher Sudah Diklaim": "Voucher Already Claimed",
+  "Anda telah berhasil mengklaim voucher ulasan sebelumnya. Terima kasih atas dukungan Anda!": "You have successfully claimed your review voucher earlier. Thank you for your support!",
+  "Lihat Voucher Saya": "View My Voucher",
+  "Anda belum memiliki voucher aktif.": "You do not have any active vouchers yet.",
+  "Beri Review & Dapatkan Voucher": "Leave a Review & Get Voucher",
+  "REWARD VOUCHER": "REWARD VOUCHER",
+  "Enjoy 10% Discount": "Enjoy 10% Discount",
+  "No Minimum Spending": "No Minimum Spending",
+  "Before Tax & Service": "Before Tax & Service",
+  "KODE VOUCHER ANDA:": "YOUR VOUCHER CODE:",
+  "Tunjukkan Voucher Ini Ke Kasir": "Show this voucher to the cashier",
+  "Unduh Voucher": "Download Voucher",
+  "Feedback for": "Feedback for",
+  "Masukan Anda membantu menyempurnakan kualitas kami": "Your feedback helps us refine our quality and service",
+  "Pesan / Masukan": "Message / Feedback",
+  "Tuliskan saran atau kritik Anda di sini...": "Write your feedback or suggestions here...",
+  "Kirim via WhatsApp": "Send via WhatsApp",
+  "Reserve a Table & Event Space": "Reserve a Table & Event Space",
+  "Untuk informasi ketersediaan tempat dan reservasi acara, tim kami siap membantu segala kebutuhan Anda.": "For table availability and private event reservations, our team is ready to assist you.",
+
+  // --- PWA Bottom Sheet ---
+  "APLIKASI RESMI SAJIVA+": "OFFICIAL SAJIVA+ APP",
+  "Pasang Sajiva+ di layar utama ponsel Anda. Akses promo, menu, RSVP, dan voucher jadi lebih cepat.": "Install Sajiva+ on your home screen. Fast access to promos, menu, reservations, and vouchers.",
+  "RESMI DARI SAJIVA": "OFFICIAL FROM SAJIVA",
+  "SANGAT RINGAN (<1 MB)": "VERY LIGHTWEIGHT (<1 MB)",
+  "100% TERVERIFIKASI DAN AMAN": "100% VERIFIED & SAFE",
+  "PASANG APLIKASI SAJIVA+": "INSTALL SAJIVA+ APP",
+  "Nanti Saja": "Maybe Later"
+};
+
+// Buat kamus pembalik otomatis (EN -> ID)
+const enToIdMap = {};
+for (const [idText, enText] of Object.entries(idToEnMap)) {
+  enToIdMap[enText.trim().toLowerCase()] = idText;
+}
+
+// Fungsi Penerjemah Menyeluruh (Text Nodes + Input Placeholders)
+function applyDynamicTranslation(targetLang) {
+  // 1. Terjemahkan Semua Text Node di Halaman
+  const walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName.toLowerCase();
+        if (tag === 'script' || tag === 'style' || tag === 'svg' || tag === 'code') {
+          return NodeFilter.FILTER_REJECT;
+        }
+        // Lindungi nama Brand SAJIVA & INARA GROUP agar tidak terdistorsi
+        if (parent.closest('#app-splash-screen') || 
+            parent.closest('.brand-main-text') || 
+            parent.closest('.auth-inara-branding') || 
+            parent.closest('.inara-footer-wrapper')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  let currentNode;
+  while (currentNode = walker.nextNode()) {
+    const originalText = currentNode.nodeValue.trim();
+    if (!originalText) continue;
+
+    if (targetLang === 'en') {
+      for (const [idText, enText] of Object.entries(idToEnMap)) {
+        if (originalText === idText) {
+          currentNode.nodeValue = currentNode.nodeValue.replace(idText, enText);
+          break;
+        }
+      }
+    } else {
+      const lower = originalText.toLowerCase();
+      if (enToIdMap[lower]) {
+        currentNode.nodeValue = currentNode.nodeValue.replace(originalText, enToIdMap[lower]);
+      }
+    }
+  }
+
+  // 2. Terjemahkan Seluruh Placeholder (Input & Textarea)
+  const inputs = document.querySelectorAll('input[placeholder], textarea[placeholder]');
+  inputs.forEach(el => {
+    const ph = el.getAttribute('placeholder');
+    if (!ph) return;
+
+    if (targetLang === 'en') {
+      for (const [idText, enText] of Object.entries(idToEnMap)) {
+        if (ph.trim() === idText) {
+          el.setAttribute('placeholder', enText);
+          break;
+        }
+      }
+    } else {
+      const lower = ph.trim().toLowerCase();
+      if (enToIdMap[lower]) {
+        el.setAttribute('placeholder', enToIdMap[lower]);
+      }
+    }
+  });
+}
+
+// Fungsi Pemanggil saat Kapsul Bahasa Diklik
+function changeLanguage(lang) {
+  localStorage.setItem('sajiva_lang', lang);
+
+  // 1. Sinkronkan tombol di Hero Login
+  const btnHeroId = document.getElementById('lang-btn-id');
+  const btnHeroEn = document.getElementById('lang-btn-en');
+  if (btnHeroId && btnHeroEn) {
+    btnHeroId.classList.toggle('active', lang === 'id');
+    btnHeroEn.classList.toggle('active', lang === 'en');
+  }
+
+  // 2. Sinkronkan tombol di Dropdown Menu
+  const btnMenuId = document.getElementById('menu-lang-id');
+  const btnMenuEn = document.getElementById('menu-lang-en');
+  if (btnMenuId && btnMenuEn) {
+    btnMenuId.classList.toggle('active', lang === 'id');
+    btnMenuEn.classList.toggle('active', lang === 'en');
+  }
+
+  // 3. Ubah label "Bahasa" / "Language" di menu
+  const navLangLabel = document.getElementById('nav-lang-label');
+  if (navLangLabel) {
+    navLangLabel.innerText = lang === 'en' ? 'Language' : 'Bahasa';
+  }
+  
+  // 5. Eksekusi translasi dinamis
+  if (typeof applyDynamicTranslation === 'function') {
+    applyDynamicTranslation(lang);
+  }
+}
+
   // 1. Menonaktifkan Menu Klik Kanan
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
@@ -2815,6 +3366,7 @@ function openAuthView(type) {
 }
 
 // Fungsi Navigasi Tunggal Terpadu
+// SATU-SATUNYA FUNGSI NAVIGASI
 function navigateTo(pageId, isBackAction = false) {
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
@@ -2824,16 +3376,21 @@ function navigateTo(pageId, isBackAction = false) {
     history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
   }
 
-  // Sembunyikan semua halaman aktif
-  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-view').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
 
-  // Tampilkan halaman target
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
+    if (targetPage.classList.contains('auth-fullscreen-view')) {
+      targetPage.style.display = 'flex';
+    } else {
+      targetPage.style.display = 'block';
+    }
   }
 
-  // Atur visibilitas header
   const brandHeader = document.getElementById('main-brand-header');
   const topAppBar = document.getElementById('top-app-bar');
 
@@ -2892,6 +3449,7 @@ function closeElegantAlert() {
   }
 }
 
+// SATU-SATUNYA FUNGSI NAVIGASI YANG MENGATUR HEADER SECARA KETAT
 function navigateTo(pageId, isBackAction = false) {
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
@@ -2901,20 +3459,39 @@ function navigateTo(pageId, isBackAction = false) {
     history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
   }
 
-  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  // 1. Sembunyikan semua halaman
+  document.querySelectorAll('.page-view').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+
+  // 2. Tampilkan halaman target
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
+    if (targetPage.classList.contains('auth-fullscreen-view')) {
+      targetPage.style.display = 'flex';
+    } else {
+      targetPage.style.display = 'block';
+    }
   }
 
-  // Tampilkan / sembunyikan header logo Sajiva+ luar secara dinamis
+  // 3. ATUR ATURAN TAMPILAN HEADER SECARA TEGAS:
   const brandHeader = document.getElementById('main-brand-header');
-  if (brandHeader) {
-    if (pageId === 'page-login') {
-      brandHeader.style.display = 'none'; // Sembunyi di landing full screen
-    } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
-      brandHeader.style.display = 'flex'; // Muncul kembali di form input
-    }
+  const topAppBar = document.getElementById('top-app-bar');
+
+  if (pageId === 'page-login') {
+    // Layar Slider Awal: Sembunyikan SEMUA header
+    if (brandHeader) brandHeader.style.display = 'none';
+    if (topAppBar) topAppBar.style.display = 'none';
+  } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
+    // Form Login / Register: HANYA munculkan logo Roastery, SEMBUNYIKAN navbar atas
+    if (brandHeader) brandHeader.style.display = 'flex';
+    if (topAppBar) topAppBar.style.display = 'none';
+  } else {
+    // Setelah Login (Promo, Menu, About, dsb): HANYA munculkan navbar atas, SEMBUNYIKAN logo Roastery
+    if (brandHeader) brandHeader.style.display = 'none';
+    if (topAppBar) topAppBar.style.display = 'flex';
   }
 
   const dropdown = document.getElementById('dropdown-menu');
@@ -2939,13 +3516,6 @@ function navigateTo(pageId, isBackAction = false) {
         formReg.style.display = 'block';
         formLogin.style.display = 'none';
       }
-    }
-
-    function navigateTo(pageId) {
-      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      document.getElementById('dropdown-menu').classList.remove('show');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function checkReviewPageNavigation() {
@@ -3107,6 +3677,9 @@ function formatDisplayDate(isoDate) {
 
 // 3. Masuk ke Tampilan View-Only (Hanya Membaca Data)
 function switchToViewMode() {
+  const currentLang = localStorage.getItem('sajiva_lang') || 'id';
+  const isEn = currentLang === 'en';
+
   const viewContainer = document.getElementById('profile-view-container');
   const editForm = document.getElementById('edit-profile-form');
   const uploadBtn = document.getElementById('avatar-upload-btn-el');
@@ -3116,15 +3689,24 @@ function switchToViewMode() {
   if (uploadBtn) uploadBtn.classList.add('disabled-view');
   
   const titleEl = document.getElementById('profile-modal-title');
-  if (titleEl) titleEl.innerText = "Profil Pengguna";
+  if (titleEl) {
+    titleEl.innerText = isEn ? "User Profile" : "Profil Pengguna";
+  }
 
-  // Ambil data terbaru dari localStorage jika memori kosong
+  const subTitleEl = document.getElementById('profile-modal-subtitle');
+  if (subTitleEl) {
+    subTitleEl.innerHTML = isEn 
+      ? 'Official Member <span class="font-trajan-sajiva">SAJIVA+</span>' 
+      : 'Member Resmi <span class="font-trajan-sajiva">SAJIVA+</span>';
+  }
+
+  // Ambil data terbaru
   const stored = localStorage.getItem('sajiva_crm_user');
   if (stored) {
     try { customerData = Object.assign(customerData, JSON.parse(stored)); } catch(e){}
   }
 
-  // Tampilkan ke teks View-Only
+  // Tampilkan data teks
   const elNama = document.getElementById('view-nama-val');
   const elEmail = document.getElementById('view-email-val');
   const elNohp = document.getElementById('view-nohp-val');
@@ -3135,10 +3717,35 @@ function switchToViewMode() {
   if (elEmail) elEmail.innerText = customerData.email || "-";
   if (elNohp) elNohp.innerText = customerData.nohp || "-";
   if (elDob) elDob.innerText = formatDisplayDate(customerData.dob);
-  if (elGender) elGender.innerText = customerData.gender || "-";
+  
+  // Konversi otomatis tampilan Pria / Wanita
+  if (elGender) {
+    let genderVal = customerData.gender || "-";
+    if (isEn) {
+      if (genderVal.toLowerCase() === 'pria') genderVal = 'Male';
+      if (genderVal.toLowerCase() === 'wanita') genderVal = 'Female';
+    }
+    elGender.innerText = genderVal;
+  }
+
+  // Tombol aksi
+  const btnEdit = document.querySelector('.btn-edit-mode');
+  if (btnEdit) {
+    btnEdit.innerText = isEn ? "✏️ Edit Profile" : "✏️ Edit Profil";
+  }
+
+  const btnLogout = document.getElementById('btn-logout');
+  if (btnLogout) {
+    btnLogout.innerText = isEn ? "Log Out" : "Logout / Keluar";
+  }
 
   tempEditPhoto = customerData.photo || "";
   renderProfileAvatar(customerData.photo);
+
+  // Jalankan translasi dinamis untuk label form profil
+  if (typeof applyDynamicTranslation === 'function') {
+    applyDynamicTranslation(currentLang);
+  }
 }
 
 function switchToEditMode() {
@@ -3563,10 +4170,16 @@ function validateEmail(email) {
       return pass.length >= 6 && hasUpper && hasLower && hasNumber;
     }
 
-    function logoutUser() {
-      localStorage.removeItem('sajiva_crm_user');
-      location.reload();
-    }
+function logoutUser() {
+  localStorage.removeItem('sajiva_crm_user');
+  customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };
+  
+  // Tutup modal profil
+  closeProfileModal();
+  
+  // Arahkan langsung ke halaman login (Aman untuk PWA terinstall & iOS/Android)
+  navigateTo('page-login');
+}
 
     function renderVoucherTicket(code) {
       document.getElementById('voucher-empty-state').style.display = 'none';
@@ -3949,44 +4562,7 @@ history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
 	  initGoogleAuth();
       renderGallery('all');
 	  
-	  // Listener Show/Hide Password Register
-const btnToggleReg = document.getElementById('btn-toggle-reg-pass');
-if (btnToggleReg) {
-  btnToggleReg.addEventListener('click', function(e) {
-    e.preventDefault();
-    const input = document.getElementById('reg-pass');
-    const svg = document.getElementById('svg-reg-pass');
-    if (!input || !svg) return;
-
-    if (input.type === 'password') {
-      input.type = 'text';
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-    } else {
-      input.type = 'password';
-      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-    }
-  });
-}
-
-// Listener Show/Hide Password Login
-const btnToggleLogin = document.getElementById('btn-toggle-login-pass');
-if (btnToggleLogin) {
-  btnToggleLogin.addEventListener('click', function(e) {
-    e.preventDefault();
-    const input = document.getElementById('login-pass-input');
-    const svg = document.getElementById('svg-login-pass');
-    if (!input || !svg) return;
-
-    if (input.type === 'password') {
-      input.type = 'text';
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-    } else {
-      input.type = 'password';
-      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-    }
-  });
-}
-	  
+ 
 
 // Filter Realtime: Hanya Huruf dan Spasi untuk Nama Lengkap
 const regNamaInput = document.getElementById('reg-nama');
@@ -4068,29 +4644,34 @@ if (regEmailInput) {
         navigateTo('page-login');
       }
 
-      // SUBMIT LOGIN
-      document.getElementById('form-login-user').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const userInput = document.getElementById('login-user-input').value.trim();
-        const passInput = document.getElementById('login-pass-input').value.trim();
-        const btnSubmit = document.getElementById('btn-submit-login');
-        
-        let isValid = true;
-        if (!userInput) {
-          document.getElementById('error-login-user').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-login-user').style.display = 'none';
-        }
+// SUBMIT LOGIN
+      const formLogin = document.getElementById('form-login-user');
+      if (formLogin) {
+        formLogin.addEventListener('submit', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
 
-        if (!passInput) {
-          document.getElementById('error-login-pass').style.display = 'block';
-          isValid = false;
-        } else {
-          document.getElementById('error-login-pass').style.display = 'none';
-        }
+          const userInput = document.getElementById('login-user-input').value.trim();
+          const passInput = document.getElementById('login-pass-input').value.trim();
+          const btnSubmit = document.getElementById('btn-submit-login');
+          
+          let isValid = true;
+          if (!userInput) {
+            document.getElementById('error-login-user').style.display = 'block';
+            isValid = false;
+          } else {
+            document.getElementById('error-login-user').style.display = 'none';
+          }
 
-        if (isValid) {
+          if (!passInput) {
+            document.getElementById('error-login-pass').style.display = 'block';
+            isValid = false;
+          } else {
+            document.getElementById('error-login-pass').style.display = 'none';
+          }
+
+          if (!isValid) return false;
+
           btnSubmit.disabled = true;
           btnSubmit.innerText = "Memeriksa Akun...";
 
@@ -4098,7 +4679,7 @@ if (regEmailInput) {
           customerData.email = userInput;
           customerData.nohp = userInput;
 
-          sendDataToBackend('login_account', "", (result) => {
+          sendDataToBackend('login_account', { user: userInput }, (result) => {
             btnSubmit.disabled = false;
             btnSubmit.innerText = "LOGIN";
 
@@ -4108,14 +4689,15 @@ if (regEmailInput) {
               customerData.email = result.existingEmail || userInput;
               customerData.voucherCode = result.voucherCode || "";
               customerData.photo = result.photo || "";
-			  customerData.dob = result.dob || customerData.dob || "";
-			  customerData.gender = result.gender || customerData.gender || "";
+              customerData.dob = result.dob || customerData.dob || "";
+              customerData.gender = result.gender || customerData.gender || "";
 
               localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
 
-              document.getElementById('main-brand-header').style.display = 'none';
-              document.getElementById('top-app-bar').style.display = 'flex';
-              document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
+              const welcomeEl = document.getElementById('welcome-user-text');
+              if (welcomeEl) {
+                welcomeEl.innerText = `Hello, ${customerData.nama}!`;
+              }
 
               if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
                 renderVoucherTicket(customerData.voucherCode);
@@ -4130,12 +4712,18 @@ if (regEmailInput) {
 
               navigateTo('page-promo');
             } else {
-              showElegantAlert(result.message || "Password atau akun yang Anda masukkan salah!", "Gagal Masuk", "✕");
+              showElegantAlert(
+                (result && result.message) ? result.message : "Password atau akun yang Anda masukkan salah!", 
+                "Gagal Masuk", 
+                "✕"
+              );
             }
           }, "", passInput);
-        }
-      });
 
+          return false;
+        });
+      }
+	  
       // SUBMIT REGISTER
 // HANDLER SUBMIT REGISTER LENGKAP & AMAN
 const formReg = document.getElementById('form-register-user');
@@ -4496,9 +5084,8 @@ window.addEventListener('popstate', function(event) {
       <span>2. Gulir ke bawah lalu pilih <strong>Tambah ke Layar Utama</strong>.</span>
     </div>
   </div>
-
   <button type="button" class="btn-sheet-dismiss" onclick="dismissInstallSheet()">Nanti Saja</button>
 </div>
-  
+
 </body>
 </html>
