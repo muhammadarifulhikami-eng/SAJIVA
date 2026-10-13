@@ -2939,6 +2939,23 @@ const idToEnMap = {
   "Cozy Corner": "Cozy Corner",
   "Coffee Cupping": "Coffee Cupping",
   "Barista Team Sajiva": "Sajiva Barista Team",
+  
+  // --- Notifikasi Validasi & Eror Registrasi ---
+  "Hanya Boleh Huruf dan Spasi (min. 3 karakter).": "Letters and spaces only (min. 3 characters).",
+  "Masukkan Alamat Email yang valid.": "Please enter a valid email address.",
+  "Nomor Telepon tidak valid.": "Invalid phone number.",
+  "Usia minimal pendaftar adalah 17 tahun.": "Minimum age for registration is 17 years old.",
+  "Silakan pilih jenis kelamin Anda.": "Please select your gender.",
+  "Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.": "Password must contain at least 6 characters, uppercase, lowercase, and numbers.",
+  "Anda harus menyetujui Syarat & Ketentuan untuk mendaftar.": "You must agree to the Terms & Conditions to register.",
+
+  // --- Notifikasi Validasi & Eror Login & Fitur Lainnya ---
+  "Isi kolom ini dengan benar.": "Please fill this field correctly.",
+  "Password tidak boleh kosong.": "Password cannot be empty.",
+  "Nomor WhatsApp tidak valid!": "Invalid WhatsApp number!",
+  "Email / Akun tidak ditemukan di database!": "Email / Account not found in database!",
+  "Kode OTP salah! Cek Inbox atau folder Spam Email Anda.": "Incorrect OTP code! Check your Inbox or Spam folder.",
+  "Password tidak cocok atau tidak memenuhi syarat.": "Passwords do not match or do not meet requirements.",
 
   // --- Autentikasi (Login & Register) ---
   "Masuk ke Akun": "Log In to Account",
@@ -4645,84 +4662,93 @@ if (regEmailInput) {
       }
 
 // SUBMIT LOGIN
-      const formLogin = document.getElementById('form-login-user');
-      if (formLogin) {
-        formLogin.addEventListener('submit', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+// SUBMIT LOGIN
+const formLogin = document.getElementById('form-login-user');
+if (formLogin) {
+  formLogin.addEventListener('submit', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-          const userInput = document.getElementById('login-user-input').value.trim();
-          const passInput = document.getElementById('login-pass-input').value.trim();
-          const btnSubmit = document.getElementById('btn-submit-login');
-          
-          let isValid = true;
-          if (!userInput) {
-            document.getElementById('error-login-user').style.display = 'block';
-            isValid = false;
-          } else {
-            document.getElementById('error-login-user').style.display = 'none';
-          }
+    const userInput = document.getElementById('login-user-input').value.trim();
+    const passInput = document.getElementById('login-pass-input').value.trim();
+    const btnSubmit = document.getElementById('btn-submit-login');
+    
+    // Cek bahasa yang sedang aktif
+    const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
 
-          if (!passInput) {
-            document.getElementById('error-login-pass').style.display = 'block';
-            isValid = false;
-          } else {
-            document.getElementById('error-login-pass').style.display = 'none';
-          }
+    let isValid = true;
+    if (!userInput) {
+      const errUser = document.getElementById('error-login-user');
+      errUser.innerText = isEn ? "Please fill this field correctly." : "Isi kolom ini dengan benar.";
+      errUser.style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('error-login-user').style.display = 'none';
+    }
 
-          if (!isValid) return false;
+    if (!passInput) {
+      const errPass = document.getElementById('error-login-pass');
+      errPass.innerText = isEn ? "Password cannot be empty." : "Password tidak boleh kosong.";
+      errPass.style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('error-login-pass').style.display = 'none';
+    }
 
-          btnSubmit.disabled = true;
-          btnSubmit.innerText = "Memeriksa Akun...";
+    if (!isValid) return false;
 
-          customerData.nama = userInput;
-          customerData.email = userInput;
-          customerData.nohp = userInput;
+    // --- TEKS TOMBOL LOADING MENYESUAIKAN BAHASA ---
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = isEn ? "Checking Account..." : "Memeriksa Akun...";
 
-          sendDataToBackend('login_account', { user: userInput }, (result) => {
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = "LOGIN";
+    customerData.nama = userInput;
+    customerData.email = userInput;
+    customerData.nohp = userInput;
 
-            if (result && result.status === "success") {
-              customerData.nama = result.existingName || userInput;
-              customerData.nohp = result.existingHp || userInput;
-              customerData.email = result.existingEmail || userInput;
-              customerData.voucherCode = result.voucherCode || "";
-              customerData.photo = result.photo || "";
-              customerData.dob = result.dob || customerData.dob || "";
-              customerData.gender = result.gender || customerData.gender || "";
+    sendDataToBackend('login_account', { user: userInput }, (result) => {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = isEn ? "LOG IN" : "LOGIN";
 
-              localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+      if (result && result.status === "success") {
+        customerData.nama = result.existingName || userInput;
+        customerData.nohp = result.existingHp || userInput;
+        customerData.email = result.existingEmail || userInput;
+        customerData.voucherCode = result.voucherCode || "";
+        customerData.photo = result.photo || "";
+        customerData.dob = result.dob || customerData.dob || "";
+        customerData.gender = result.gender || customerData.gender || "";
 
-              const welcomeEl = document.getElementById('welcome-user-text');
-              if (welcomeEl) {
-                welcomeEl.innerText = `Hello, ${customerData.nama}!`;
-              }
+        localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
 
-              if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
-                renderVoucherTicket(customerData.voucherCode);
-                document.getElementById('review-form-wrapper').style.display = 'none';
-                document.getElementById('review-already-claimed').style.display = 'block';
-              } else {
-                document.getElementById('voucher-empty-state').style.display = 'block';
-                document.getElementById('voucher-display-container').style.display = 'none';
-                document.getElementById('review-form-wrapper').style.display = 'block';
-                document.getElementById('review-already-claimed').style.display = 'none';
-              }
+        const welcomeEl = document.getElementById('welcome-user-text');
+        if (welcomeEl) {
+          welcomeEl.innerText = `Hello, ${customerData.nama}!`;
+        }
 
-              navigateTo('page-promo');
-            } else {
-              showElegantAlert(
-                (result && result.message) ? result.message : "Password atau akun yang Anda masukkan salah!", 
-                "Gagal Masuk", 
-                "✕"
-              );
-            }
-          }, "", passInput);
+        if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
+          renderVoucherTicket(customerData.voucherCode);
+          document.getElementById('review-form-wrapper').style.display = 'none';
+          document.getElementById('review-already-claimed').style.display = 'block';
+        } else {
+          document.getElementById('voucher-empty-state').style.display = 'block';
+          document.getElementById('voucher-display-container').style.display = 'none';
+          document.getElementById('review-form-wrapper').style.display = 'block';
+          document.getElementById('review-already-claimed').style.display = 'none';
+        }
 
-          return false;
-        });
+        navigateTo('page-promo');
+      } else {
+        showElegantAlert(
+          (result && result.message) ? result.message : (isEn ? "Incorrect account or password!" : "Password atau akun yang Anda masukkan salah!"), 
+          isEn ? "Login Failed" : "Gagal Masuk", 
+          "✕"
+        );
       }
+    }, "", passInput);
+
+    return false;
+  });
+}
 	  
       // SUBMIT REGISTER
 // HANDLER SUBMIT REGISTER LENGKAP & AMAN
@@ -4817,8 +4843,9 @@ if (formReg) {
 
     // Kunci tombol & ubah teks loading
     if (btnSubmit) {
-      btnSubmit.disabled = true;
-      btnSubmit.innerText = "Mendaftarkan Akun...";
+      const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
+btnSubmit.disabled = true;
+btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
     }
 
     // Set Data Customer
@@ -4832,7 +4859,7 @@ if (formReg) {
     sendDataToBackend('register_account', null, function(res) {
       if (btnSubmit) {
         btnSubmit.disabled = false;
-        btnSubmit.innerText = "REGISTER";
+        btnSubmit.innerText = isEn ? "SIGN UP" : "REGISTER";
       }
 
       if (res && res.status === "error") {
