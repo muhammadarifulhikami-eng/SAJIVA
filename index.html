@@ -2406,18 +2406,28 @@ select.form-input {
 </body>
 
   <script>
-  let deferredPrompt = null;
+let deferredPrompt = null;
 
-// Deteksi apakah sedang dibuka di iOS Safari
+// Cek apakah web dibuka langsung di browser vs sudah running sebagai PWA yang terinstall
+function isAlreadyInstalled() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                       navigator.standalone || 
+                       document.referrer.includes('android-app://');
+  const storedInstallFlag = localStorage.getItem('sajiva_pwa_installed') === 'true';
+  return isStandalone || storedInstallFlag;
+}
+
+// Deteksi iOS Safari (di browser safari biasa, bukan aplikasi terinstall)
 function isIosSafari() {
   const userAgent = window.navigator.userAgent.toLowerCase();
   const isIos = /iphone|ipad|ipod/.test(userAgent);
-  const isWebview = navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-  return isIos && !isWebview;
+  return isIos && !isAlreadyInstalled();
 }
 
 // Buka bottom sheet
 function showInstallSheet() {
+  if (isAlreadyInstalled()) return; // Jika sudah install, abaikan
+
   const sheet = document.getElementById('universal-install-sheet');
   const backdrop = document.getElementById('pwa-backdrop');
   if (sheet && backdrop) {
@@ -2426,63 +2436,67 @@ function showInstallSheet() {
   }
 }
 
-// Tutup bottom sheet
+// Tutup bottom sheet (HANYA menutup tampilan sementara tanpa blokir refresh)
 function dismissInstallSheet() {
   const sheet = document.getElementById('universal-install-sheet');
   const backdrop = document.getElementById('pwa-backdrop');
   if (sheet && backdrop) {
     sheet.classList.remove('show');
     backdrop.classList.remove('show');
-    // Jangan munculkan lagi selama 2 hari setelah ditutup
-    localStorage.setItem('sajiva_sheet_dismissed', Date.now());
+    // TIDAK menyimpan flag blokir ke localStorage, jadi pas di-refresh akan muncul lagi
   }
 }
 
 // 1. Tangkap Event PWA Install di Android / Chrome
 window.addEventListener('beforeinstallprompt', (e) => {
+  if (isAlreadyInstalled()) return;
+
   e.preventDefault();
   deferredPrompt = e;
 
-  const lastDismissed = localStorage.getItem('sajiva_sheet_dismissed');
-  const twoDays = 2 * 24 * 60 * 60 * 1000;
-  if (lastDismissed && (Date.now() - lastDismissed < twoDays)) {
-    return; // Masih dalam masa jeda
-  }
-
-  // Tampilkan area tombol Android
-  document.getElementById('android-install-area').style.display = 'block';showInstallSheet();
+  document.getElementById('android-install-area').style.display = 'block';
   document.getElementById('ios-install-area').style.display = 'none';
 
-  // Munculkan pop-up setelah 1.5 detik agar halaman selesai dimuat
-  setTimeout(showInstallSheet, 1500);
+  // Munculkan pop-up setiap halaman dimuat
+  setTimeout(showInstallSheet, 1200);
 });
 
-// 2. Fungsi Klik Tombol "PASANG APLIKASI SAJIVA+"
+// 2. Tombol Aksi Pasang Aplikasi di Android
 async function triggerAndroidInstall() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
+      localStorage.setItem('sajiva_pwa_installed', 'true');
       dismissInstallSheet();
     }
     deferredPrompt = null;
   }
 }
 
-// 3. Fallback Khusus iPhone (iOS)
+// 3. Event resmi saat PWA selesai terinstall di perangkat (Android/Desktop)
+window.addEventListener('appinstalled', () => {
+  localStorage.setItem('sajiva_pwa_installed', 'true');
+  dismissInstallSheet();
+});
+
+// 4. Deteksi khusus iPhone / iOS Safari
 document.addEventListener('DOMContentLoaded', () => {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  if (!isStandalone && isIosSafari()) {
-    const lastDismissed = localStorage.getItem('sajiva_sheet_dismissed');
-    const twoDays = 2 * 24 * 60 * 60 * 1000;
-    if (!lastDismissed || (Date.now() - lastDismissed > twoDays)) {
-      document.getElementById('android-install-area').style.display = 'none';
-      document.getElementById('ios-install-area').style.display = 'block';
-      setTimeout(showInstallSheet, 2000);
-    }
+  if (isAlreadyInstalled()) {
+    // Pastikan sheet tidak tampil sama sekali jika sudah terpasang
+    const sheet = document.getElementById('universal-install-sheet');
+    const backdrop = document.getElementById('pwa-backdrop');
+    if (sheet) sheet.classList.remove('show');
+    if (backdrop) backdrop.classList.remove('show');
+    return;
+  }
+
+  if (isIosSafari()) {
+    document.getElementById('android-install-area').style.display = 'none';
+    document.getElementById('ios-install-area').style.display = 'block';
+    setTimeout(showInstallSheet, 1500);
   }
 });
-  
   // 1. Menonaktifkan Menu Klik Kanan
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
