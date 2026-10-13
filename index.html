@@ -45,20 +45,25 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-/* SPLASH SCREEN ELEGAN ALA UNION */
+/* ===================================================
+   SPLASH SCREEN IDENTIK LOGIN SLIDER (BACKGROUND KREM)
+   =================================================== */
 #app-splash-screen {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background-color: #fbf9f4;
+  background-color: #fbf9f4; /* Warna dasar krem Sajiva+ */
   z-index: 99999;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  padding: calc(60px + env(safe-area-inset-top, 20px)) 24px calc(60px + env(safe-area-inset-bottom, 20px));
+  box-sizing: border-box;
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+  pointer-events: auto;
 }
 
 #app-splash-screen.fade-out {
@@ -67,41 +72,73 @@
   pointer-events: none;
 }
 
-.splash-content {
+/* 1. Header Atas: PART OF INARA GROUP */
+.splash-header-group {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.splash-subtitle {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.68rem;
+.splash-header-group .group-pre {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 0.65rem;
   letter-spacing: 5px;
-  color: #8c827a;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  color: #2b2520;
   font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
-.splash-title {
-  font-family: 'Cinzel', serif;
-  font-size: 2.2rem;
+.splash-header-group .group-main {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.splash-header-group .group-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 5px;
+  font-weight: 400;
+  color: #3d352e;
+}
+
+/* 2. Tengah Layar: SAJIVA+ dengan + di atas */
+.splash-center-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto; /* Memastikan logo tepat di tengah vertikal */
+}
+
+.brand-sajiva {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 2.8rem;
   font-weight: 600;
-  letter-spacing: 8px;
+  letter-spacing: 12px; /* Jarak huruf lebar sesuai login screen */
   color: #1a1a1a;
   margin: 0;
   line-height: 1;
+  position: relative;
+  display: inline-block;
 }
 
-.splash-tagline {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 4px;
-  color: #b87d4b;
-  text-transform: uppercase;
-  margin-top: 14px;
-  font-weight: 600;
+/* Penempatan tanda tambah (+) di kanan atas sebagai pangkat (superscript) */
+.brand-plus {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;         /* Ukuran lebih kecil */
+  font-weight: 300;
+  position: absolute;
+  top: -0.25rem;             /* Geser ke atas */
+  right: -0.9rem;            /* Rapatkan ke huruf A terakhir */
+  vertical-align: super;
+  letter-spacing: normal;    /* Abaikan tracking lebar agar tidak terdorong */
+  color: #1a1a1a;
 }
   
 /* ===================================================
@@ -1585,12 +1622,19 @@ select.form-input {
 </head>
 <body>
 
-<!-- OVERLAY SPLASH SCREEN -->
+<!-- SPLASH OVERLAY TRANSITION (IDENTIK DENGAN LOGIN SLIDER) -->
 <div id="app-splash-screen">
-  <div class="splash-content">
-    <div class="splash-subtitle">PART OF INĀRA GROUP</div>
-    <h1 class="splash-title">SAJIVA<span style="font-weight: 300; font-size: 1.8rem; margin-left: 2px;">+</span></h1>
-    <div class="splash-tagline">ARTISAN ROASTERY</div>
+  <!-- BAGIAN ATAS: PART OF INARA GROUP -->
+  <div class="splash-header-group">
+    <span class="group-pre">PART OF</span>
+    <span class="group-main">INĀRA <span class="group-sub">GROUP</span></span>
+  </div>
+
+  <!-- BAGIAN TENGAH: LOGO UTAMA SAJIVA+ (DENGAN PLUS DI ATAS) -->
+  <div class="splash-center-brand">
+    <h1 class="brand-sajiva">
+      SAJIVA<sup class="brand-plus">+</sup>
+    </h1>
   </div>
 </div>
 
@@ -2570,7 +2614,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (splash) {
     setTimeout(() => {
       splash.classList.add('fade-out');
-    }, 600);
+    }, 3000);
   }
 });
   // 1. Menonaktifkan Menu Klik Kanan
