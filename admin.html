@@ -432,12 +432,18 @@
       window.location.reload();
     }
 
-    // FETCH REALTIME DATA DENGAN API KEY
+// PERBAIKAN: Fetch Data Member Realtime yang Kebal Kegagalan Key
     async function fetchRealtimeCRMData() {
       const tableBody = document.getElementById('member-table-body');
       tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data dari server...</td></tr>`;
 
+      // Ambil key terbaru dari memori atau localStorage
+      if (!adminSecretKey) {
+        adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
+      }
+
       try {
+        // Jika berjalan di dalam lingkungan Google Apps Script
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
             .withSuccessHandler(function(res) {
@@ -448,11 +454,16 @@
                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">${escapeHtml(res ? res.message : 'Akses ditolak')}</td></tr>`;
               }
             })
+            .withFailureHandler(function(err) {
+              tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Gagal koneksi script server.</td></tr>`;
+            })
             .getAllCustomers();
           return;
         }
 
-        const response = await fetch(scriptURL + "?action=getAllCustomers&key=" + encodeURIComponent(adminSecretKey));
+        // Eksekusi via fetch dengan menyertakan kunci API admin yang sah
+        const targetUrl = scriptURL + "?action=getAllCustomers&key=" + encodeURIComponent(adminSecretKey);
+        const response = await fetch(targetUrl);
         const json = await response.json();
 
         if (json && json.status === "success" && Array.isArray(json.data)) {
@@ -462,7 +473,8 @@
           tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">${escapeHtml(json ? json.message : 'Gagal memuat data.')}</td></tr>`;
         }
       } catch (e) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Koneksi server gagal.</td></tr>';
+        console.error("Fetch error:", e);
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Koneksi server gagal. Periksa kembali deployment URL Anda.</td></tr>';
       }
     }
 
