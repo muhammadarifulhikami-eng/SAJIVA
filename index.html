@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<!-- CSP yang sudah dioptimalkan agar mengizinkan cdnjs -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://accounts.google.com https://images.unsplash.com https://script.google.com https://script.googleusercontent.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://www.googleapis.com;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
 <!-- Google Identity Services SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sajiva+</title>
@@ -22,10 +28,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Pustaka QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
-  <style>
+  <!-- Pustaka Html2Canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>  <style>
     :root {
 	
       --bg-dark: #fcf8f2;
@@ -2723,13 +2730,13 @@ select.form-input {
       
       <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Lupa Password</h3>
       <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;" id="forgot-step-desc">
-        Masukkan Email terdaftar Anda. Kode OTP akan dikirimkan langsung ke Inbox Email Anda.
+        Masukkan Email Anda. Kode OTP akan dikirimkan ke Inbox Email Anda.
       </p>
 
       <form id="form-forgot-step1" style="text-align: left;">
         <div class="form-group">
-          <label class="form-label">Alamat Email / Username</label>
-          <input type="text" id="forgot-email-input" class="form-input" placeholder="Masukkan Email atau Username Anda">
+          <label class="form-label">Alamat Email</label>
+          <input type="text" id="forgot-email-input" class="form-input" placeholder="Masukkan Email Anda">
           <div class="error-text" id="error-forgot-email">Email / Akun tidak ditemukan di database!</div>
         </div>
         <button type="submit" id="btn-send-otp" class="btn-submit" style="background: var(--accent-gold);">Kirim Kode OTP ke Email</button>
@@ -2765,6 +2772,20 @@ select.form-input {
 </body>
 
   <script>
+// ==========================================
+    // FUNGSI SANITASI ANTI-XSS GLOBAL (TARUH DI SINI)
+    // ==========================================
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+	
+    let globalData = [];
 let deferredPrompt = null;
 
 // Cek apakah web dibuka langsung di browser vs sudah running sebagai PWA yang terinstall
@@ -3279,23 +3300,21 @@ async function fetchGoogleEmailOnly(accessToken) {
       return;
     }
 
-    processGoogleEmail(email);
-  } catch (err) {
+processGoogleEmail(email, accessToken); // Sertakan accessToken  
+} catch (err) {
     console.error("Gagal mengambil email Google:", err);
     showElegantAlert("Gagal terhubung dengan akun Google Anda.", "Error", "✕");
   }
 }
 
-// 2. Alur Pemrosesan Email
-// 2. Alur Pemrosesan Email dari Google
-function processGoogleEmail(email) {
+// GANTI FUNGSI processGoogleEmail MENJADI SEPERTI INI:
+function processGoogleEmail(email, accessToken) {
   const cleanEmail = String(email || "").toLowerCase().trim();
 
-  // SKENARIO A: DARI FORM REGISTER (HANYA AUTO-INPUT EMAIL, TIDAK BOLEH PINDAH HALAMAN)
+  // SKENARIO A: DARI FORM REGISTER (Hanya isi kolom email)
   if (googleAuthMode === 'register') {
     sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
-      // Jika ternyata email SUDAH ADA di database dan punya no HP:
-      if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
+      if (result && result.status === "success" && result.existingHp) {
         showElegantAlert(
           "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
           "Sudah Terdaftar",
@@ -3305,18 +3324,17 @@ function processGoogleEmail(email) {
           }
         );
       } else {
-        // JIKA BELUM TERDAFTAR: HANYA ISI KOLOM EMAIL, TETAP DI FORM REGISTER
         populateEmailOnly(cleanEmail);
       }
     });
     return;
   }
 
-  // SKENARIO B: DARI FORM LOGIN (MASUK DENGAN GOOGLE)
+  // SKENARIO B: DARI FORM LOGIN (Kirim accessToken ke server untuk diverifikasi resmi)
   if (googleAuthMode === 'login') {
-    sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
-      // Hanya login jika email BENAR-BENAR ada di database
+    sendDataToBackend('check_google_account', { email: cleanEmail, googleAccessToken: accessToken || "" }, (result) => {
       if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
+        customerData.token = result.token || ""; // Amankan token sesi dari server
         customerData.nama = result.existingName || "";
         customerData.email = cleanEmail;
         customerData.nohp = result.existingHp;
@@ -3326,10 +3344,9 @@ function processGoogleEmail(email) {
         customerData.gender = result.gender || "";
 
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-        document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
+        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama)}!`;
         navigateTo('page-promo');
       } else {
-        // Jika belum ada di database, tolak login dan arahkan ke pendaftaran
         showElegantAlert(
           "Akun Anda belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
           "Belum Terdaftar",
@@ -3382,51 +3399,6 @@ function openAuthView(type) {
   }
 }
 
-// Fungsi Navigasi Tunggal Terpadu
-// SATU-SATUNYA FUNGSI NAVIGASI
-function navigateTo(pageId, isBackAction = false) {
-  const currentActivePage = document.querySelector('.page-view.active');
-  const currentId = currentActivePage ? currentActivePage.id : null;
-
-  if (!isBackAction && currentId && currentId !== pageId) {
-    navigationHistory.push(currentId);
-    history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
-  }
-
-  document.querySelectorAll('.page-view').forEach(p => {
-    p.classList.remove('active');
-    p.style.display = 'none';
-  });
-
-  const targetPage = document.getElementById(pageId);
-  if (targetPage) {
-    targetPage.classList.add('active');
-    if (targetPage.classList.contains('auth-fullscreen-view')) {
-      targetPage.style.display = 'flex';
-    } else {
-      targetPage.style.display = 'block';
-    }
-  }
-
-  const brandHeader = document.getElementById('main-brand-header');
-  const topAppBar = document.getElementById('top-app-bar');
-
-  if (pageId === 'page-login') {
-    if (brandHeader) brandHeader.style.display = 'none';
-    if (topAppBar) topAppBar.style.display = 'none';
-  } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
-    if (brandHeader) brandHeader.style.display = 'flex';
-    if (topAppBar) topAppBar.style.display = 'none';
-  } else {
-    if (brandHeader) brandHeader.style.display = 'none';
-    if (topAppBar) topAppBar.style.display = 'flex';
-  }
-
-  const dropdown = document.getElementById('dropdown-menu');
-  if (dropdown) dropdown.classList.remove('show');
-  
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 // Fungsi untuk memunculkan popup elegan pengganti alert()
 function showElegantAlert(message, title = "Pemberitahuan", icon = "✦", callback = null) {
   const modal = document.getElementById('elegant-alert-modal');
@@ -3468,6 +3440,10 @@ function closeElegantAlert() {
 
 // SATU-SATUNYA FUNGSI NAVIGASI YANG MENGATUR HEADER SECARA KETAT
 function navigateTo(pageId, isBackAction = false) {
+const isLoggedIn = !!localStorage.getItem('sajiva_crm_user');
+  if (isLoggedIn && (pageId === 'page-login' || pageId === 'page-auth-login' || pageId === 'page-auth-register')) {
+    pageId = 'page-promo';
+  }
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
 
@@ -3829,64 +3805,42 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
     btnSave.innerText = "Menyimpan Data...";
   }
 
+  // ========================================================
+  // HAPUS DARI SINI SAMPAI SEBELUM TANDA "});" PALING BAWAH
+  // ========================================================
   const finalPhoto = tempEditPhoto || customerData.photo || "";
 
-  const payloadUpdate = {
-    action: 'update_profile',
-    nama: newNama || customerData.nama,
-    email: newEmail || customerData.email,
-    nohp: newNohp || customerData.nohp,
-    oldHp: customerData.nohp,
-    dob: newDob || customerData.dob,
-    gender: newGender || customerData.gender,
-    photo: finalPhoto
-  };
-
-  fetch(scriptURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payloadUpdate),
-    redirect: 'follow'
-  })
-  .then(res => res.json())
-  .then(res => {
+  sendDataToBackend('update_profile', {
+    oldHp: customerData.nohp
+  }, (res) => {
     if (btnSave) {
       btnSave.disabled = false;
       btnSave.innerText = "💾 Simpan Perubahan";
     }
 
-    customerData.nama = payloadUpdate.nama;
-    customerData.email = payloadUpdate.email;
-    customerData.nohp = payloadUpdate.nohp;
-    customerData.dob = payloadUpdate.dob;
-    customerData.gender = payloadUpdate.gender;
-    customerData.photo = payloadUpdate.photo;
+    if (res && res.status === "success") {
+      customerData.nama = newNama || customerData.nama;
+      customerData.email = newEmail || customerData.email;
+      customerData.nohp = newNohp || customerData.nohp;
+      customerData.dob = newDob || customerData.dob;
+      customerData.gender = newGender || customerData.gender;
+      customerData.photo = finalPhoto;
+      if (res.token) customerData.token = res.token;
 
-    localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-    document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
-    
-    switchToViewMode();
-    alert('Profil dan foto berhasil diperbarui!');
-  })
-  .catch(err => {
-    if (btnSave) {
-      btnSave.disabled = false;
-      btnSave.innerText = "💾 Simpan Perubahan";
+      localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+      document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama}!`;
+      
+      switchToViewMode();
+      showElegantAlert("Profil dan foto berhasil diperbarui!", "Berhasil", "✓");
+    } else {
+      showElegantAlert(res.message || "Gagal memperbarui profil di server.", "Pemberitahuan", "✕");
     }
-    console.error("Update profile error:", err);
+  }, "", "", newDob, newGender);
+  // ========================================================
+  // AKHIR BAGIAN YANG DIGANTI
+  // ========================================================
 
-    customerData.nama = payloadUpdate.nama;
-    customerData.email = payloadUpdate.email;
-    customerData.nohp = payloadUpdate.nohp;
-    customerData.dob = payloadUpdate.dob;
-    customerData.gender = payloadUpdate.gender;
-    customerData.photo = payloadUpdate.photo;
-    localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-    
-    switchToViewMode();
-    alert('Profil tersimpan di perangkat lokal.');
-  });
-});
+}); // <-- TANDA INI TETAP DISIMPAN (PENUTUP SUBMIT)
 
     function closeProfileModal() {
       document.getElementById('profile-modal').classList.remove('show');
@@ -3897,7 +3851,7 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
       document.getElementById('form-forgot-step1').style.display = 'block';
       document.getElementById('form-forgot-step2').style.display = 'none';
       document.getElementById('error-forgot-email').style.display = 'none';
-      document.getElementById('forgot-step-desc').innerText = "Masukkan Email terdaftar Anda. Kode OTP akan dikirimkan langsung ke Inbox Email Anda.";
+      document.getElementById('forgot-step-desc').innerText = "Masukkan email Anda untuk menerima kode OTP";
       document.getElementById('forgot-modal').classList.add('show');
     }
 	
@@ -4190,11 +4144,9 @@ function validateEmail(email) {
 function logoutUser() {
   localStorage.removeItem('sajiva_crm_user');
   customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };
-  
-  // Tutup modal profil
+  navigationHistory = [];
   closeProfileModal();
-  
-  // Arahkan langsung ke halaman login (Aman untuk PWA terinstall & iOS/Android)
+  history.replaceState({ pageId: 'page-login', type: 'page' }, '', '#page-login');
   navigateTo('page-login');
 }
 
@@ -4215,25 +4167,36 @@ function logoutUser() {
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
 async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
   try {
-let payload = {
+    // Perbaikan: Ambil token secara aman langsung dari localStorage atau objek global customerData
+    let savedUserSession = {};
+    try {
+      savedUserSession = JSON.parse(localStorage.getItem('sajiva_crm_user') || "{}");
+    } catch(e) {
+      savedUserSession = {};
+    }
+    
+    let currentActiveToken = (typeof customerData !== 'undefined' && customerData.token) ? customerData.token : (savedUserSession.token || "");
+
+    let payload = {
       action: action,
+      token: currentActiveToken, // <-- Token terkirim aman ke server
       nama: customerData.nama || "",
       email: customerData.email || "",
       nohp: customerData.nohp || "",
       rating: customerData.rating || "",
       feedback: feedbackText || "",
       password: pass || "",
-      otp: (paramData && paramData.otp) ? paramData.otp : "", // <-- Tambahkan baris ini
+      otp: (paramData && paramData.otp) ? paramData.otp : "",
       photo: customerData.photo || "",
       dob: typeof dob !== 'undefined' ? dob : (customerData.dob || ""),
       gender: typeof gender !== 'undefined' ? gender : (customerData.gender || "")
     };
 
-    // PERBAIKAN PENTING: Jika aksinya adalah cek akun Google, kosongkan identitas lokal lainnya
     if (action === "check_google_account" && paramData && paramData.email) {
       payload = {
         action: "check_google_account",
-        email: paramData.email
+       email: paramData.email || "",
+		googleAccessToken: paramData.googleAccessToken || "" // Koma sudah terpasang dengan benar
       };
     }
 
@@ -4621,14 +4584,29 @@ if (regEmailInput) {
 		}
 	  })
 
-      const savedUser = localStorage.getItem('sajiva_crm_user');
+const savedUser = localStorage.getItem('sajiva_crm_user');
       if (savedUser) {
-        customerData = JSON.parse(savedUser);
+        try {
+          customerData = JSON.parse(savedUser);
+          
+          // Validasi tambahan: Jika data login ada tapi token kosong, paksa logout demi keamanan
+          if (!customerData.token) {
+            console.warn("Sesi tidak memiliki token kriptografi yang sah. Membersihkan sesi lokal.");
+            logoutUser();
+            return;
+          }
+        } catch(err) {
+          logoutUser();
+          return;
+        }
+        
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
-        document.getElementById('welcome-user-text').innerText = `Hello, ${customerData.nama || 'Pelanggan Setia'}!`;
+        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama || 'Pelanggan Setia')}!`;
         
-  // Sinkronisasi data profil & voucher dari server
+        // ... lanjutkan sinkronisasi status ke server ...
+        
+// Sinkronisasi data profil & voucher dari server
         sendDataToBackend('check_status', null, (res) => {
           if (res && res.status === "success") {
             if (res.existingName) customerData.nama = res.existingName;
@@ -4638,13 +4616,26 @@ if (regEmailInput) {
             if (res.gender) customerData.gender = res.gender;
             if (res.photo) customerData.photo = res.photo;
 
-            if (res.voucherCode && res.voucherCode !== "-") {
+            // CEGAH VOUCHER PALSU: Jika server bilang ada voucher, tampilkan. Jika kosong, bersihkan!
+            if (res.voucherCode && res.voucherCode.trim() !== "" && res.voucherCode !== "-") {
               customerData.voucherCode = res.voucherCode;
               renderVoucherTicket(res.voucherCode);
               document.getElementById('review-form-wrapper').style.display = 'none';
               document.getElementById('review-already-claimed').style.display = 'block';
+            } else {
+              customerData.voucherCode = "";
+              document.getElementById('voucher-empty-state').style.display = 'block';
+              document.getElementById('voucher-display-container').style.display = 'none';
+              document.getElementById('review-form-wrapper').style.display = 'block';
+              document.getElementById('review-already-claimed').style.display = 'none';
             }
             localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+          } 
+          // CEGAH SESI ZOMBIE: Jika sesi ditolak atau akun sudah dihapus oleh admin di spreadsheet
+          else if (res && (res.status === "error" || res.status === "not_found")) {
+            showElegantAlert("Sesi login Anda telah berakhir atau tidak valid. Silakan masuk kembali.", "Keamanan", "✦", () => {
+              logoutUser();
+            });
           }
         });
 
@@ -4661,7 +4652,6 @@ if (regEmailInput) {
         navigateTo('page-login');
       }
 
-// SUBMIT LOGIN
 // SUBMIT LOGIN
 const formLogin = document.getElementById('form-login-user');
 if (formLogin) {
@@ -4701,16 +4691,13 @@ if (formLogin) {
     btnSubmit.disabled = true;
     btnSubmit.innerText = isEn ? "Checking Account..." : "Memeriksa Akun...";
 
-    customerData.nama = userInput;
-    customerData.email = userInput;
-    customerData.nohp = userInput;
-
     sendDataToBackend('login_account', { user: userInput }, (result) => {
       btnSubmit.disabled = false;
       btnSubmit.innerText = isEn ? "LOG IN" : "LOGIN";
 
       if (result && result.status === "success") {
-        customerData.nama = result.existingName || userInput;
+customerData.token = result.token || ""; // <-- Simpan token dari server        
+customerData.nama = result.existingName || userInput;
         customerData.nohp = result.existingHp || userInput;
         customerData.email = result.existingEmail || userInput;
         customerData.voucherCode = result.voucherCode || "";
@@ -4735,6 +4722,9 @@ if (formLogin) {
           document.getElementById('review-form-wrapper').style.display = 'block';
           document.getElementById('review-already-claimed').style.display = 'none';
         }
+		
+		navigationHistory = [];
+        history.replaceState({ pageId: 'page-promo', type: 'page' }, '', '#page-promo');
 
         navigateTo('page-promo');
       } else {
@@ -4865,6 +4855,7 @@ btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
       if (res && res.status === "error") {
         showElegantAlert(res.message, "Registrasi Gagal", "✕");
       } else {
+	  customerData.token = (res && res.token) ? res.token : ""; // Amankan token dari server
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
@@ -4875,31 +4866,32 @@ btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
   });
 }
  
-      // FORGOT PASSWORD STEP 1
-      document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const emailInput = document.getElementById('forgot-email-input').value.trim();
-        
-        if (!emailInput) {
-          document.getElementById('error-forgot-email').style.display = 'block';
-          return;
-        }
+// ============================================================================
+// 1. REKOMENDASI PERBAIKAN FRONTEND (Hapus penyimpanan res.otp di sisi klien)
+// ============================================================================
+document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const emailInput = document.getElementById('forgot-email-input').value.trim();
+  if (!emailInput) {
+    document.getElementById('error-forgot-email').style.display = 'block';
+    return;
+  }
+  document.getElementById('error-forgot-email').style.display = 'none';
 
-        document.getElementById('error-forgot-email').style.display = 'none';
-        
-        sendDataToBackend('send_otp_email', null, (res) => {
-          if (res && res.status === "success") {
-            tempForgotData.email = res.email || emailInput;
-            tempForgotData.generatedOtp = res.otp;
-
-            document.getElementById('form-forgot-step1').style.display = 'none';
-            document.getElementById('form-forgot-step2').style.display = 'block';
-            document.getElementById('forgot-step-desc').innerText = `Kode OTP telah dikirimkan ke Email ${tempForgotData.email}.`;
-          } else {
-            alert(res.message || "Email / Akun tidak ditemukan di database.");
-          }
-        });
-      });
+  // Kirim permintaan OTP; server hanya mengembalikan status "success" tanpa membocorkan kode OTP
+  sendDataToBackend('send_otp_email', { email: emailInput }, (res) => {
+    if (res && res.status === "success") {
+      tempForgotData.email = emailInput;
+      // PENTING: Jangan pernah menerima atau menyimpan res.otp di memori browser!
+      document.getElementById('form-forgot-step1').style.display = 'none';
+      document.getElementById('form-forgot-step2').style.display = 'block';
+      document.getElementById('forgot-step-desc').innerText = 
+        `Kode OTP telah dikirimkan ke Email terdaftar Anda (berlaku 5 menit).`;
+    } else {
+      showElegantAlert(res.message || "Permintaan gagal diproses.", "Pemberitahuan", "✕");
+    }
+  });
+});
 
 // FORGOT PASSWORD STEP 2
       document.getElementById('form-forgot-step2').addEventListener('submit', (e) => {
@@ -4992,34 +4984,45 @@ window.addEventListener('popstate', function(event) {
     return;
   }
 
-// 6. Navigasi Halaman Sebelumnya
+  // 6. Navigasi Halaman Sebelumnya (Kunci Logika Login)
+  const isLoggedIn = !!localStorage.getItem('sajiva_crm_user');
+
   if (navigationHistory.length > 0) {
-    const prevPage = navigationHistory.pop();
-    navigateTo(prevPage, true);
+    let prevPage = navigationHistory.pop();
+    
+    // Jika sudah LOGIN, buang semua jejak riwayat halaman login/register
+    if (isLoggedIn) {
+      while (prevPage && (prevPage === 'page-login' || prevPage === 'page-auth-login' || prevPage === 'page-auth-register')) {
+        prevPage = navigationHistory.pop();
+      }
+    }
+
+    if (prevPage) {
+      navigateTo(prevPage, true);
+    } else {
+      // Jika antrean riwayat habis, tahan di page-promo
+      navigateTo(isLoggedIn ? 'page-promo' : 'page-login', true);
+      history.pushState({ pageId: 'stay', type: 'page' }, '', isLoggedIn ? '#page-promo' : '#page-login');
+    }
   } else {
     const activePage = document.querySelector('.page-view.active');
-    const isAuthArea = activePage && (
-      activePage.id === 'page-login' ||
-      activePage.id === 'page-auth-login' ||
-      activePage.id === 'page-auth-register'
-    );
-
-    if (isAuthArea) {
-      if (activePage.id !== 'page-login') {
-        navigateTo('page-login', true);
-      } else {
-        history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
-      }
-    } else {
+    if (isLoggedIn) {
+      // User sudah login -> mentok di page-promo
       if (activePage && activePage.id !== 'page-promo') {
         navigateTo('page-promo', true);
       } else {
-        history.pushState({ pageId: 'stay', type: 'page' }, '', window.location.hash || '#');
+        history.pushState({ pageId: 'stay', type: 'page' }, '', '#page-promo');
+      }
+    } else {
+      // User belum login -> mentok di page-login
+      if (activePage && activePage.id !== 'page-login') {
+        navigateTo('page-login', true);
+      } else {
+        history.pushState({ pageId: 'stay', type: 'page' }, '', '#page-login');
       }
     }
   }
-}); // <-- Pastikan ditutup dengan }); lengkap
-	
+});
   </script>
   <!-- POPUP NOTIFIKASI ELEGAN -->
 <div class="elegant-modal-overlay" id="elegant-alert-modal">
