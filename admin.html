@@ -124,7 +124,6 @@
     .item-actions { display: flex; gap: 8px; }
 
     .btn-sm { padding: 8px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; }
-    .btn-edit { background: rgba(184, 125, 75, 0.15); color: var(--accent-gold-light); }
     .btn-delete { background: rgba(220, 38, 38, 0.1); color: var(--error-red); }
     .btn-add { background: var(--accent-gold); color: #fff; padding: 10px 16px; font-size: 0.85rem; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
     .btn-refresh { background: transparent; color: var(--error-red); border: 1px solid rgba(220, 38, 38, 0.3); padding: 10px 16px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
@@ -164,11 +163,11 @@
           <input type="text" id="admin-user" class="form-input" placeholder="Masukkan ID Admin" required autocomplete="off">
         </div>
         <div class="form-group">
-          <label class="form-label">Password</label>
+          <label class="form-label">Password Admin</label>
           <input type="password" id="admin-pass" class="form-input" placeholder="Masukkan Password" required>
         </div>
-        <p id="login-error" style="color: var(--error-red); font-size: 0.8rem; margin-bottom: 12px; display: none;">Username atau Password salah!</p>
-        <button type="submit" class="btn-primary">LOGIN ADMIN</button>
+        <p id="login-error" style="color: var(--error-red); font-size: 0.8rem; margin-bottom: 12px; display: none;">Username atau Password admin salah!</p>
+        <button type="submit" class="btn-primary" id="btn-login-admin">LOGIN ADMIN</button>
       </form>
     </div>
 
@@ -187,7 +186,7 @@
         </div>
       </div>
 
-      <!-- ANALYTICS CARDS (REALTIME) -->
+      <!-- KPI CARDS ANALYTICS -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-title">Total Member CRM</div>
@@ -276,7 +275,7 @@
             <button class="btn-add" onclick="openModal('banner')">+ Tambah Banner Baru</button>
           </div>
           <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom:15px;">
-            💡 Masukkan URL foto dari Imgur, Unsplash, Google Drive (Pastikan Akses Publik), atau sumber link lainnya.
+            💡 Masukkan URL foto dari Imgur, Unsplash, atau Google Drive (Akses Publik).
           </p>
           <div class="item-list" id="banner-list-container"></div>
         </div>
@@ -289,9 +288,6 @@
             <span>Kelola Galeri Foto Sajiva</span>
             <button class="btn-add" onclick="openModal('gallery')">+ Tambah Foto Galeri</button>
           </div>
-          <p style="font-size:0.8rem; color: var(--text-secondary); margin-bottom:15px;">
-            Kategori Galeri: <strong>Fasad, Interior, Ambience, Event, dan Kru</strong>.
-          </p>
           <div class="admin-gallery-grid" id="gallery-list-container"></div>
         </div>
       </div>
@@ -305,28 +301,27 @@
     <div class="modal-box">
       <h3 class="section-title" id="modal-title">Tambah Data</h3>
       <form id="modal-form">
-        <input type="hidden" id="edit-id">
         <input type="hidden" id="edit-type">
 
         <div class="form-group" id="group-category" style="display:none;">
           <label class="form-label">Kategori Galeri</label>
           <select id="input-category" class="form-select">
-            <option value="fasad">Fasad (Tampak Depan)</option>
+            <option value="fasad">Fasad</option>
             <option value="interior">Interior</option>
-            <option value="ambience">Ambience (Suasana)</option>
+            <option value="ambience">Ambience</option>
             <option value="event">Event</option>
-            <option value="kru">Kru (Tim Barista/Staff)</option>
+            <option value="kru">Kru</option>
           </select>
         </div>
 
         <div class="form-group" id="group-title">
           <label class="form-label">Judul / Keterangan</label>
-          <input type="text" id="input-title" class="form-input" placeholder="Masukkan judul/keterangan foto">
+          <input type="text" id="input-title" class="form-input" placeholder="Masukkan judul">
         </div>
 
         <div class="form-group" id="group-url" style="display:none;">
-          <label class="form-label">URL Link Gambar (Imgur / Drive / Image Link)</label>
-          <input type="url" id="input-url" class="form-input" placeholder="https://i.imgur.com/example.jpg">
+          <label class="form-label">URL Link Gambar</label>
+          <input type="url" id="input-url" class="form-input" placeholder="https://...">
         </div>
 
         <div class="form-group" id="group-price">
@@ -335,13 +330,13 @@
         </div>
 
         <div class="form-group" id="group-date">
-          <label class="form-label">Tanggal &amp; Waktu Event</label>
-          <input type="text" id="input-date" class="form-input" placeholder="Contoh: 03 October 2026 | 10.00 - Finish">
+          <label class="form-label">Tanggal & Waktu Event</label>
+          <input type="text" id="input-date" class="form-input" placeholder="Contoh: 03 October 2026">
         </div>
 
         <div class="form-group" id="group-desc">
           <label class="form-label">Deskripsi Singkat</label>
-          <textarea id="input-desc" class="form-input" style="height: 80px; resize: none;" placeholder="Penjelasan detail..."></textarea>
+          <textarea id="input-desc" class="form-input" style="height: 80px; resize: none;" placeholder="Penjelasan..."></textarea>
         </div>
 
         <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -353,48 +348,69 @@
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec';
+    const scriptURL = window.location.href.split('?')[0];
     let rawCustomerList = [];
+    let adminSecretKey = ""; // Disimpan otomatis di memori setelah login admin berhasil
 
-    let bannerData = [
-      { id: 1, url: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000", title: "Specialty Coffee Roastery" },
-      { id: 2, url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000", title: "Warm Ambience & Artisanal Brews" }
-    ];
-
-    let galleryData = [
-      { id: 1, category: "fasad", title: "Fasad Depan Sajiva", url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800" },
-      { id: 2, category: "interior", title: "Interior Main Hall", url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800" },
-      { id: 3, category: "ambience", title: "Cozy Corner", url: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=800" },
-      { id: 4, category: "event", title: "Coffee Cupping Event", url: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=800" },
-      { id: 5, category: "kru", title: "Barista Team Sajiva", url: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800" }
-    ];
-
+    let bannerData = [];
+    let galleryData = [];
     let eventData = [
-      { id: 1, title: "3D Ocean Painting", price: "285k / person", date: "03 October 2026 | 10.00 - Finish", desc: "Learn the art of resin layering to create realistic ocean waves and shorelines." },
-      { id: 2, title: "Moon Lamp Making", price: "295k / person", date: "10 October 2026 | 10.00 - Finish", desc: "Shape, texture, and illuminate your own 3D Moonlamp with guided steps." }
+      { id: 1, title: "3D Ocean Painting", price: "285k / person", date: "03 October 2026 | 10.00 - Finish", desc: "Learn the art of resin layering to create realistic ocean waves." }
     ];
-
     let promoData = [
-      { id: 1, title: "Diskon 15% Review Reward", price: "Member Special", date: "Berlaku Setiap Hari", desc: "Beri ulasan terbaik Anda di Google Maps dan klaim voucher diskon Rp 100.000." },
-      { id: 2, title: "Buy 1 Get 1 Filter Coffee", price: "Weekly Offer", date: "Setiap Hari Selasa", desc: "Tunjukkan akun Sajiva terdaftar ini ke Barista untuk setiap pembelian V60 / Kalita." }
+      { id: 1, title: "Diskon 15% Review Reward", price: "Member Special", date: "Berlaku Setiap Hari", desc: "Beri ulasan terbaik di Google Maps dan klaim voucher diskon Rp 100.000." }
     ];
 
-    // AUTHENTICATION
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // AUTHENTICATION KE SERVER (AMAN DARI INSPECT ELEMENT)
     document.getElementById('admin-login-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const u = document.getElementById('admin-user').value.trim();
       const p = document.getElementById('admin-pass').value.trim();
+      const btn = document.getElementById('btn-login-admin');
+      const errEl = document.getElementById('login-error');
 
-      if (u === "Sajiva admin" && p === "SajivaCRM2026") {
-        localStorage.setItem('sajiva_admin_logged', 'true');
-        showDashboard();
-      } else {
-        document.getElementById('login-error').style.display = 'block';
+      btn.disabled = true;
+      btn.innerText = "Memverifikasi...";
+      errEl.style.display = 'none';
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            btn.disabled = false;
+            btn.innerText = "LOGIN ADMIN";
+            if (res && res.status === "success") {
+              adminSecretKey = res.adminKey || "SAJIVA_SECURE_ADMIN_2026";
+              localStorage.setItem('sajiva_admin_logged', 'true');
+              localStorage.setItem('sajiva_admin_key', adminSecretKey);
+              showDashboard();
+            } else {
+              errEl.innerText = res.message || "Username atau Password salah!";
+              errEl.style.display = 'block';
+            }
+          })
+          .withFailureHandler(function(err) {
+            btn.disabled = false;
+            btn.innerText = "LOGIN ADMIN";
+            errEl.innerText = "Gagal terhubung ke server.";
+            errEl.style.display = 'block';
+          })
+          .processCustomerSubmission({ action: "login_admin", username: u, password: p });
       }
     });
 
     function checkAdminSession() {
       if (localStorage.getItem('sajiva_admin_logged') === 'true') {
+        adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
         showDashboard();
       }
     }
@@ -412,40 +428,41 @@
 
     function logoutAdmin() {
       localStorage.removeItem('sajiva_admin_logged');
+      localStorage.removeItem('sajiva_admin_key');
       window.location.reload();
     }
 
-    // FETCH REALTIME DATA
+    // FETCH REALTIME DATA DENGAN API KEY
     async function fetchRealtimeCRMData() {
       const tableBody = document.getElementById('member-table-body');
-      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data terbaru dari Google Sheets...</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data dari server...</td></tr>`;
 
       try {
-        let json;
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
             .withSuccessHandler(function(res) {
               if (res && res.status === "success" && Array.isArray(res.data)) {
                 rawCustomerList = res.data;
                 processAndRenderCRMData(rawCustomerList);
+              } else {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">${escapeHtml(res ? res.message : 'Akses ditolak')}</td></tr>`;
               }
             })
             .getAllCustomers();
           return;
-        } else {
-          const response = await fetch(scriptURL + "?action=getAllCustomers");
-          json = await response.json();
         }
+
+        const response = await fetch(scriptURL + "?action=getAllCustomers&key=" + encodeURIComponent(adminSecretKey));
+        const json = await response.json();
 
         if (json && json.status === "success" && Array.isArray(json.data)) {
           rawCustomerList = json.data;
           processAndRenderCRMData(rawCustomerList);
         } else {
-          tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Gagal mengambil data dari Google Sheets.</td></tr>';
+          tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">${escapeHtml(json ? json.message : 'Gagal memuat data.')}</td></tr>`;
         }
       } catch (e) {
-        console.error("Fetch member error:", e);
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Terjadi kesalahan koneksi saat mengambil data.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Koneksi server gagal.</td></tr>';
       }
     }
 
@@ -453,19 +470,19 @@
       try {
         const bRes = await fetch(scriptURL + "?action=getBanners");
         const bJson = await bRes.json();
-        if (bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0) {
+        if (bJson.status === "success" && Array.isArray(bJson.data)) {
           bannerData = bJson.data;
           renderBanners();
         }
 
         const gRes = await fetch(scriptURL + "?action=getGallery");
         const gJson = await gRes.json();
-        if (gJson.status === "success" && Array.isArray(gJson.data) && gJson.data.length > 0) {
+        if (gJson.status === "success" && Array.isArray(gJson.data)) {
           galleryData = gJson.data;
           renderAdminGallery();
         }
       } catch (err) {
-        console.log("Error loading banners/gallery:", err);
+        console.log("Error loading media:", err);
       }
     }
 
@@ -494,23 +511,19 @@
         return;
       }
 
-      tableBody.innerHTML = data.map((index, item) => {
-        return '';
-      });
-
       tableBody.innerHTML = data.map((item, index) => {
         const vCode = item.voucher ? String(item.voucher).trim() : "";
         const hasVoucher = vCode !== "" && vCode !== "-";
-        const starRating = (item.rating && item.rating !== "") ? `★ ${item.rating}` : 'Belum Memberi Rating';
+        const starRating = (item.rating && item.rating !== "") ? '★ ' + escapeHtml(item.rating) : 'Belum Memberi Rating';
         return `
           <tr>
             <td>${index + 1}</td>
-            <td style="font-size:0.78rem;">${item.waktu || '-'}</td>
-            <td><strong>${item.nama || '-'}</strong></td>
-            <td>${item.nohp || '-'}</td>
+            <td style="font-size:0.78rem;">${escapeHtml(item.waktu || '-')}</td>
+            <td><strong>${escapeHtml(item.nama || '-')}</strong></td>
+            <td>${escapeHtml(item.nohp || '-')}</td>
             <td>${starRating}</td>
-            <td>${hasVoucher ? '<code>' + vCode + '</code>' : '-'}</td>
-            <td>${item.statusVoucher || (hasVoucher ? 'Sudah Cetak Voucher' : 'Belum Cetak Voucher')}</td>
+            <td>${hasVoucher ? '<code>' + escapeHtml(vCode) + '</code>' : '-'}</td>
+            <td>${escapeHtml(item.statusVoucher || (hasVoucher ? 'Sudah Cetak Voucher' : 'Belum Cetak Voucher'))}</td>
           </tr>
         `;
       }).join('');
@@ -532,15 +545,14 @@
       if (evt) evt.target.classList.add('active');
     }
 
-    // RENDER MANAGERS
     function renderEvents() {
       const container = document.getElementById('event-list-container');
       container.innerHTML = eventData.map(item => `
         <div class="item-card">
           <div class="item-info">
-            <h4>${item.title} (${item.price})</h4>
-            <p>📅 ${item.date}</p>
-            <p>${item.desc}</p>
+            <h4>${escapeHtml(item.title)} (${escapeHtml(item.price)})</h4>
+            <p>📅 ${escapeHtml(item.date)}</p>
+            <p>${escapeHtml(item.desc)}</p>
           </div>
           <div class="item-actions">
             <button class="btn-sm btn-delete" onclick="deleteItem('event', ${item.id})">Hapus</button>
@@ -554,8 +566,8 @@
       container.innerHTML = promoData.map(item => `
         <div class="item-card">
           <div class="item-info">
-            <h4>${item.title} (${item.price})</h4>
-            <p>${item.desc}</p>
+            <h4>${escapeHtml(item.title)} (${escapeHtml(item.price)})</h4>
+            <p>${escapeHtml(item.desc)}</p>
           </div>
           <div class="item-actions">
             <button class="btn-sm btn-delete" onclick="deleteItem('promo', ${item.id})">Hapus</button>
@@ -572,10 +584,10 @@
       }
       container.innerHTML = bannerData.map(item => `
         <div class="item-card">
-          <img src="${item.url}" class="item-thumb" onerror="this.src='https://via.placeholder.com/150'">
+          <img src="${escapeHtml(item.url)}" class="item-thumb" onerror="this.src='https://via.placeholder.com/150'">
           <div class="item-info">
-            <h4>${item.title || 'Slide Banner Sajiva'}</h4>
-            <p style="font-size:0.75rem; word-break:break-all; color:#777;">${item.url}</p>
+            <h4>${escapeHtml(item.title || 'Slide Banner Sajiva')}</h4>
+            <p style="font-size:0.75rem; word-break:break-all; color:#777;">${escapeHtml(item.url)}</p>
           </div>
           <div class="item-actions">
             <button class="btn-sm btn-delete" onclick="deleteItem('banner', ${item.id})">Hapus</button>
@@ -592,17 +604,16 @@
       }
       container.innerHTML = galleryData.map(item => `
         <div class="gallery-admin-card">
-          <img src="${item.url}" onerror="this.src='https://via.placeholder.com/300'">
+          <img src="${escapeHtml(item.url)}" onerror="this.src='https://via.placeholder.com/300'">
           <div class="gallery-admin-body">
-            <span>${item.category}</span>
-            <h5>${item.title || 'Foto Sajiva'}</h5>
+            <span>${escapeHtml(item.category)}</span>
+            <h5>${escapeHtml(item.title || 'Foto Sajiva')}</h5>
             <button class="btn-sm btn-delete" style="width:100%; margin-top:6px;" onclick="deleteItem('gallery', ${item.id})">Hapus</button>
           </div>
         </div>
       `).join('');
     }
 
-    // MODAL CONTROL
     function openModal(type) {
       document.getElementById('edit-type').value = type;
       document.getElementById('modal-title').textContent = 
@@ -631,11 +642,11 @@
       if (type === 'banner') {
         bannerData = bannerData.filter(x => x.id !== id);
         renderBanners();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_banner", id: id }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_banner", id: id, adminKey: adminSecretKey }) });
       } else if (type === 'gallery') {
         galleryData = galleryData.filter(x => x.id !== id);
         renderAdminGallery();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_gallery", id: id }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_gallery", id: id, adminKey: adminSecretKey }) });
       } else if (type === 'event') {
         eventData = eventData.filter(x => x.id !== id);
         renderEvents();
@@ -645,7 +656,6 @@
       }
     }
 
-    // SUBMIT MODAL FORM
     document.getElementById('modal-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const type = document.getElementById('edit-type').value;
@@ -653,19 +663,17 @@
       if (type === 'banner') {
         const url = document.getElementById('input-url').value;
         const title = document.getElementById('input-title').value;
-        const newObj = { id: Date.now(), url: url, title: title };
-        bannerData.push(newObj);
+        bannerData.push({ id: Date.now(), url: url, title: title });
         renderBanners();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title, adminKey: adminSecretKey }) });
       } 
       else if (type === 'gallery') {
         const category = document.getElementById('input-category').value;
         const url = document.getElementById('input-url').value;
         const title = document.getElementById('input-title').value;
-        const newObj = { id: Date.now(), category: category, url: url, title: title };
-        galleryData.push(newObj);
+        galleryData.push({ id: Date.now(), category: category, url: url, title: title });
         renderAdminGallery();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title, adminKey: adminSecretKey }) });
       }
       else if (type === 'event') {
         eventData.push({
