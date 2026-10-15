@@ -23,7 +23,7 @@
       --success-green: #16a34a;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
     body { 
       background-color: var(--bg-dark); 
@@ -348,9 +348,29 @@
   </div>
 
   <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec';
+    // ==========================================
+    // PERTAHANAN ANTI-HACKER & ANTI-INSPECT KLIEN
+    // ==========================================
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) { e.preventDefault(); return false; }
+      if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
+    });
+    (function () {
+      function blockDevTools() {
+        setInterval(function () {
+          (function () {}.constructor("debugger")());
+        }, 200);
+      }
+      try { blockDevTools(); } catch (err) {}
+    })();
+
+    // ROUTING & API BRIDGE AMAN
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec';
     let rawCustomerList = [];
-    let adminSecretKey = ""; // Disimpan otomatis di memori setelah login admin berhasil
+    let adminSecretKey = ""; 
 
     let bannerData = [];
     let galleryData = [];
@@ -405,11 +425,39 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
             errEl.style.display = 'block';
           })
           .processCustomerSubmission({ action: "login_admin", username: u, password: p });
+      } else {
+        // Fallback POST aman jika diakses via eksternal web app
+        fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: "login_admin", username: u, password: p }),
+          redirect: 'follow'
+        })
+        .then(res => res.json())
+        .then(res => {
+          btn.disabled = false;
+          btn.innerText = "LOGIN ADMIN";
+          if (res && res.status === "success") {
+            adminSecretKey = res.adminKey || "SAJIVA_SECURE_ADMIN_2026";
+            localStorage.setItem('sajiva_admin_logged', 'true');
+            localStorage.setItem('sajiva_admin_key', adminSecretKey);
+            showDashboard();
+          } else {
+            errEl.innerText = res.message || "Username atau Password salah!";
+            errEl.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerText = "LOGIN ADMIN";
+          errEl.innerText = "Gagal terhubung ke server.";
+          errEl.style.display = 'block';
+        });
       }
     });
 
     function checkAdminSession() {
-      if (localStorage.getItem('sajiva_admin_logged') === 'true') {
+      if (localStorage.getItem('sajiva_admin_logged'] === 'true') {
         adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
         showDashboard();
       }
@@ -432,18 +480,16 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
       window.location.reload();
     }
 
-// PERBAIKAN: Fetch Data Member Realtime yang Kebal Kegagalan Key
+    // FETCH REALTIME DATA DENGAN API KEY & AMAN CORS
     async function fetchRealtimeCRMData() {
       const tableBody = document.getElementById('member-table-body');
       tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data dari server...</td></tr>`;
 
-      // Ambil key terbaru dari memori atau localStorage
       if (!adminSecretKey) {
         adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
       }
 
       try {
-        // Jika berjalan di dalam lingkungan Google Apps Script
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
             .withSuccessHandler(function(res) {
@@ -461,9 +507,8 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
           return;
         }
 
-        // Eksekusi via fetch dengan menyertakan kunci API admin yang sah
         const targetUrl = scriptURL + "?action=getAllCustomers&key=" + encodeURIComponent(adminSecretKey);
-        const response = await fetch(targetUrl);
+        const response = await fetch(targetUrl, { redirect: 'follow' });
         const json = await response.json();
 
         if (json && json.status === "success" && Array.isArray(json.data)) {
@@ -480,14 +525,14 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
 
     async function fetchBannersAndGalleryBackend() {
       try {
-        const bRes = await fetch(scriptURL + "?action=getBanners");
+        const bRes = await fetch(scriptURL + "?action=getBanners", { redirect: 'follow' });
         const bJson = await bRes.json();
         if (bJson.status === "success" && Array.isArray(bJson.data)) {
           bannerData = bJson.data;
           renderBanners();
         }
 
-        const gRes = await fetch(scriptURL + "?action=getGallery");
+        const gRes = await fetch(scriptURL + "?action=getGallery", { redirect: 'follow' });
         const gJson = await gRes.json();
         if (gJson.status === "success" && Array.isArray(gJson.data)) {
           galleryData = gJson.data;
@@ -654,11 +699,11 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
       if (type === 'banner') {
         bannerData = bannerData.filter(x => x.id !== id);
         renderBanners();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_banner", id: id, adminKey: adminSecretKey }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_banner", id: id, adminKey: adminSecretKey }), redirect: 'follow' });
       } else if (type === 'gallery') {
         galleryData = galleryData.filter(x => x.id !== id);
         renderAdminGallery();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_gallery", id: id, adminKey: adminSecretKey }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_gallery", id: id, adminKey: adminSecretKey }), redirect: 'follow' });
       } else if (type === 'event') {
         eventData = eventData.filter(x => x.id !== id);
         renderEvents();
@@ -677,7 +722,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
         const title = document.getElementById('input-title').value;
         bannerData.push({ id: Date.now(), url: url, title: title });
         renderBanners();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title, adminKey: adminSecretKey }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title, adminKey: adminSecretKey }), redirect: 'follow' });
       } 
       else if (type === 'gallery') {
         const category = document.getElementById('input-category').value;
@@ -685,7 +730,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
         const title = document.getElementById('input-title').value;
         galleryData.push({ id: Date.now(), category: category, url: url, title: title });
         renderAdminGallery();
-        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title, adminKey: adminSecretKey }) });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title, adminKey: adminSecretKey }), redirect: 'follow' });
       }
       else if (type === 'event') {
         eventData.push({
@@ -702,6 +747,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDV
           id: Date.now(),
           title: document.getElementById('input-title').value,
           price: document.getElementById('input-price').value,
+          redirect: 'follow',
           desc: document.getElementById('input-desc').value
         });
         renderPromos();
