@@ -3311,17 +3311,15 @@ processGoogleEmail(email, accessToken); // Sertakan accessToken
 function processGoogleEmail(email, accessToken) {
   const cleanEmail = String(email || "").toLowerCase().trim();
 
-  // SKENARIO A: DARI FORM REGISTER (Hanya isi kolom email)
+  // Mode Register
   if (googleAuthMode === 'register') {
     sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
-      if (result && result.status === "success" && result.existingHp) {
+      if (result && result.status === "success" && result.existingHp && result.existingHp !== "NOT_REGISTERED") {
         showElegantAlert(
           "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
           "Sudah Terdaftar",
           "✦",
-          () => {
-            navigateTo('page-auth-login');
-          }
+          () => { navigateTo('page-auth-login'); }
         );
       } else {
         populateEmailOnly(cleanEmail);
@@ -3329,6 +3327,37 @@ function processGoogleEmail(email, accessToken) {
     });
     return;
   }
+
+  // Mode Login
+  if (googleAuthMode === 'login') {
+    sendDataToBackend('check_google_account', { email: cleanEmail, googleAccessToken: accessToken || "" }, (result) => {
+      if (result && result.status === "success" && result.existingHp && result.existingHp !== "NOT_REGISTERED") {
+        customerData.token = result.token || "";
+        customerData.nama = result.existingName || "";
+        customerData.email = cleanEmail;
+        customerData.nohp = result.existingHp;
+        customerData.voucherCode = result.voucherCode || "";
+        customerData.photo = result.photo || "";
+        customerData.dob = result.dob || "";
+        customerData.gender = result.gender || "";
+
+        localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama)}!`;
+        navigateTo('page-promo');
+      } else {
+        showElegantAlert(
+          "Akun Anda belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
+          "Belum Terdaftar",
+          "✦",
+          () => {
+            navigateTo('page-auth-register');
+            populateEmailOnly(cleanEmail);
+          }
+        );
+      }
+    });
+  }
+}
 
   // SKENARIO B: DARI FORM LOGIN (Kirim accessToken ke server untuk diverifikasi resmi)
   if (googleAuthMode === 'login') {
@@ -4167,7 +4196,6 @@ function logoutUser() {
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
 async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
   try {
-    // Perbaikan: Ambil token secara aman langsung dari localStorage atau objek global customerData
     let savedUserSession = {};
     try {
       savedUserSession = JSON.parse(localStorage.getItem('sajiva_crm_user') || "{}");
@@ -4179,7 +4207,7 @@ async function sendDataToBackend(action, paramData, callback, feedbackText = "",
 
     let payload = {
       action: action,
-      token: currentActiveToken, // <-- Token terkirim aman ke server
+      token: currentActiveToken,
       nama: customerData.nama || "",
       email: customerData.email || "",
       nohp: customerData.nohp || "",
@@ -4188,23 +4216,21 @@ async function sendDataToBackend(action, paramData, callback, feedbackText = "",
       password: pass || "",
       otp: (paramData && paramData.otp) ? paramData.otp : "",
       photo: customerData.photo || "",
-      dob: typeof dob !== 'undefined' ? dob : (customerData.dob || ""),
-      gender: typeof gender !== 'undefined' ? gender : (customerData.gender || "")
+      dob: typeof dob !== 'undefined' && dob !== "" ? dob : (customerData.dob || ""),
+      gender: typeof gender !== 'undefined' && gender !== "" ? gender : (customerData.gender || "")
     };
 
-    if (action === "check_google_account" && paramData && paramData.email) {
-      payload = {
-        action: "check_google_account",
-       email: paramData.email || "",
-		googleAccessToken: paramData.googleAccessToken || "" // Koma sudah terpasang dengan benar
-      };
+    // Penanganan khusus aksi akun Google
+    if (action === "check_google_account" && paramData) {
+      payload.email = paramData.email || "";
+      payload.googleAccessToken = paramData.googleAccessToken || "";
     }
 
     if (action === "claim_voucher" && paramData) {
       payload.voucher = paramData;
     }
-    
-    // 1. Eksekusi jika berada di dalam lingkungan Google Apps Script Web App
+
+    // 1. Prioritaskan google.script.run jika running di Apps Script Web App
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
         .withSuccessHandler(function(res) {
@@ -4212,39 +4238,43 @@ async function sendDataToBackend(action, paramData, callback, feedbackText = "",
         })
         .withFailureHandler(function(err) {
           console.error("google.script.run Error:", err);
-          alert("Gagal eksekusi script: " + (err.message || String(err)));
+          showElegantAlert("Gagal terhubung ke database server.", "Error", "✕");
           if (callback) callback({ status: "error", message: err.message || String(err) });
         })
         .processCustomerSubmission(payload);
       return;
     }
 
-    // 2. Eksekusi via HTTP Fetch API (Akses Luar / Local HTML / PWA)
+    // 2. Fetch HTTP POST ke Google Script /exec
     const response = await fetch(scriptURL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      redirect: 'follow'
+      body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP Error Status: ${response.status} (${response.statusText})`);
+      throw new Error(`HTTP Error: ${response.status}`);
     }
 
-    const responseText = await response.text();
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (jsonErr) {
-      console.error("Respon Server Bukan JSON:", responseText);
-      throw new Error("Server mengembalikan halaman HTML (bukan JSON). Pastikan URL Web App menggunakan /exec dan akses diatur ke 'Anyone'.");
-    }
-
-    if (callback) callback(data);
+    const resJson = await response.json();
+    if (callback) callback(resJson);
 
   } catch (err) {
     console.error("Backend Connection Error Detail:", err);
-    alert(`Gagal terhubung ke server.\n\nDetail Error: ${err.message}`);
+    
+    // Buka kembali status tombol submit agar tidak macet
+    const btnSubmit = document.getElementById('btn-submit-login');
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = "LOGIN";
+    }
+    const btnReg = document.getElementById('btn-submit-register');
+    if (btnReg) {
+      btnReg.disabled = false;
+      btnReg.innerText = "REGISTER";
+    }
+
+    showElegantAlert("Gagal terhubung ke server. Periksa koneksi internet Anda.", "Koneksi Gagal", "✕");
     if (callback) callback({ status: "error", message: err.message });
   }
 }
