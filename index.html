@@ -4172,15 +4172,16 @@ function logoutUser() {
     } catch(e) {
       savedUserSession = {};
     }
-    let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
+	let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
     let currentActiveToken = (typeof customerData !== 'undefined' && customerData.token) ? customerData.token : (savedUserSession.token || "");
 
     let payload = {
       action: action,
       token: currentActiveToken,
-      nama: customerData.nama || "",
-      email: customerData.email || "",
-      nohp: customerData.nohp || "",
+      user: loginIdentifier, // <-- WAJIB ADA AGAR SERVER TAHU SIAPA YANG LOGIN
+      nama: loginIdentifier || customerData.nama || "",
+      email: (loginIdentifier && loginIdentifier.includes('@')) ? loginIdentifier.toLowerCase() : (customerData.email || ""),
+      nohp: loginIdentifier || customerData.nohp || "",
       rating: customerData.rating || "",
       feedback: feedbackText || "",
       password: pass || "",
