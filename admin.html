@@ -457,8 +457,8 @@
     });
 
     function checkAdminSession() {
-      if (localStorage.getItem('sajiva_admin_logged'] === 'true') {
-        adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
+if (localStorage.getItem('sajiva_admin_logged') === 'true') {        
+adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
         showDashboard();
       }
     }
