@@ -3359,37 +3359,6 @@ function processGoogleEmail(email, accessToken) {
   }
 }
 
-  // SKENARIO B: DARI FORM LOGIN (Kirim accessToken ke server untuk diverifikasi resmi)
-  if (googleAuthMode === 'login') {
-    sendDataToBackend('check_google_account', { email: cleanEmail, googleAccessToken: accessToken || "" }, (result) => {
-      if (result && result.status === "success" && result.existingHp && result.existingHp.trim() !== "") {
-        customerData.token = result.token || ""; // Amankan token sesi dari server
-        customerData.nama = result.existingName || "";
-        customerData.email = cleanEmail;
-        customerData.nohp = result.existingHp;
-        customerData.voucherCode = result.voucherCode || "";
-        customerData.photo = result.photo || "";
-        customerData.dob = result.dob || "";
-        customerData.gender = result.gender || "";
-
-        localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama)}!`;
-        navigateTo('page-promo');
-      } else {
-        showElegantAlert(
-          "Akun Anda belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
-          "Belum Terdaftar",
-          "✦",
-          () => {
-            navigateTo('page-auth-register');
-            populateEmailOnly(cleanEmail);
-          }
-        );
-      }
-    });
-  }
-}
-
 // 3. Fungsi Pengisian Otomatis Kolom Email Saja (Persis Union)
 function populateEmailOnly(email) {
   const inEmail = document.getElementById('reg-email');
