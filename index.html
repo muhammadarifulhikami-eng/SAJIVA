@@ -4163,15 +4163,15 @@ function logoutUser() {
     }
 
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
-async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
-  try {
+	async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
+	try {
     let savedUserSession = {};
     try {
       savedUserSession = JSON.parse(localStorage.getItem('sajiva_crm_user') || "{}");
     } catch(e) {
       savedUserSession = {};
     }
-    
+    let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
     let currentActiveToken = (typeof customerData !== 'undefined' && customerData.token) ? customerData.token : (savedUserSession.token || "");
 
     let payload = {
