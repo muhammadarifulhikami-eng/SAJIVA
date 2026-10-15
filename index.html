@@ -3364,7 +3364,8 @@ function populateEmailOnly(email) {
   const inEmail = document.getElementById('reg-email');
   if (inEmail && email) {
     inEmail.value = email;
-    inEmail.readOnly = true; // Kunci agar email Google tidak diedit manual
+    // Gunakan atribut 'disabled' atau biarkan aktif tapi dikunci stylenya agar tetap terbaca oleh form submit
+    inEmail.setAttribute('readonly', 'readonly');
     inEmail.style.backgroundColor = "rgba(0, 0, 0, 0.04)";
     inEmail.style.cursor = "not-allowed";
 
@@ -3373,7 +3374,7 @@ function populateEmailOnly(email) {
     if (errEmail) errEmail.style.display = 'none';
   }
 
-  // Fokuskan kursor ke kolom Nama Lengkap
+  // Fokuskan kursor ke kolom Nama Lengkap agar user bisa langsung mengetik nama
   const inNama = document.getElementById('reg-nama');
   if (inNama && !inNama.value.trim()) {
     inNama.focus();
