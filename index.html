@@ -2234,7 +2234,7 @@ select.form-input {
           <div class="slider-dots" id="slider-dots"></div>
         </div>
 
-        <div class="promo-banner">
+        <div id="dynamic-promo-container"></div>
           <span class="promo-tag">Member Special</span>
           <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
           <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
@@ -2478,7 +2478,7 @@ select.form-input {
       </main>
     </div>
     <!-- 4. HALAMAN EVENT -->
-    <div id="page-event" class="page-view">
+    <div id="dynamic-event-container"></div>
       <main class="card">
 		<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>        
         
@@ -4521,6 +4521,53 @@ function initAuthSlider() {
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
     }
+	
+// ==========================================
+// FUNGSI LOAD DYNAMIC EVENT & PROMO
+// ==========================================
+async function loadDynamicContent() {
+  try {
+    const [eRes, pRes] = await Promise.all([
+      fetch(scriptURL + "?action=getEvents", { redirect: 'follow' }),
+      fetch(scriptURL + "?action=getPromos", { redirect: 'follow' })
+    ]);
+
+    const [eJson, pJson] = await Promise.all([eRes.json(), pRes.json()]);
+
+    // Render Event
+    const eventContainer = document.getElementById('dynamic-event-container');
+    if (eventContainer && eJson.status === "success" && Array.isArray(eJson.data)) {
+      eventContainer.innerHTML = eJson.data.map(ev => `
+        <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; background: rgba(184, 125, 75, 0.1); padding: 3px 8px; border-radius: 6px;">Sajiva Creative Experience</span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold-light);">${escapeHtml(ev.price)}</span>
+          </div>
+          <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(ev.title)}</div>
+          <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">📅 ${escapeHtml(ev.date)}</div>
+          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(ev.title)}" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+            Book Slot via WhatsApp
+          </a>
+        </div>
+      `).join('');
+    }
+
+    // Render Promo
+    const promoContainer = document.getElementById('dynamic-promo-container');
+    if (promoContainer && pJson.status === "success" && Array.isArray(pJson.data)) {
+      promoContainer.innerHTML = pJson.data.map(pr => `
+        <div class="promo-banner" style="margin-bottom: 12px;">
+          <span class="promo-tag">${escapeHtml(pr.price || 'Special')}</span>
+          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(pr.title)}</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(pr.desc)}</div>
+        </div>
+      `).join('');
+    }
+  } catch (err) {
+    console.error("Gagal memuat konten event/promo:", err);
+  }
+}
+	
 	function openTnCModal() {
       document.getElementById('tnc-modal').classList.add('show');
     }
@@ -4542,6 +4589,7 @@ history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
       initSlider();
 	  initGoogleAuth();
       renderGallery('all');
+	  loadDynamicContent();
 	  
  
 
