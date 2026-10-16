@@ -523,24 +523,30 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
       }
     }
 
-    async function fetchBannersAndGalleryBackend() {
+async function fetchBannersAndGalleryBackend() {
       try {
-        const bRes = await fetch(scriptURL + "?action=getBanners", { redirect: 'follow' });
-        const bJson = await bRes.json();
-        if (bJson.status === "success" && Array.isArray(bJson.data)) {
-          bannerData = bJson.data;
-          renderBanners();
-        }
+        const [bRes, gRes, eRes, pRes] = await Promise.all([
+          fetch(scriptURL + "?action=getBanners", { redirect: 'follow' }),
+          fetch(scriptURL + "?action=getGallery", { redirect: 'follow' }),
+          fetch(scriptURL + "?action=getEvents", { redirect: 'follow' }),
+          fetch(scriptURL + "?action=getPromos", { redirect: 'follow' })
+        ]);
 
-        const gRes = await fetch(scriptURL + "?action=getGallery", { redirect: 'follow' });
-        const gJson = await gRes.json();
-        if (gJson.status === "success" && Array.isArray(gJson.data)) {
-          galleryData = gJson.data;
-          renderAdminGallery();
-        }
+        const [bJson, gJson, eJson, pJson] = await Promise.all([
+          bRes.json(), gRes.json(), eRes.json(), pRes.json()
+        ]);
+
+        if (bJson.status === "success") { bannerData = bJson.data; renderBanners(); }
+        if (gJson.status === "success") { galleryData = gJson.data; renderAdminGallery(); }
+        if (eJson.status === "success") { eventData = eJson.data; renderEvents(); }
+        if (pJson.status === "success") { promoData = pJson.data; renderPromos(); }
+
+        const totalActive = (eventData.length || 0) + (promoData.length || 0);
+        document.getElementById('stat-active-events').textContent = totalActive;
       } catch (err) {
-        console.log("Error loading media:", err);
+        console.error("Gagal sinkronisasi data konten:", err);
       }
+    }
     }
 
     function processAndRenderCRMData(data) {
@@ -693,8 +699,8 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
       document.getElementById('form-modal').classList.remove('show');
     }
 
-    function deleteItem(type, id) {
-      if(!confirm("Yakin ingin menghapus item ini?")) return;
+function deleteItem(type, id) {
+      if (!confirm("Yakin ingin menghapus item ini?")) return;
 
       if (type === 'banner') {
         bannerData = bannerData.filter(x => x.id !== id);
@@ -707,9 +713,11 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
       } else if (type === 'event') {
         eventData = eventData.filter(x => x.id !== id);
         renderEvents();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_event", id: id, adminKey: adminSecretKey }), redirect: 'follow' });
       } else if (type === 'promo') {
         promoData = promoData.filter(x => x.id !== id);
         renderPromos();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "delete_promo", id: id, adminKey: adminSecretKey }), redirect: 'follow' });
       }
     }
 
@@ -723,34 +731,28 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
         bannerData.push({ id: Date.now(), url: url, title: title });
         renderBanners();
         fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_banner", url: url, title: title, adminKey: adminSecretKey }), redirect: 'follow' });
-      } 
-      else if (type === 'gallery') {
+      } else if (type === 'gallery') {
         const category = document.getElementById('input-category').value;
         const url = document.getElementById('input-url').value;
         const title = document.getElementById('input-title').value;
         galleryData.push({ id: Date.now(), category: category, url: url, title: title });
         renderAdminGallery();
         fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_gallery", category: category, url: url, title: title, adminKey: adminSecretKey }), redirect: 'follow' });
-      }
-      else if (type === 'event') {
-        eventData.push({
-          id: Date.now(),
-          title: document.getElementById('input-title').value,
-          price: document.getElementById('input-price').value,
-          date: document.getElementById('input-date').value,
-          desc: document.getElementById('input-desc').value
-        });
+      } else if (type === 'event') {
+        const title = document.getElementById('input-title').value;
+        const price = document.getElementById('input-price').value;
+        const date = document.getElementById('input-date').value;
+        const desc = document.getElementById('input-desc').value;
+        eventData.push({ id: Date.now(), title, price, date, desc });
         renderEvents();
-      }
-      else if (type === 'promo') {
-        promoData.push({
-          id: Date.now(),
-          title: document.getElementById('input-title').value,
-          price: document.getElementById('input-price').value,
-          redirect: 'follow',
-          desc: document.getElementById('input-desc').value
-        });
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_event", title, price, date, desc, adminKey: adminSecretKey }), redirect: 'follow' });
+      } else if (type === 'promo') {
+        const title = document.getElementById('input-title').value;
+        const price = document.getElementById('input-price').value;
+        const desc = document.getElementById('input-desc').value;
+        promoData.push({ id: Date.now(), title, price, desc });
         renderPromos();
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "add_promo", title, price, desc, adminKey: adminSecretKey }), redirect: 'follow' });
       }
 
       closeModal();
