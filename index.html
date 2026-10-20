@@ -678,27 +678,53 @@ body {
   width: 100%;
 }
 
+/* ===================================================
+   EFEK 3D KACA KHAS IOS (GENDER, SAVE, & CANCEL)
+   =================================================== */
+
+/* 1. TOMBOL PILIHAN GENDER (DEFAULT / TIDAK TERPILIH) */
 .gender-btn-option {
   flex: 1;
   padding: 13px 16px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
+  border-radius: 16px;
   font-family: inherit;
   font-size: 0.92rem;
-  font-weight: 500;
-  color: var(--text-main);
+  font-weight: 600;
+  color: #1a1a1a;
   cursor: pointer;
   outline: none;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  /* Efek Kaca Frosting Putih Halus */
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    0 4px 14px rgba(0, 0, 0, 0.05);
+  
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gender-btn-option:hover {
-  border-color: var(--accent-gold);
-  background: #fdfaf7;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 1),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* 2. TOMBOL PILIHAN GENDER (AKTIF / TERPILIH - EFEK KACA GELAP TINGKAT TINGGI) */
+.gender-btn-option.selected {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.92) 0%, rgba(10, 10, 10, 0.88) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    0 8px 20px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-1px);
 }
 
 /* Tampilan Saat Dipilih (Elegan Sesuai Tema Sajiva) */
@@ -1472,12 +1498,75 @@ select.form-input {
   transform: scale(0.98);
   filter: brightness(0.95);
 }
-    .btn-cancel-edit {
-      background: #f1f5f9;
-      color: #475569;
-      border: 1px solid var(--card-border);
-      margin-top: 8px;
-    }
+/* 4. TOMBOL BATAL (CANCEL - FROSTED NEUTRAL GLASS) */
+.btn-cancel-edit {
+  width: 100%;
+  padding: 13px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 8px;
+  color: #334155 !important;
+  
+  /* Lapisan Kaca Abu-abu Transparan */
+  background: rgba(241, 245, 249, 0.65) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 4px 14px rgba(0, 0, 0, 0.04);
+  
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-cancel-edit:hover {
+  background: rgba(241, 245, 249, 0.85) !important;
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 1),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.btn-cancel-edit:active {
+  transform: scale(0.98);
+  background: rgba(226, 232, 240, 0.75) !important;
+}
+/* Letakkan di bawah .btn-cancel-edit */
+#btn-save-profile {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  margin-top: 14px;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(184, 125, 75, 0.85) 0%, rgba(140, 88, 40, 0.78) 100%) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.65),
+    0 8px 24px rgba(184, 125, 75, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#btn-save-profile:hover {
+  background: linear-gradient(135deg, rgba(184, 125, 75, 0.95) 0%, rgba(140, 88, 40, 0.88) 100%) !important;
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    0 10px 28px rgba(184, 125, 75, 0.4);
+}
+
+#btn-save-profile:active {
+  transform: scale(0.98);
+  filter: brightness(0.95);
+}
     .avatar-upload-btn.disabled-view {
       display: none !important;
     }
@@ -2777,11 +2866,29 @@ select.form-input {
           <div class="error-text" id="error-edit-nohp">Nomor WhatsApp tidak valid!</div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Tanggal Lahir</label>
-          <input type="date" id="edit-dob-input" class="form-input">
-        </div>
+<!-- KODE BARU (CUSTOM DATEPICKER KACA) -->
+<div class="form-group">
+  <label class="form-label">Date of Birth</label>
+  <div class="custom-datepicker-wrapper">
+    <input type="text" id="edit-dob-display" class="form-input" placeholder="Select Date of Birth" readonly onclick="toggleEditCalendar()">
+    <input type="hidden" id="edit-dob-input" value="">
 
+    <div class="custom-calendar-popup glass-calendar" id="edit-calendar-popup">
+      <div class="calendar-header">
+        <button type="button" class="calendar-title-btn" id="edit-cal-title-btn" onclick="switchEditCalendarView()">Okt 2026</button>
+        <div class="calendar-nav-group">
+          <button type="button" class="calendar-nav-btn" onclick="prevEditCalendarStep()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="calendar-nav-btn" onclick="nextEditCalendarStep()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      <div id="edit-calendar-content"></div>
+    </div>
+  </div>
+</div>
         <div class="form-group">
           <label class="form-label">Jenis Kelamin</label>
           <div class="gender-selector-container">
