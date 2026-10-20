@@ -4600,19 +4600,29 @@ async function fetchDynamicContentForUser() {
       bRes.json(), gRes.json(), eRes.json(), pRes.json()
     ]);
 
-    // Update Banners jika data tersedia
+// Update Banners jika data tersedia
     if (bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0) {
       const sliderContainer = document.getElementById('banner-slides');
       if (sliderContainer) {
-        sliderContainer.innerHTML = bJson.data.map(item => `
-          <div class="banner-slide">
-            <img src="${escapeHtml(item.url)}" alt="${escapeHtml(item.title || 'Sajiva Banner')}">
-            <div class="banner-overlay">
-              <h4>${escapeHtml(item.title || 'Artisanal Coffee Roastery')}</h4>
+        sliderContainer.innerHTML = bJson.data.map(item => {
+          // Cegah URL masuk sebagai judul jika salah input
+          let displayTitle = item.title || 'Artisanal Coffee Roastery';
+          if (displayTitle.startsWith('http://') || displayTitle.startsWith('https://')) {
+            displayTitle = 'Artisanal Coffee Roastery';
+          }
+          
+          let imgUrl = item.url || 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000';
+
+          return `
+            <div class="banner-slide">
+              <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(displayTitle)}" onerror="this.src='https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000'">
+              <div class="banner-overlay">
+                <h4>${escapeHtml(displayTitle)}</h4>
+              </div>
             </div>
-          </div>
-        `).join('');
-        initSlider(); // Re-inisialisasi slider
+          `;
+        }).join('');
+        initSlider(); // Inisialisasi ulang slide dan dots
       }
     }
 
