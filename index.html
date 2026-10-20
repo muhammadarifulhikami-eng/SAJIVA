@@ -1574,11 +1574,11 @@ select.form-input {
   bottom: calc(env(safe-area-inset-bottom, 20px) + 24px);
   left: 20px;
   right: 20px;
-  z-index: 10; /* Tingkatkan z-index agar selalu di atas gradient mask */
+  z-index: 9999 !important; /* Tinggikan z-index agar berada di atas layer slider */
   display: flex;
   flex-direction: column;
   align-items: center;
-  pointer-events: auto; /* Pastikan area ini menerima klik */
+  pointer-events: auto !important;
 }
 
 .auth-union-tagline {
@@ -1598,8 +1598,8 @@ select.form-input {
   width: 100%;
   max-width: 400px;
   position: relative;
-  z-index: 20; /* Pastikan tombol berada di lapisan terdepan */
-  pointer-events: auto;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
 }
 
 .btn-union-cta {
@@ -1613,10 +1613,9 @@ select.form-input {
   border-radius: 4px;
   transition: all 0.2s ease;
   position: relative;
-  z-index: 30; /* Lapisan paling atas */
-  pointer-events: auto; /* Wajib aktif agar event klik terpicu */
+  z-index: 10001 !important;
+  pointer-events: auto !important; /* Memastikan event klik diterima */
 }
-
 /* Tombol Login: Putih Bersih */
 .btn-union-login {
   background: #ffffff;
@@ -1786,18 +1785,20 @@ select.form-input {
     function forceDismissSplash() {
       var splash = document.getElementById('app-splash-screen');
       if (splash) {
-        splash.classList.add('fade-out');
+        // Langsung matikan pointer-events agar tombol di bawahnya bisa langsung diklik
         splash.style.pointerEvents = 'none';
+        splash.classList.add('fade-out');
         setTimeout(function() {
-          splash.style.display = 'none'; // Hapus total agar tidak menutupi tombol
+          splash.style.display = 'none';
         }, 600);
       }
     }
-    // Tepat 3 detik pasti hilang dan tombol bisa diklik
-    setTimeout(forceDismissSplash, 3000);
+    // Percepat waktu tunggu atau biarkan hilang otomatis saat window sudah load penuh
     window.addEventListener('load', function() {
-      setTimeout(forceDismissSplash, 3000);
+      setTimeout(forceDismissSplash, 1000); // Diubah dari 3000ms ke 1000ms agar lebih responsif
     });
+    // Fallback darurat 2 detik
+    setTimeout(forceDismissSplash, 2000);
   })();
 </script>
 
@@ -1885,7 +1886,7 @@ select.form-input {
   </div>
   <div class="wrapper">
     
-    <!-- TOP APP BAR -->
+<!-- TOP APP BAR -->
     <div class="top-app-bar" id="top-app-bar">
       <div style="position: relative;">
         <button class="top-bar-btn" id="btn-toggle-menu" onclick="toggleDropdownMenu()">
@@ -1903,8 +1904,8 @@ select.form-input {
           </div>
           <div class="dropdown-item" onclick="navigateTo('page-about')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-			<span>Tentang Kami</span>          
-		  </div>
+            <span>Tentang Kami</span>          
+          </div>
           <div class="dropdown-item" onclick="navigateTo('page-event')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             <span>Acara</span>
@@ -1932,7 +1933,7 @@ select.form-input {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M12 12h.01"></path><path d="M17 12h.01"></path><path d="M7 12h.01"></path></svg>
             <span>Voucher Saya</span>
           </div>
-		  <!-- TAMBAHAN: Item Ganti Bahasa dengan Kapsul Toggle ID | EN -->
+          <!-- Item Ganti Bahasa -->
           <div class="dropdown-item-lang">
             <div class="lang-label-group">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1949,11 +1950,12 @@ select.form-input {
             </div>
           </div>
         </div>
-</div>
+      </div>
 
-<div style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--text-main);">
-  SAJIVA<sup class="brand-plus-sup">+</sup>
-</div>
+      <div style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--text-main);">
+        SAJIVA<sup class="brand-plus-sup">+</sup>
+      </div>
+      
       <button class="top-bar-btn" onclick="openProfileModal()">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </button>
@@ -2206,11 +2208,11 @@ select.form-input {
       </main>
     </div>
 	
-    <!-- 1. HALAMAN PROMO -->
+<!-- 1. HALAMAN PROMO -->
     <div id="page-promo" class="page-view">
       <main class="card">
-<h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA<sup class="brand-plus-sup">+</sup></span></h2>
-<p class="card-subtitle" id="welcome-user-text">Selamat datang kembali!</p>
+        <h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA<sup class="brand-plus-sup">+</sup></span></h2>
+        <p class="card-subtitle" id="welcome-user-text">Selamat datang kembali!</p>
 		
         <div class="banner-slider-container" id="banner-slider">
           <button class="slider-btn prev" onclick="prevSlide()">❮</button>
@@ -2234,17 +2236,20 @@ select.form-input {
           <div class="slider-dots" id="slider-dots"></div>
         </div>
 
-        <div id="dynamic-promo-container"></div>
-          <span class="promo-tag">Member Special</span>
-          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
-          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
-          <button onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 10px; font-size: 0.82rem; background: var(--accent-gold);">Lihat Voucher / Review</button>
-        </div>
+        <!-- Kontainer Promo Dinamis yang Bersih -->
+        <div id="dynamic-promo-container">
+          <div class="promo-banner">
+            <span class="promo-tag">Member Special</span>
+            <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
+            <button onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 10px; font-size: 0.82rem; background: var(--accent-gold);">Lihat Voucher / Review</button>
+          </div>
 
-        <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff;">
-          <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">Weekly Offer</span>
-          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Buy 1 Get 1 Filter Coffee</div>
-          <div style="font-size: 0.78rem; color: var(--text-secondary);">Setiap hari Selasa, tunjukkan akun Sajiva terdaftar ini ke Barista kami untuk setiap pembelian V60 / Kalita.</div>
+          <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff;">
+            <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">Weekly Offer</span>
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Buy 1 Get 1 Filter Coffee</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">Setiap hari Selasa, tunjukkan akun Sajiva terdaftar ini ke Barista kami untuk setiap pembelian V60 / Kalita.</div>
+          </div>
         </div>
       </main>
     </div>
@@ -2477,23 +2482,25 @@ select.form-input {
         </div>
       </main>
     </div>
-    <!-- 4. HALAMAN EVENT -->
-    <div id="dynamic-event-container"></div>
+<!-- 4. HALAMAN EVENT -->
+    <div id="page-event" class="page-view">
       <main class="card">
-		<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>        
+        <h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>        
         
-        <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; background: rgba(184, 125, 75, 0.1); padding: 3px 8px; border-radius: 6px;">Sajiva Creative Experience</span>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold-light);">285k <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-dim);">/ person</span></span>
+        <div id="dynamic-event-container">
+          <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; background: rgba(184, 125, 75, 0.1); padding: 3px 8px; border-radius: 6px;">Sajiva Creative Experience</span>
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold-light);">285k <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-dim);">/ person</span></span>
+            </div>
+            <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">3D Ocean Painting</div>
+            <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+              📅 03 October 2026 | ⏰ 10.00 - Finish
+            </div>
+            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%203D%20Ocean%20Painting" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+              Book Slot via WhatsApp
+            </a>
           </div>
-          <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">3D Ocean Painting</div>
-          <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
-            📅 03 October 2026 | ⏰ 10.00 - Finish
-          </div>
-          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%203D%20Ocean%20Painting" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
-            Book Slot via WhatsApp
-          </a>
         </div>
       </main>
     </div>
@@ -3804,13 +3811,19 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
     btnSave.innerText = "Menyimpan Data...";
   }
 
-  // ========================================================
-  // HAPUS DARI SINI SAMPAI SEBELUM TANDA "});" PALING BAWAH
-  // ========================================================
   const finalPhoto = tempEditPhoto || customerData.photo || "";
+  const oldPhoneTracker = customerData.nohp; // Simpan nomor lama untuk parameter oldHp
+
+  // Perbarui properti customerData secara lokal terlebih dahulu
+  customerData.nama = newNama || customerData.nama;
+  customerData.email = newEmail || customerData.email;
+  customerData.nohp = newNohp || customerData.nohp;
+  customerData.dob = newDob || customerData.dob;
+  customerData.gender = newGender || customerData.gender;
+  customerData.photo = finalPhoto;
 
   sendDataToBackend('update_profile', {
-    oldHp: customerData.nohp
+    oldHp: oldPhoneTracker // Kirim nomor lama agar server bisa melacak baris sheet yang benar
   }, (res) => {
     if (btnSave) {
       btnSave.disabled = false;
@@ -3818,12 +3831,6 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
     }
 
     if (res && res.status === "success") {
-      customerData.nama = newNama || customerData.nama;
-      customerData.email = newEmail || customerData.email;
-      customerData.nohp = newNohp || customerData.nohp;
-      customerData.dob = newDob || customerData.dob;
-      customerData.gender = newGender || customerData.gender;
-      customerData.photo = finalPhoto;
       if (res.token) customerData.token = res.token;
 
       localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
@@ -3835,11 +3842,7 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
       showElegantAlert(res.message || "Gagal memperbarui profil di server.", "Pemberitahuan", "✕");
     }
   }, "", "", newDob, newGender);
-  // ========================================================
-  // AKHIR BAGIAN YANG DIGANTI
-  // ========================================================
-
-}); // <-- TANDA INI TETAP DISIMPAN (PENUTUP SUBMIT)
+});
 
     function closeProfileModal() {
       document.getElementById('profile-modal').classList.remove('show');
@@ -4175,21 +4178,23 @@ function logoutUser() {
 	let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
     let currentActiveToken = (typeof customerData !== 'undefined' && customerData.token) ? customerData.token : (savedUserSession.token || "");
 
-    let payload = {
-      action: action,
-      token: currentActiveToken,
-      user: loginIdentifier, // <-- WAJIB ADA AGAR SERVER TAHU SIAPA YANG LOGIN
-      nama: loginIdentifier || customerData.nama || "",
-      email: (loginIdentifier && loginIdentifier.includes('@')) ? loginIdentifier.toLowerCase() : (customerData.email || ""),
-      nohp: loginIdentifier || customerData.nohp || "",
-      rating: customerData.rating || "",
-      feedback: feedbackText || "",
-      password: pass || "",
-      otp: (paramData && paramData.otp) ? paramData.otp : "",
-      photo: customerData.photo || "",
-      dob: typeof dob !== 'undefined' && dob !== "" ? dob : (customerData.dob || ""),
-      gender: typeof gender !== 'undefined' && gender !== "" ? gender : (customerData.gender || "")
-    };
+let payload = {
+  action: action,
+  token: currentActiveToken,
+  user: loginIdentifier,
+  nama: loginIdentifier || customerData.nama || "",
+  email: (loginIdentifier && loginIdentifier.includes('@')) ? loginIdentifier.toLowerCase() : (customerData.email || ""),
+  nohp: loginIdentifier || customerData.nohp || "",
+  // Tambahkan baris ini untuk menangani oldHp saat update profil:
+  oldHp: (paramData && paramData.oldHp) ? paramData.oldHp : customerData.nohp,
+  rating: customerData.rating || "",
+  feedback: feedbackText || "",
+  password: pass || "",
+  otp: (paramData && paramData.otp) ? paramData.otp : "",
+  photo: customerData.photo || "",
+  dob: typeof dob !== 'undefined' && dob !== "" ? dob : (customerData.dob || ""),
+  gender: typeof gender !== 'undefined' && gender !== "" ? gender : (customerData.gender || "")
+};
 
     // Penanganan khusus aksi akun Google
     if (action === "check_google_account" && paramData) {
@@ -4582,6 +4587,72 @@ async function loadDynamicContent() {
 history.pushState({ modal: 'tnc' }, ''); // di dalam openTnCModal
 history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
 
+async function fetchDynamicContentForUser() {
+  try {
+    const [bRes, gRes, eRes, pRes] = await Promise.all([
+      fetch(scriptURL + "?action=getBanners", { redirect: 'follow' }),
+      fetch(scriptURL + "?action=getGallery", { redirect: 'follow' }),
+      fetch(scriptURL + "?action=getEvents", { redirect: 'follow' }),
+      fetch(scriptURL + "?action=getPromos", { redirect: 'follow' })
+    ]);
+
+    const [bJson, gJson, eJson, pJson] = await Promise.all([
+      bRes.json(), gRes.json(), eRes.json(), pRes.json()
+    ]);
+
+    // Update Banners jika data tersedia
+    if (bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0) {
+      const sliderContainer = document.getElementById('banner-slides');
+      if (sliderContainer) {
+        sliderContainer.innerHTML = bJson.data.map(item => `
+          <div class="banner-slide">
+            <img src="${escapeHtml(item.url)}" alt="${escapeHtml(item.title || 'Sajiva Banner')}">
+            <div class="banner-overlay">
+              <h4>${escapeHtml(item.title || 'Artisanal Coffee Roastery')}</h4>
+            </div>
+          </div>
+        `).join('');
+        initSlider(); // Re-inisialisasi slider
+      }
+    }
+
+    // Update Gallery jika data tersedia
+    if (gJson.status === "success" && Array.isArray(gJson.data)) {
+      galleryItems = gJson.data; // Timpa array global galleryItems
+      renderGallery('all');
+    }
+
+    // Update Events jika data tersedia
+    if (eJson.status === "success" && Array.isArray(eJson.data) && eJson.data.length > 0) {
+      const eventPageContainer = document.querySelector('#page-event main.card');
+      if (eventPageContainer) {
+        // Render dinamis daftar event
+        let eventHtml = `<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>`;
+        eventHtml += eJson.data.map(item => `
+          <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; background: rgba(184, 125, 75, 0.1); padding: 3px 8px; border-radius: 6px;">Sajiva Creative Experience</span>
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold-light);">${escapeHtml(item.price)}</span>
+            </div>
+            <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(item.title)}</div>
+            <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+              📅 ${escapeHtml(item.date)}
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 10px;">${escapeHtml(item.desc)}</p>
+            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(item.title)}" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+              Book Slot via WhatsApp
+            </a>
+          </div>
+        `).join('');
+        eventPageContainer.innerHTML = eventHtml;
+      }
+    }
+
+  } catch (err) {
+    console.error("Gagal mengambil konten dinamis:", err);
+  }
+}
+
     // INIT APP
     document.addEventListener("DOMContentLoaded", () => {
       setupStarRating();
@@ -4590,8 +4661,7 @@ history.pushState({ modal: 'forgot' }, ''); // di dalam openForgotPasswordModal
 	  initGoogleAuth();
       renderGallery('all');
 	  loadDynamicContent();
-	  
- 
+	  fetchDynamicContentForUser();
 
 // Filter Realtime: Hanya Huruf dan Spasi untuk Nama Lengkap
 const regNamaInput = document.getElementById('reg-nama');
