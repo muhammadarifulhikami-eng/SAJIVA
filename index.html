@@ -1122,8 +1122,44 @@ select.form-input {
       display: inline-block;
     }
 
-    .btn-logout { width: 100%; padding: 12px; background: #fee2e2; color: var(--error-red); border: 1px solid #fca5a5; border-radius: 12px; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-top: 14px; }
+/* EFEK TOMBOL KACA IOS (LOG OUT) */
+.btn-logout {
+  width: 100%;
+  padding: 13px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 10px;
+  color: #dc2626;
+  
+  /* Lapisan Kaca Frosted Merah Lembut */
+  background: rgba(254, 226, 226, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  /* Refleksi Kaca & Border Tipis */
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8), 
+    0 4px 16px rgba(220, 38, 38, 0.08);
+  
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+.btn-logout:hover {
+  background: rgba(254, 226, 226, 0.75);
+  border-color: rgba(220, 38, 38, 0.35);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.9), 
+    0 6px 20px rgba(220, 38, 38, 0.12);
+}
+
+.btn-logout:active {
+  transform: scale(0.98);
+  background: rgba(254, 202, 202, 0.7);
+}
 /* FOOTER BRANDING: PART OF INARA GROUP */
 .inara-footer-wrapper {
   display: flex;
@@ -1398,11 +1434,44 @@ select.form-input {
       color: var(--text-main);
       word-break: break-all;
     }
-    .btn-edit-mode {
-      background: var(--accent-gold);
-      color: #ffffff;
-      margin-top: 6px;
-    }
+ /* EFEK TOMBOL KACA IOS (EDIT PROFILE) */
+.btn-edit-mode {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  margin-top: 12px;
+  color: #ffffff;
+  
+  /* Lapisan Kaca Amber / Gold */
+  background: linear-gradient(135deg, rgba(184, 125, 75, 0.82) 0%, rgba(140, 88, 40, 0.75) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  /* Refleksi Cahaya Sudut Kaca iOS */
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.6), 
+    0 8px 24px rgba(184, 125, 75, 0.25);
+  
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-edit-mode:hover {
+  background: linear-gradient(135deg, rgba(184, 125, 75, 0.92) 0%, rgba(140, 88, 40, 0.85) 100%);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.75), 
+    0 10px 28px rgba(184, 125, 75, 0.35);
+}
+
+.btn-edit-mode:active {
+  transform: scale(0.98);
+  filter: brightness(0.95);
+}
     .btn-cancel-edit {
       background: #f1f5f9;
       color: #475569;
@@ -2236,21 +2305,25 @@ select.form-input {
           <div class="slider-dots" id="slider-dots"></div>
         </div>
 
-        <!-- Kontainer Promo Dinamis yang Bersih -->
-        <div id="dynamic-promo-container">
-          <div class="promo-banner">
-            <span class="promo-tag">Member Special</span>
-            <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
-            <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
-            <button onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 10px; font-size: 0.82rem; background: var(--accent-gold);">Lihat Voucher / Review</button>
-          </div>
+        <!-- 1. KARTU UTAMA REVIEW REWARD (DENGAN TOMBOL AKSI KLAIM/REVIEW) -->
+        <div class="promo-banner">
+          <span class="promo-tag">Member Special</span>
+          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
+          <button type="button" onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 12px; font-size: 0.88rem; background: var(--accent-gold); cursor: pointer;">
+            Lihat Voucher / Review
+          </button>
+        </div>
 
+        <!-- 2. KONTAINER KHUSUS PROMO DINAMIS DARI DATABASE GOOGLE SHEETS -->
+        <div id="dynamic-promo-container">
           <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff;">
             <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">Weekly Offer</span>
             <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Buy 1 Get 1 Filter Coffee</div>
             <div style="font-size: 0.78rem; color: var(--text-secondary);">Setiap hari Selasa, tunjukkan akun Sajiva terdaftar ini ke Barista kami untuk setiap pembelian V60 / Kalita.</div>
           </div>
         </div>
+
       </main>
     </div>
 
@@ -4557,16 +4630,21 @@ async function loadDynamicContent() {
       `).join('');
     }
 
-    // Render Promo
+// Render Promo Tambahan
     const promoContainer = document.getElementById('dynamic-promo-container');
     if (promoContainer && pJson.status === "success" && Array.isArray(pJson.data)) {
-      promoContainer.innerHTML = pJson.data.map(pr => `
-        <div class="promo-banner" style="margin-bottom: 12px;">
-          <span class="promo-tag">${escapeHtml(pr.price || 'Special')}</span>
-          <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(pr.title)}</div>
-          <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(pr.desc)}</div>
-        </div>
-      `).join('');
+      // Saring promo selain Review Reward agar kartu utama tidak terduplikasi
+      const extraPromos = pJson.data.filter(pr => !pr.title.toLowerCase().includes('review reward'));
+      
+      if (extraPromos.length > 0) {
+        promoContainer.innerHTML = extraPromos.map(pr => `
+          <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff; margin-bottom: 12px;">
+            <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">${escapeHtml(pr.price || 'Special Offer')}</span>
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(pr.title)}</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">${escapeHtml(pr.desc)}</div>
+          </div>
+        `).join('');
+      }
     }
   } catch (err) {
     console.error("Gagal memuat konten event/promo:", err);
