@@ -681,8 +681,9 @@ body {
 /* ===================================================
    EFEK 3D KACA KHAS IOS (GENDER, SAVE, & CANCEL)
    =================================================== */
-
-/* 1. TOMBOL PILIHAN GENDER (DEFAULT / TIDAK TERPILIH) */
+/* ===================================================
+   TOMBOL GENDER (DEFAULT / TIDAK TERPILIH - FROSTED GLASS)
+   =================================================== */
 .gender-btn-option {
   flex: 1;
   padding: 13px 16px;
@@ -716,24 +717,41 @@ body {
     0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* 2. TOMBOL PILIHAN GENDER (AKTIF / TERPILIH - EFEK KACA GELAP TINGKAT TINGGI) */
-.gender-btn-option.selected {
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.92) 0%, rgba(10, 10, 10, 0.88) 100%) !important;
+/* ===================================================
+   TOMBOL GENDER SAAT AKTIF / DIPILIH (.selected)
+   =================================================== */
+/* 1. MALE / PRIA TERPILIH -> SKY BLUE GLASSMORPHISM + GLOW */
+.gender-btn-option.selected#btn-gender-pria,
+.gender-btn-option.selected[data-value="Pria"] {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.35),
-    0 8px 20px rgba(0, 0, 0, 0.25) !important;
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(56, 189, 248, 0.45),
+    0 0 16px rgba(56, 189, 248, 0.35) !important;
   transform: translateY(-1px);
 }
 
-/* Tampilan Saat Dipilih (Elegan Sesuai Tema Sajiva) */
-.gender-btn-option.selected {
-  background: #1a1a1a;
-  color: #ffffff;
-  border-color: #1a1a1a;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+/* 2. FEMALE / WANITA TERPILIH -> MILKY PINK GLASSMORPHISM + GLOW */
+.gender-btn-option.selected#btn-gender-wanita,
+.gender-btn-option.selected[data-value="Wanita"] {
+  background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.9),
+    0 8px 24px rgba(244, 114, 182, 0.45),
+    0 0 16px rgba(251, 207, 232, 0.5) !important;
+  text-shadow: 0 1px 2px rgba(190, 24, 93, 0.25);
+  transform: translateY(-1px);
+}
+.gender-btn-option:active {
+  transform: scale(0.98);
 }
 	
 	/* Styling Checklist TnC & Modal Pop-up */
@@ -802,58 +820,163 @@ body {
       padding: 4px 0;
       position: relative;
     }
-    .top-bar-btn {
-      background: #ffffff;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      color: var(--text-main);
-      transition: all 0.2s;
-    }
-    .top-bar-btn:active { transform: scale(0.95); background: #f0f0f0; }
+/* ========================================================
+   NAVBAR BUTTONS: FROSTED GLASS & COPPER AMBIENT GLOW
+   ======================================================== */
 
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 50px;
-      left: 0;
-      width: 220px;
-      background: #ffffff;
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-      z-index: 100;
-      overflow: hidden;
-      animation: fadeIn 0.2s ease forwards;
-    }
-    .dropdown-menu.show { display: block; }
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-main);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-	
-	/* Item Ganti Bahasa di Bagian Bawah Dropdown */
+.top-bar-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  outline: none;
+
+  /* Efek Kaca Frosted Lembut */
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+
+  /* Refleksi Border Kaca Halus */
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+
+  /* Efek Cahaya Keluar (Ambient Copper Glow) + Inner Specular */
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 4px 14px rgba(0, 0, 0, 0.04),
+    0 0 12px rgba(184, 125, 75, 0.18) !important;
+
+  color: var(--text-main);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Efek Saat Kursor Diarahkan (Hover) */
+.top-bar-btn:hover {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--accent-gold) !important;
+  border-color: #ffffff !important;
+  transform: translateY(-1px);
+
+  /* Pendaran Cahaya Keluar Lebih Nyala */
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 6px 18px rgba(0, 0, 0, 0.06),
+    0 0 16px rgba(184, 125, 75, 0.4) !important;
+}
+
+.top-bar-btn:hover svg {
+  stroke: var(--accent-gold) !important;
+  transform: scale(1.06);
+}
+
+/* Efek Saat Tombol Ditekan (Active) */
+.top-bar-btn:active {
+  transform: scale(0.94);
+  background: rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(0, 0, 0, 0.05),
+    0 0 8px rgba(184, 125, 75, 0.25) !important;
+}
+
+.top-bar-btn svg {
+  transition: all 0.2s ease;
+}
+   /* ========================================================
+   DROPDOWN MENU: SUBTLE FROSTED GLASS & COPPER GLOW
+   ======================================================== */
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 52px;
+  left: 0;
+  width: 220px;
+
+  /* Efek Kaca Frosted Halus */
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+
+  /* Border Kaca dengan Pantulan Cahaya */
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  z-index: 100;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  /* Bayangan Mengambang + Pendaran Halus */
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(184, 125, 75, 0.08),
+    inset 0 1px 1.5px #ffffff !important;
+}
+
+/* Pendaran Garis Cahaya Copper di Bagian Atas Dropdown */
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  box-shadow: 0 0 8px var(--copper-glow);
+  z-index: 2;
+}
+
+.dropdown-menu.show { 
+  display: block; 
+}
+
+/* Item Menu */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Efek Hover Kaca Warna Copper Halus */
+.dropdown-item:hover,
+.dropdown-item.active {
+  background: linear-gradient(90deg, rgba(184, 125, 75, 0.12) 0%, rgba(184, 125, 75, 0.04) 100%) !important;
+  color: var(--accent-gold-light) !important;
+  padding-left: 19px; /* Micro-interaction bergeser halus ke kanan */
+}
+
+.dropdown-item:hover svg,
+.dropdown-item.active svg {
+  stroke: var(--accent-gold) !important;
+  transform: scale(1.1);
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+  stroke: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:last-child { 
+  border-bottom: none; 
+}
+
+/* Area Pilihan Bahasa di Bagian Bawah Menu */
 .dropdown-item-lang {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.4) !important;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -871,42 +994,61 @@ body {
   stroke: var(--text-main);
 }
 
-/* Kapsul Mini ID | EN */
+/* ========================================================
+   KAPSUL BAHASA DROPDOWN: GLASSMORPHISM & COPPER GLOW
+   ======================================================== */
 .lang-pill-menu {
   display: flex;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
   border-radius: 99px;
-  padding: 2px 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  padding: 3px 4px;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 0 10px rgba(184, 125, 75, 0.12) !important;
 }
 
 .lang-pill-btn {
-  background: none;
+  background: transparent;
   border: none;
   font-family: inherit;
   font-size: 0.72rem;
   font-weight: 600;
-  color: #888888;
+  color: var(--text-secondary);
   cursor: pointer;
-  padding: 3px 6px;
+  padding: 4px 8px;
   line-height: 1;
   border-radius: 99px;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.lang-pill-btn:hover:not(.active) {
+  color: var(--accent-gold);
+  background: rgba(184, 125, 75, 0.1);
+}
+
+/* Tombol Bahasa Aktif (Glass Copper Amber + Pendaran Cahaya) */
 .lang-pill-btn.active {
-  background: #1a1a1a;
-  color: #ffffff;
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  color: #ffffff !important;
   font-weight: 700;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.8),
+    0 2px 8px rgba(184, 125, 75, 0.4),
+    0 0 10px rgba(212, 155, 106, 0.5) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25);
 }
 
 .lang-pill-sep {
-  font-size: 0.65rem;
-  color: #d1d5db;
-  margin: 0 1px;
-  user-select: none;
+  display: none; /* Sembunyikan garis pemisah batang agar antar-tombol kaca lebih rapi */
 }
     .dropdown-item:last-child { border-bottom: none; }
     .dropdown-item:active, .dropdown-item.active { background: rgba(184, 125, 75, 0.1); color: var(--accent-gold-light); }
@@ -918,21 +1060,42 @@ body {
     .brand-meta span.divider { width: 20px; height: 1px; background: #d1d5db; }
     .brand-subtext { font-size: 0.7rem; letter-spacing: 3.5px; color: var(--text-secondary); text-transform: uppercase; font-weight: 500; }
 
-    .card { 
-      width: 100%; 
-      background: var(--card-bg); 
-      border: 1px solid var(--card-border); 
-      border-radius: 24px; 
-      padding: 26px 20px 24px; 
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.6); 
-      text-align: center; 
-      position: relative; 
-      overflow: hidden; 
-      backdrop-filter: blur(16px); 
-      -webkit-backdrop-filter: blur(16px);
-      margin-bottom: 16px;
-    }
-    .card::before { content: ""; position: absolute; top: 0; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-gold), transparent); }
+/* ========================================================
+   PAGE PROMO: GLASSMORPHISM BINGKAI KARTU & KOTAK PROMO
+   ======================================================== */
+
+/* 1. BINGKAI KARTU PUTIH UTAMA (FROSTED GLASS CARD) */
+.card {
+  width: 100%;
+  /* Latar Kaca Frosted Semi-Transparan */
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+  border-radius: 28px !important;
+  padding: 26px 20px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.07),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Pendaran Cahaya Copper di Bagian Atas Kartu */
+.card::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 12px var(--copper-glow) !important;
+  z-index: 5 !important;
+}
+
     .card-headline { font-size: 1.15rem; font-weight: 600; color: var(--text-main); line-height: 1.4; margin-bottom: 6px; }
     .card-subtitle { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4; }
 
@@ -1044,20 +1207,132 @@ select.form-input {
     .btn-wa { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #ffffff; box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25); }
     .btn-claim { background: linear-gradient(135deg, #2D1C13 0%, #1a0f0a 100%); color: #ffffff; margin-top: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); cursor: pointer; }
     .btn-claim:disabled { opacity: 0.7; cursor: not-allowed; }
-    .btn-download { background: #1a1a1a; color: #ffffff; margin-top: 16px; width: 100%; border: none; padding: 15px; border-radius: 14px; font-weight: 700; cursor: pointer; }
+/* ========================================================
+   TOMBOL UNDUH VOUCHER (COPPER MUDA GLASS + GLOW)
+   ======================================================== */
+.btn-download,
+#btn-download-voucher {
+  width: 100%;
+  padding: 15px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 18px !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-    .voucher-card { background: #ffffff; border: 2px dashed var(--accent-gold); border-radius: 16px; padding: 20px 16px; margin-top: 12px; position: relative; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
-    .voucher-card::before, .voucher-card::after { content: ''; position: absolute; top: 50%; width: 18px; height: 18px; background: var(--bg-dark); border-radius: 50%; transform: translateY(-50%); border: 2px solid var(--accent-gold); }
-    .voucher-card::before { left: -11px; border-left-color: transparent; border-top-color: transparent; border-bottom-color: transparent; }
-    .voucher-card::after { right: -11px; border-right-color: transparent; border-top-color: transparent; border-bottom-color: transparent; }
-    .voucher-header, .voucher-title { font-family: 'Cinzel', serif; }
-    .voucher-header { font-size: 1.4rem; font-weight: 500; color: var(--accent-gold); margin-bottom: 2px; }
-    .voucher-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px; color: #1a1a1a; }
-    .qr-container { display: flex; justify-content: center; margin-bottom: 14px; }
-    .qr-box { background: #ffffff; padding: 8px; border-radius: 10px; display: inline-block; border: 1px solid #eeeeee; }
-    .voucher-code-box { background: rgba(0, 0, 0, 0.04); padding: 12px; border-radius: 10px; margin-bottom: 14px; border: 1px solid rgba(0, 0, 0, 0.08); }
-    .voucher-code-label { display: block; font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
-    .voucher-code { font-family: monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent-gold-light); letter-spacing: 2px; }
+  /* Gradasi Copper Muda Mengalir */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-download:hover,
+#btn-download-voucher:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.btn-download:active,
+#btn-download-voucher:active {
+  transform: scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 14px rgba(184, 125, 75, 0.25) !important;
+}
+
+.voucher-card { 
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 251, 253, 0.90) 50%, rgba(242, 244, 247, 0.92) 100%) !important; 
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border: 1.5px dashed rgba(184, 125, 75, 0.45) !important; 
+      border-radius: 24px !important; 
+      padding: 24px 18px 22px !important; 
+      margin-top: 14px !important; 
+      position: relative !important; 
+      box-shadow: inset 0 1.5px 2px #ffffff, inset 0 -1.5px 2px rgba(255, 255, 255, 0.6), 0 16px 36px rgba(184, 125, 75, 0.12), 0 4px 14px rgba(0, 0, 0, 0.04) !important; 
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .voucher-card:hover {
+      transform: translateY(-2px);
+      box-shadow: inset 0 2px 3px #ffffff, 0 20px 40px rgba(184, 125, 75, 0.18), 0 6px 18px rgba(0, 0, 0, 0.06) !important;
+    }
+    .voucher-card::before, .voucher-card::after { 
+      content: '' !important; 
+      position: absolute !important; 
+      top: 50% !important; 
+      width: 22px !important; 
+      height: 22px !important; 
+      background: #fcf9f5 !important; 
+      border-radius: 50% !important; 
+      transform: translateY(-50%) !important; 
+      border: 1.5px dashed rgba(184, 125, 75, 0.45) !important; 
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
+    .voucher-card::before { 
+      left: -12px !important; 
+      border-left-color: transparent !important; 
+      border-top-color: transparent !important; 
+      border-bottom-color: transparent !important; 
+    }
+    .voucher-card::after { 
+      right: -12px !important; 
+      border-right-color: transparent !important; 
+      border-top-color: transparent !important; 
+      border-bottom-color: transparent !important; 
+    }
+    .voucher-header, .voucher-title { font-family: 'Cinzel', serif !important; }
+    .voucher-header { font-size: 1.4rem !important; font-weight: 500 !important; color: var(--accent-gold) !important; margin-bottom: 2px !important; }
+    .voucher-title { font-size: 1.4rem !important; font-weight: 600 !important; margin-bottom: 10px !important; letter-spacing: 1px !important; color: #1a1a1a !important; }
+    .qr-container { display: flex !important; justify-content: center !important; margin-bottom: 14px !important; }
+    .qr-box { 
+      background: #ffffff !important; 
+      padding: 10px !important; 
+      border-radius: 16px !important; 
+      display: inline-block !important; 
+      border: 1px solid rgba(255, 255, 255, 0.9) !important; 
+      box-shadow: inset 0 1px 2px #ffffff, 0 6px 18px rgba(184, 125, 75, 0.1) !important;
+    }
+    .voucher-code-box { 
+      background: rgba(255, 255, 255, 0.75) !important; 
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      padding: 14px !important; 
+      border-radius: 14px !important; 
+      margin-bottom: 14px !important; 
+      border: 1px solid rgba(212, 155, 106, 0.3) !important; 
+      box-shadow: inset 0 1px 2px #ffffff, 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+    }
+    .voucher-code-label { display: block !important; font-size: 0.72rem !important; color: var(--text-secondary) !important; text-transform: uppercase !important; letter-spacing: 2px !important; margin-bottom: 4px !important; }
+    .voucher-code { 
+      font-family: monospace !important; 
+      font-size: 1.25rem !important; 
+      font-weight: 700 !important; 
+      color: #8c5828 !important; 
+      letter-spacing: 2.5px !important; 
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+    }
 
     .page-view { display: none; width: 100%; animation: fadeIn 0.3s ease forwards; }
     .page-view.active { display: block; }
@@ -1069,7 +1344,151 @@ select.form-input {
     .menu-desc { font-size: 0.74rem; color: var(--text-secondary); margin-top: 3px; line-height: 1.35; }
     .menu-price { font-weight: 700; font-size: 0.85rem; color: var(--accent-gold-light); white-space: nowrap; margin-left: 8px; }
 
-    .promo-banner { background: linear-gradient(135deg, rgba(184, 125, 75, 0.12) 0%, rgba(212, 163, 115, 0.22) 100%); padding: 18px; border-radius: 18px; border: 1px solid var(--accent-gold); text-align: left; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(184, 125, 75, 0.1); }
+/* 2. KOTAK PROMO 1: REVIEW REWARD (WARM COPPER FROSTED GLASS) */
+.promo-banner {
+  /* Gradasi Kaca Halus Bernuansa Tembaga */
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 248, 240, 0.75) 0%, 
+    rgba(247, 233, 218, 0.55) 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(170%) !important;
+  border: 1.5px solid rgba(184, 125, 75, 0.35) !important;
+  border-radius: 22px !important;
+  padding: 18px !important;
+  text-align: left;
+  margin-bottom: 16px;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    0 8px 24px rgba(184, 125, 75, 0.12) !important;
+  transition: all 0.25s ease;
+}
+
+.promo-banner:hover {
+  border-color: rgba(184, 125, 75, 0.55) !important;
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 12px 28px rgba(184, 125, 75, 0.2) !important;
+}
+
+/* KOTAK PROMO DINAMIS (BUY 1 GET 1): BORDER HIJAU WEEKLY OFFER + GLASS EFFECT */
+#dynamic-promo-container .promo-banner {
+  /* Latar Kaca Frosted Halus dengan Sentuhan Nuansa Mint Segar */
+  background: linear-gradient(
+    135deg,
+    rgba(240, 253, 244, 0.75) 0%,
+    rgba(220, 252, 231, 0.50) 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(170%) !important;
+
+  /* Border Mengikuti Warna Aksen Hijau Weekly Offer (#128C7E / #16a34a) */
+  border: 1.5px solid rgba(18, 140, 126, 0.38) !important;
+  border-radius: 22px !important;
+
+  /* Pantulan Cahaya Atas + Bayangan Glow Hijau Lembut */
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    0 8px 24px rgba(18, 140, 126, 0.12) !important;
+  transition: all 0.25s ease;
+}
+
+#dynamic-promo-container .promo-banner:hover {
+  border-color: rgba(18, 140, 126, 0.65) !important;
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 12px 28px rgba(18, 140, 126, 0.22) !important;
+}
+/* 4. CHIP / TAG PROMO (MEMBER SPECIAL & WEEKLY OFFER) */
+.promo-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 1px #ffffff, 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* TAG REVIEW & REWARD: COPPER MUDA GRADASI GLASSMORPHISM + GLOW */
+.promo-tag-copper {
+  background: linear-gradient(
+    135deg, 
+    rgba(240, 195, 155, 0.45) 0%, 
+    rgba(212, 155, 106, 0.25) 100%
+  ) !important;
+  color: #8c5828 !important;
+  border: 1px solid rgba(212, 155, 106, 0.55) !important;
+  backdrop-filter: blur(10px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(170%) !important;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    0 2px 8px rgba(184, 125, 75, 0.18),
+    0 0 12px rgba(212, 155, 106, 0.3) !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+/* ========================================================
+   TOMBOL LIHAT VOUCHER / REVIEW (COPPER MUDA GLASS + GLOW)
+   ======================================================== */
+.promo-banner .btn-submit,
+button[onclick="checkReviewPageNavigation()"] {
+  width: 100%;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  margin-top: 14px !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Gradasi Copper Muda Mengalir */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.promo-banner .btn-submit:hover,
+button[onclick="checkReviewPageNavigation()"]:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 10px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.promo-banner .btn-submit:active,
+button[onclick="checkReviewPageNavigation()"]:active {
+  transform: scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 14px rgba(184, 125, 75, 0.25) !important;
+}
     .promo-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; color: var(--accent-gold-light); text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.8); padding: 3px 8px; border-radius: 6px; margin-bottom: 6px; }
 
     .modal-overlay { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
@@ -1148,50 +1567,50 @@ select.form-input {
       display: inline-block;
     }
 
-/* 2. TOMBOL LOG OUT (SOFT CORAL-RED FROSTED GLASS) */
+/* 2. TOMBOL LOG OUT: PINK MUDA GRADASI + GLOW */
 .btn-logout {
   width: 100%;
-  padding: 14px 20px;
+  padding: 13px 20px;
   border-radius: 18px;
   font-family: inherit;
   font-weight: 700;
   font-size: 0.92rem;
   letter-spacing: 0.3px;
   cursor: pointer;
-  margin-top: 12px;
-  color: #dc2626;
+  margin-top: 10px;
 
-  /* Efek Kaca Lembut Semi-Transparan */
-  background: rgba(254, 226, 226, 0.45);
-  
-  /* Blur Latar Belakang (Glassmorphism) */
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  /* Teks Rose Pekat agar Tetap Kontras & Tajam */
+  color: #be123c !important;
 
-  /* Border Refleksi Kaca Tipis */
-  border: 1px solid rgba(220, 38, 38, 0.18);
+  /* Gradasi Pink Muda / Soft Rosé Susu */
+  background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Pink */
   box-shadow: 
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
-    0 6px 20px rgba(220, 38, 38, 0.08);
-
+    inset 0 1.5px 2px #ffffff,
+    0 8px 24px rgba(254, 205, 211, 0.55),
+    0 0 16px rgba(255, 228, 230, 0.6) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-logout:hover {
-  background: rgba(254, 226, 226, 0.65);
-  border-color: rgba(220, 38, 38, 0.3);
-  color: #b91c1c;
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%) !important;
+  color: #9f1239 !important;
   box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 1),
-    0 8px 24px rgba(220, 38, 38, 0.14);
-  transform: translateY(-1px);
+    inset 0 1.5px 2.5px #ffffff,
+    0 10px 28px rgba(244, 63, 94, 0.25),
+    0 0 20px rgba(255, 228, 230, 0.8) !important;
+  transform: translateY(-2px);
 }
 
 .btn-logout:active {
   transform: scale(0.98);
-  background: rgba(254, 202, 202, 0.6);
 }
-
 /* FOOTER BRANDING: PART OF INARA GROUP */
 .inara-footer-wrapper {
   display: flex;
@@ -1267,98 +1686,154 @@ select.form-input {
   color: #a39587;
   text-align: Right;
 }
-    /* BANNER SLIDER */
-    .banner-slider-container {
-      position: relative;
-      width: 100%;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-      background: #111;
-      aspect-ratio: 16 / 9;
-    }
+/* ========================================================
+   FIX BANNER SLIDER: NO BLACK SCREEN & NO OVERLAY OVERLAP
+   ======================================================== */
+/* ========================================================
+   FIX BANNER SLIDER: SEAMLESS TRANSITION & GLASS BUTTONS
+   ======================================================== */
 
-    .banner-slides {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    }
+.banner-slider-container {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  margin-bottom: 20px !important;
+  background: transparent !important; /* Hapus warna dasar hitam */
+  border: none !important;            /* Hapus garis tepi */
+  outline: none !important;
+  
+  /* Hanya pendaran cahaya tembaga halus tanpa bayangan hitam pekat */
+  box-shadow: 0 8px 24px rgba(184, 125, 75, 0.22) !important;
+}
+.banner-slider-container:hover {
+  box-shadow: 0 10px 28px rgba(184, 125, 75, 0.32) !important;
+}
 
-    .banner-slide {
-      min-width: 100%;
-      height: 100%;
-      position: relative;
-    }
+.banner-slides {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  height: 100% !important;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-    .banner-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.9);
-    }
+.banner-slide {
+  position: relative !important;
+  flex: 0 0 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background: transparent !important; /* Diubah dari #111111 ke transparent */
+}
 
-    .banner-overlay {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 20px 16px 14px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
-      color: #fff;
-    }
+.banner-slide img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  background-color: #1a1a1a; /* Background dasar saat foto memuat */
+}
 
-    .banner-overlay h4 {
-      font-family: 'Cinzel', serif;
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-    }
+/* Sembunyikan simbol broken image jika URL gagal muat */
+.banner-slide img:not([src]), 
+.banner-slide img[src=""] {
+  opacity: 0 !important;
+}
 
-    .slider-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.7);
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 5;
-      font-size: 0.9rem;
-      color: #111;
-      backdrop-filter: blur(4px);
-      transition: all 0.2s;
-    }
-    .slider-btn:hover { background: #fff; }
-    .slider-btn.prev { left: 10px; }
-    .slider-btn.next { right: 10px; }
+.banner-slide .banner-overlay {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 24px 16px 12px !important;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%) !important;
+  color: #ffffff !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  display: flex !important;
+  align-items: flex-end !important;
+}
 
-    .slider-dots {
-      position: absolute;
-      bottom: 10px;
-      right: 15px;
-      display: flex;
-      gap: 6px;
-      z-index: 5;
-    }
+.banner-slide .banner-overlay h4 {
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 1.2px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important;
+  margin: 0 !important;
+  padding-right: 65px !important;
+  line-height: 1.3 !important;
+}
 
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .dot.active {
-      width: 18px;
-      border-radius: 10px;
-      background: var(--accent-gold);
-    }
+.slider-btn {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  border: none !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.75),
+    0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
 
+.slider-btn:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+.slider-btn.prev { left: 10px !important; }
+.slider-btn.next { right: 10px !important; }
+
+.slider-dots {
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  z-index: 10 !important;
+}
+
+.dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.45) !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.dot.active {
+  width: 18px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  box-shadow: 0 0 8px rgba(184, 125, 75, 0.8) !important;
+}
     /* GALLERY APP INTEGRATION */
     .gallery-categories-app {
       display: flex;
@@ -1437,166 +1912,233 @@ select.form-input {
     }
     .lightbox img { max-width: 100%; max-height: 80vh; border-radius: 12px; }
   
-  /* TAMPILAN VIEW-ONLY PROFIL ELEGAN */
-    .profile-view-box {
-      width: 100%;
-      text-align: left;
-      margin-bottom: 8px;
-    }
-    .profile-info-row {
-      display: flex;
-      flex-direction: column;
-      padding: 10px 14px;
-      background: #ffffff;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      margin-bottom: 8px;
-    }
-    .profile-info-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-    .profile-info-val {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: var(--text-main);
-      word-break: break-all;
-    }
-/* 1. TOMBOL EDIT PROFILE (AMBER-GOLD FROSTED GLASS) */
-.btn-edit-mode {
+/* ========================================================
+   MODERN FROSTED GLASSMORPHISM (70%): PROFILE MODAL SAJIVA+
+   ======================================================== */
+
+/* 1. Backdrop Gelap dengan Blur */
+#profile-modal.modal-overlay {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* 2. Kartu Utama Modal Profil (Identik dengan Bingkai Putih Kartu Promo + Pendaran Cahaya Copper) */
+#profile-modal .modal-box {
+  background: var(--card-bg) !important; /* Latar putih krem identik kartu promo */
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.06), 
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pendaran Garis Cahaya Copper di Bagian Atas Bingkai */
+#profile-modal .modal-box::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 12px var(--copper-glow) !important;
+  z-index: 5 !important;
+}
+
+/* Kotak Baris Data di Dalamnya agar Bersih dan Serasi dengan Bingkai */
+.profile-info-row {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  background: #ffffff !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 14px !important;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* 3. Tombol Tutup (X) macOS Glassmorphism Copper */
+#profile-modal .modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(184, 125, 75, 0.22) !important;
+  color: #8c5828 !important;
+  border: 1px solid rgba(184, 125, 75, 0.45) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 6px rgba(184, 125, 75, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#profile-modal .modal-close-btn:hover {
+  background: rgba(184, 125, 75, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  transform: scale(1.08);
+}
+
+/* 4. Kolom Input Form Edit (Frosted 50%) */
+#edit-profile-form .form-input {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 14px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+#edit-profile-form .form-input:focus {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 0 0 3px rgba(184, 125, 75, 0.18);
+}
+
+/* 5. Baris Data Profil View-Only (Frosted 50%) */
+.profile-view-box {
   width: 100%;
-  padding: 15px 20px;
+  text-align: left;
+  margin-bottom: 8px;
+}
+.profile-info-row {
+  display: flex;
+  flex-direction: column;
+  padding: 11px 16px;
+  background: rgba(255, 255, 255, 0.50) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.02),
+    inset 0 1px 1px #ffffff;
+  transition: all 0.2s ease;
+}
+.profile-info-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-gold, #b87d4b);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.profile-info-val {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  word-break: break-all;
+}
+ 
+/* 1. TOMBOL EDIT PROFILE: COPPER MUDA GRADASI + GLOW */
+.btn-edit-mode,
+#btn-save-profile {
+  width: 100%;
+  padding: 14px 20px;
   border-radius: 18px;
   font-family: inherit;
   font-weight: 700;
   font-size: 0.95rem;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  margin-top: 16px;
-  color: #ffffff;
+  margin-top: 14px;
+  color: #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 
-  /* Efek Kaca Transparan & Gradasi Hangat */
-  background: linear-gradient(
-    135deg,
-    rgba(184, 125, 75, 0.78) 0%,
-    rgba(140, 88, 40, 0.65) 100%
-  );
-  
-  /* Blur Latar Belakang (Glassmorphism) */
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  /* Gradasi Copper Muda Berkilau */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
 
-  /* Border Kaca Halus & Refleksi Sudut */
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Copper */
   box-shadow: 
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.6),
-    0 8px 24px rgba(184, 125, 75, 0.28),
-    0 2px 6px rgba(0, 0, 0, 0.05);
-
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.btn-edit-mode:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(184, 125, 75, 0.9) 0%,
-    rgba(140, 88, 40, 0.78) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.6);
+.btn-edit-mode:hover,
+#btn-save-profile:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
   box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 0.8),
-    0 12px 30px rgba(184, 125, 75, 0.38);
-  transform: translateY(-1px);
+    inset 0 1.5px 2.5px #ffffff,
+    0 10px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px);
 }
 
-.btn-edit-mode:active {
+.btn-edit-mode:active,
+#btn-save-profile:active {
   transform: scale(0.98);
-  box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.4),
-    0 4px 14px rgba(184, 125, 75, 0.2);
 }
 
-/* 4. TOMBOL BATAL (CANCEL - FROSTED NEUTRAL GLASS) */
+/* TOMBOL CANCEL: WARM SAND / FROSTED AMBER GREY */
 .btn-cancel-edit {
   width: 100%;
-  padding: 13px;
-  border-radius: 16px;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  margin-top: 8px;
-  color: #334155 !important;
-  
-  /* Lapisan Kaca Abu-abu Transparan */
-  background: rgba(241, 245, 249, 0.65) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  
-  border: 1px solid rgba(255, 255, 255, 0.8) !important;
-  box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    0 4px 14px rgba(0, 0, 0, 0.04);
-  
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-cancel-edit:hover {
-  background: rgba(241, 245, 249, 0.85) !important;
-  box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 1),
-    0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-.btn-cancel-edit:active {
-  transform: scale(0.98);
-  background: rgba(226, 232, 240, 0.75) !important;
-}
-/* Letakkan di bawah .btn-cancel-edit */
-#btn-save-profile {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
+  padding: 13px 20px;
+  border-radius: 18px;
   font-family: inherit;
   font-weight: 700;
   font-size: 0.92rem;
   letter-spacing: 0.3px;
   cursor: pointer;
-  margin-top: 14px;
-  color: #ffffff;
-  background: linear-gradient(135deg, rgba(184, 125, 75, 0.85) 0%, rgba(140, 88, 40, 0.78) 100%) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  margin-top: 10px;
+
+  /* Warna teks abu-abu tembaga pekat */
+  color: #5c4d43 !important;
+
+  /* Gradasi abu-abu hangat transparan khas kaca */
+  background: linear-gradient(135deg, rgba(238, 233, 227, 0.85) 0%, rgba(220, 212, 203, 0.7) 100%) !important;
+
+  /* Efek Glassmorphism */
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+
+  /* Pantulan cahaya atas + bayangan halus */
   box-shadow: 
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.65),
-    0 8px 24px rgba(184, 125, 75, 0.3);
+    inset 0 1.5px 2px #ffffff,
+    0 6px 18px rgba(120, 100, 85, 0.12) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#btn-save-profile:hover {
-  background: linear-gradient(135deg, rgba(184, 125, 75, 0.95) 0%, rgba(140, 88, 40, 0.88) 100%) !important;
+.btn-cancel-edit:hover {
+  background: linear-gradient(135deg, rgba(245, 241, 236, 0.95) 0%, rgba(230, 223, 215, 0.85) 100%) !important;
+  color: #3e332c !important;
   box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 0.8),
-    0 10px 28px rgba(184, 125, 75, 0.4);
+    inset 0 1.5px 2.5px #ffffff,
+    0 8px 22px rgba(120, 100, 85, 0.18) !important;
+  transform: translateY(-2px);
 }
 
-#btn-save-profile:active {
+.btn-cancel-edit:active {
   transform: scale(0.98);
-  filter: brightness(0.95);
 }
-    .avatar-upload-btn.disabled-view {
-      display: none !important;
-    }
- 
+
 /* =================================================== */
 /* HERO SLIDER FULL-SCREEN & OVERLAY (GAYA UNION)     */
 /* =================================================== */
@@ -1940,6 +2482,673 @@ select.form-input {
   background: #f7f7f7;
 }
  
+ /* ========================================================
+   TOMBOL WHATSAPP & GOOGLE MAPS (GLASSMORPHISM & GLOW EFFECT)
+   ======================================================== */
+
+/* 1. TOMBOL CONTACT VIA WHATSAPP (HIJAU GRADASI GLASS + GLOW) */
+.btn-action.btn-wa {
+  width: 100%;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Gradasi Hijau Segar Emerald ke Teal */
+  background: linear-gradient(135deg, #22c55e 0%, #0d9488 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Hijau */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(34, 197, 94, 0.45),
+    0 0 16px rgba(34, 197, 94, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(6, 78, 59, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-action.btn-wa:hover {
+  background: linear-gradient(135deg, #4ade80 0%, #14b8a6 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(34, 197, 94, 0.55),
+    0 0 20px rgba(74, 222, 128, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.btn-action.btn-wa:active {
+  transform: scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 14px rgba(34, 197, 94, 0.25) !important;
+}
+
+/* 2. TOMBOL DIRECTIONS GOOGLE MAPS (BIRU MUDA GRADASI GLASS + GLOW) */
+.btn-action.btn-google {
+  width: 100%;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Gradasi Biru Muda Sky ke Cyan Blue */
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Biru Muda */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(56, 189, 248, 0.45),
+    0 0 16px rgba(56, 189, 248, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(12, 74, 110, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-action.btn-google:hover {
+  background: linear-gradient(135deg, #7dd3fc 0%, #0369a1 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(56, 189, 248, 0.55),
+    0 0 20px rgba(125, 211, 252, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.btn-action.btn-google:active {
+  transform: scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 14px rgba(56, 189, 248, 0.25) !important;
+}
+/* ========================================================
+   TOMBOL VIEW MY VOUCHER (COPPER MUDA GLASS + GLOW)
+   ======================================================== */
+#review-already-claimed .btn-submit,
+button[onclick="navigateTo('page-my-voucher')"] {
+  width: 100%;
+  padding: 15px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  margin-top: 14px !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Gradasi Copper Muda Mengalir */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#review-already-claimed .btn-submit:hover,
+button[onclick="navigateTo('page-my-voucher')"]:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+#review-already-claimed .btn-submit:active,
+button[onclick="navigateTo('page-my-voucher')"]:active {
+  transform: scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 14px rgba(184, 125, 75, 0.25) !important;
+}
+
+/* ========================================================
+   DROPDOWN GALLERY (GLASSMORPHISM)
+   ======================================================== */
+.gallery-select-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto 18px;
+}
+
+.gallery-glass-select {
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 1.5px #ffffff, 0 4px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gallery-glass-select:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 12px rgba(184, 125, 75, 0.2);
+}
+
+.gallery-dropdown-list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 0 12px rgba(184, 125, 75, 0.15);
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* KUNCI: Class penampil dropdown saat diklik */
+.gallery-dropdown-list.show {
+  display: block !important;
+}
+
+.gallery-cat-item {
+  padding: 11px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.gallery-cat-item:hover,
+.gallery-cat-item.active {
+  background: rgba(184, 125, 75, 0.12);
+  color: var(--accent-gold-light);
+  font-weight: 700;
+}
+
+/* ========================================================
+   KOTAK LOKASI: KONTRASTED WARM CREAM & COPPER BORDER
+   ======================================================== */
+.location-glass-box {
+  /* Gradasi krem hangat yang lebih kontras terhadap kartu putih */
+  background: linear-gradient(
+    145deg, 
+    rgba(255, 245, 233, 0.92) 0%, 
+    rgba(244, 230, 212, 0.85) 100%
+  ) !important;
+  
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  
+  /* Border Tembaga Muda (Soft Copper Accent) */
+  border: 1.5px solid rgba(212, 155, 106, 0.45) !important;
+  border-radius: 18px !important;
+  padding: 18px 20px !important;
+  text-align: left;
+  font-size: 0.82rem;
+  color: #4a3e35 !important;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  
+  /* Inner highlight putih kaca + bayangan pendaran tembaga */
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.95),
+    0 8px 20px rgba(184, 125, 75, 0.12) !important;
+  transition: all 0.25s ease;
+}
+
+.location-glass-box:hover {
+  border-color: rgba(184, 125, 75, 0.75) !important;
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 1px 2.5px #ffffff,
+    0 12px 26px rgba(184, 125, 75, 0.2) !important;
+}
+
+.location-glass-box strong {
+  color: #2b1f17 !important;
+  font-weight: 700;
+}
+
+/* ========================================================
+   MY VOUCHER SLIDER / LIST VIEW (TAMPILAN 1)
+   ======================================================== */
+.voucher-card-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.voucher-summary-card {
+  background: linear-gradient(135deg, rgba(255, 248, 240, 0.9) 0%, rgba(247, 233, 218, 0.75) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(184, 125, 75, 0.35);
+  border-radius: 20px;
+  padding: 18px;
+  text-align: left;
+  box-shadow: inset 0 1px 1.5px #ffffff, 0 8px 24px rgba(184, 125, 75, 0.1);
+  transition: all 0.25s ease;
+}
+
+.voucher-summary-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 125, 75, 0.65);
+  box-shadow: inset 0 1px 2px #ffffff, 0 12px 28px rgba(184, 125, 75, 0.18);
+}
+
+.voucher-summary-card.weekly-card {
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.9) 0%, rgba(220, 252, 231, 0.7) 100%);
+  border-color: rgba(18, 140, 126, 0.38);
+  box-shadow: inset 0 1px 1.5px #ffffff, 0 8px 24px rgba(18, 140, 126, 0.08);
+}
+
+.v-card-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8c5828;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.v-card-badge.weekly-badge {
+  color: #128C7E;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.v-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.v-card-amount {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #b87d4b;
+  margin-bottom: 4px;
+}
+
+.weekly-card .v-card-amount {
+  color: #0f766e;
+}
+
+.v-card-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.btn-use-voucher {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%);
+  color: #ffffff;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(184, 125, 75, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-use-voucher.weekly-btn {
+  background: linear-gradient(135deg, #22c55e 0%, #0d9488 100%);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+/* ========================================================
+   TOMBOL KLAIM WEEKLY OFFER (EMERALD GLASSMORPHISM)
+   ======================================================== */
+.btn-weekly-claim {
+  width: 100%;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  margin-top: 14px !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Gradasi Hijau Emerald ke Teal Segar */
+  background: linear-gradient(135deg, #22c55e 0%, #0d9488 100%) !important;
+
+  /* Efek Kaca Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(34, 197, 94, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(6, 78, 59, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-weekly-claim:hover {
+  background: linear-gradient(135deg, #4ade80 0%, #14b8a6 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(34, 197, 94, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.btn-weekly-claim:active {
+  transform: scale(0.98);
+}
+
+/* Styling Kotak Promo Hijau / Dinamis */
+.weekly-offer-box,
+.custom-promo-box {
+  background: linear-gradient(145deg, rgba(240, 253, 244, 0.85) 0%, rgba(220, 252, 231, 0.6) 100%) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(18, 140, 126, 0.35) !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+  text-align: left;
+  box-shadow: inset 0 1px 1.5px #ffffff, 0 8px 24px rgba(18, 140, 126, 0.08) !important;
+  transition: all 0.25s ease;
+}
+
+.weekly-offer-box:hover,
+.custom-promo-box:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 2px #ffffff, 0 12px 28px rgba(18, 140, 126, 0.16) !important;
+}
+
+/* ========================================================
+   POPUP KETENTUAN MONDAY PROMO: SOLID WARM CREAM GLASS & COPPER GLOW
+   ======================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Latar gelap lembut murni tanpa efek blur agar halaman promo tetap tajam */
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.modal.show {
+  display: flex !important;
+}
+
+.promo-modal-box {
+  /* Warna latar disamakan dengan kartu halaman promo (#fdfbf7 / gradasi krem putih lembut) */
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    #fcfaf6 50%, 
+    #f8f4ed 100%
+  ) !important;
+  border-radius: 26px !important;
+  padding: 26px 20px 24px !important;
+  max-width: 360px !important;
+  width: 100% !important;
+  text-align: left !important;
+  
+  /* Border krem-tembaga muda berefek kaca */
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  
+  /* Efek Cahaya: Highlight inner rim + Ambient Copper Glow */
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    inset 0 -1.5px 2px rgba(184, 125, 75, 0.12),
+    0 20px 45px rgba(0, 0, 0, 0.12),
+    0 0 24px rgba(184, 125, 75, 0.28) !important;
+    
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pendaran Garis Cahaya Copper di Bagian Atas Pop-up */
+.promo-modal-box::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2.5px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 14px var(--copper-glow, rgba(184, 125, 75, 0.6)) !important;
+  z-index: 5 !important;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Tombol Tutup (X) Copper Gradasi Glassmorphism + Efek Cahaya */
+.btn-close-modal-copper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(212, 155, 106, 0.25) 0%, rgba(184, 125, 75, 0.15) 100%) !important;
+  color: var(--accent-gold-light) !important;
+  border: 1px solid rgba(184, 125, 75, 0.45) !important;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 2px 8px rgba(184, 125, 75, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-close-modal-copper:hover {
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: scale(1.08);
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 4px 14px rgba(184, 125, 75, 0.45),
+    0 0 14px rgba(212, 155, 106, 0.65) !important;
+}
+
+.btn-close-modal-copper:active {
+  transform: scale(0.94);
+}
+
+/* List Menu & Scrollbar Ramping */
+.promo-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 250px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 125, 75, 0.35) transparent;
+}
+
+.promo-menu-list::-webkit-scrollbar {
+  width: 4px;
+}
+.promo-menu-list::-webkit-scrollbar-thumb {
+  background: rgba(184, 125, 75, 0.35);
+  border-radius: 10px;
+}
+
+/* Item Menu: Putih Bersih dengan Highlight Cahaya Lembut */
+.promo-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #ffffff !important;
+  border: 1px solid rgba(184, 125, 75, 0.15) !important;
+  border-radius: 14px;
+  box-shadow: 
+    inset 0 1px 1px #ffffff,
+    0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  font-size: 0.82rem;
+  transition: all 0.2s ease;
+}
+
+.promo-menu-item:hover {
+  transform: translateX(2px);
+  border-color: rgba(184, 125, 75, 0.45) !important;
+}
+
+.promo-menu-item span {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Format Angka Coret & Nominal Diskon 20% */
+.promo-price-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-old {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  color: #a39587;
+  text-decoration: line-through;
+}
+
+.price-discount {
+  font-family: 'Cinzel', serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #128C7E; /* Hijau emerald promo yang tajam */
+}
+
+/* ========================================================
+   LOGO NAVBAR SAJIVA+: HOVER & ACTIVE COPPER TRANSITION
+   ======================================================== */
+.nav-brand-clickable {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.15s ease;
+}
+
+/* Saat Kursor Diarahkan (Hover) */
+.nav-brand-clickable:hover {
+  color: var(--accent-gold) !important;
+  text-shadow: 0 0 12px var(--copper-glow, rgba(184, 125, 75, 0.45));
+}
+
+.nav-brand-clickable:hover .brand-plus-sup {
+  color: var(--accent-gold) !important;
+}
+
+/* Saat Diklik / Ditekan (Active) */
+.nav-brand-clickable:active {
+  color: var(--accent-gold-light) !important;
+  transform: scale(0.96);
+  text-shadow: 0 0 8px var(--copper-glow, rgba(184, 125, 75, 0.6));
+}
+
+/* ========================================================
+   ANIMASI LAMBAIAN TANGAN (WAVING HAND MOTION)
+   ======================================================== */
+.wave-hand-icon {
+  display: inline-block;
+  transform-origin: 70% 70%; /* Titik poros tumpuan di pergelangan tangan */
+  animation: waveMotion 2.2s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+@keyframes waveMotion {
+  0%   { transform: rotate(0deg); }
+  10%  { transform: rotate(14deg); }
+  20%  { transform: rotate(-8deg); }
+  30%  { transform: rotate(14deg); }
+  40%  { transform: rotate(-4deg); }
+  50%  { transform: rotate(10deg); }
+  60%  { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
   </style>
 </head>
 <body>
@@ -2136,10 +3345,11 @@ select.form-input {
         </div>
       </div>
 
-      <div style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--text-main);">
-        SAJIVA<sup class="brand-plus-sup">+</sup>
-      </div>
-      
+   <!-- LOGO SAJIVA+ KLIKABLE MENUJU PAGE PROMO DENGAN EFEK CAHAYA -->
+<div onclick="navigateTo('page-promo')" class="nav-brand-clickable" title="Kembali ke Promo">
+  SAJIVA<sup class="brand-plus-sup">+</sup>
+</div>       
+	  
       <button class="top-bar-btn" onclick="openProfileModal()">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </button>
@@ -2396,49 +3606,63 @@ select.form-input {
     <div id="page-promo" class="page-view">
       <main class="card">
         <h2 class="card-headline">Welcome to <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA<sup class="brand-plus-sup">+</sup></span></h2>
-        <p class="card-subtitle" id="welcome-user-text">Selamat datang kembali!</p>
-		
+<p class="card-subtitle" id="welcome-user-text" style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%;">
+  <svg class="wave-hand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main); flex-shrink: 0;">
+    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+  </svg>
+  <span>Hello, rafi!</span>
+</p>		
         <div class="banner-slider-container" id="banner-slider">
           <button class="slider-btn prev" onclick="prevSlide()">❮</button>
           <button class="slider-btn next" onclick="nextSlide()">❯</button>
           
-          <div class="banner-slides" id="banner-slides">
-            <div class="banner-slide">
-              <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000" alt="Sajiva Coffee">
-              <div class="banner-overlay">
-                <h4>Artisanal Coffee Roastery</h4>
-              </div>
-            </div>
-            <div class="banner-slide">
-              <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000" alt="Warm Ambience">
-              <div class="banner-overlay">
-                <h4>Warm Ambience &amp; Special Beans</h4>
-              </div>
-            </div>
-          </div>
+<div class="banner-slides" id="banner-slides">
+  <div class="banner-slide">
+    <img src="https://i.imgur.com/MzLHfy4.jpg" alt="Sajiva Slide 1">
+  </div>
+  <div class="banner-slide">
+    <img src="https://i.imgur.com/QhOe3j2.jpg" alt="Sajiva Slide 2">
+  </div>
+  <div class="banner-slide">
+    <img src="https://i.imgur.com/8bmH68Q.jpg" alt="Sajiva Slide 3">
+  </div>
+  <div class="banner-slide">
+    <img src="https://i.imgur.com/l4xN4iF.jpg" alt="Sajiva Slide 4">
+  </div>
+  <div class="banner-slide">
+    <img src="https://i.imgur.com/3wswMgT.jpg" alt="Sajiva Slide 5">
+  </div>
+</div>
 
           <div class="slider-dots" id="slider-dots"></div>
         </div>
 
-        <!-- 1. KARTU UTAMA REVIEW REWARD (DENGAN TOMBOL AKSI KLAIM/REVIEW) -->
+<!-- 1. KARTU UTAMA REVIEW REWARD (DENGAN TOMBOL AKSI KLAIM/REVIEW) -->
         <div class="promo-banner">
-          <span class="promo-tag">Member Special</span>
+          <span class="promo-tag" style="background: linear-gradient(135deg, rgba(212, 155, 106, 0.32) 0%, rgba(184, 125, 75, 0.18) 100%); color: #8c5828; border: 1px solid rgba(184, 125, 75, 0.35); box-shadow: 0 2px 6px rgba(184, 125, 75, 0.15);">Review &amp; Reward</span>
           <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Diskon 10% Review Reward</div>
           <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Review sekarang, dapatkan voucher diskon hingga Rp100.000!</div>
-          <button type="button" onclick="checkReviewPageNavigation()" class="btn-submit" style="margin-top: 12px; padding: 12px; font-size: 0.88rem; background: var(--accent-gold); cursor: pointer;">
+          <button type="button" onclick="checkReviewPageNavigation()" class="btn-submit">
             Lihat Voucher / Review
           </button>
         </div>
 
-        <!-- 2. KONTAINER KHUSUS PROMO DINAMIS DARI DATABASE GOOGLE SHEETS -->
-        <div id="dynamic-promo-container">
-          <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff;">
-            <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">Weekly Offer</span>
-            <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Buy 1 Get 1 Filter Coffee</div>
-            <div style="font-size: 0.78rem; color: var(--text-secondary);">Setiap hari Selasa, tunjukkan akun Sajiva terdaftar ini ke Barista kami untuk setiap pembelian V60 / Kalita.</div>
-          </div>
+<!-- KARTU PROMO: WEDNESDAY PROMO (ARTISAN COFFEE BLACK 20% OFF) -->
+        <div class="promo-banner weekly-offer-box" style="margin-top: 14px;">
+          <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">Special Offer</span>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Wednesday Promo</div>
+          <div style="font-size: 0.78rem; color: var(--text-secondary);">Setiap hari Rabu, dapatkan diskon spesial 20% untuk pembelian varian Artisan Coffee - Black khusus Dine In.</div>
+          <button type="button" onclick="openWednesdayPromoModal()" class="btn-weekly-claim">
+            Lihat Ketentuan &amp; Menu
+          </button>
         </div>
 
+        <!-- KONTAINER PROMO TAMBAHAN DINAMIS DARI ADMIN DASHBOARD -->
+        <div id="dynamic-promo-container" style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;"></div>
+        
       </main>
     </div>
 
@@ -2622,12 +3846,13 @@ select.form-input {
           </div>
 
           <div style="text-align: left; font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Lokasi Outlet Kami</div>
-          <div style="background: #ffffff; border-radius: 14px; padding: 14px; text-align: left; border: 1px solid rgba(0,0,0,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
-            📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
-            Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
-            ⏰ <strong>Jam Operasional:</strong> 08.00 - 22.00 WIB<br>
-            📞 <strong>Telepon / WA:</strong> +62 811-1289-940
-          </div>
+         <!-- KOTAK LOKASI VERSI BAHASA INDONESIA -->
+<div class="location-glass-box">
+  📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
+  Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
+  ⏰ <strong>Jam Operasional:</strong> 08.00 - 22.00 WIB<br>
+  📞 <strong>Telepon / WA:</strong> +62 811-1289-940
+</div>
         </div>
 
         <!-- KONTEN VERSI BAHASA INGGRIS -->
@@ -2650,12 +3875,13 @@ select.form-input {
           </div>
 
           <div style="text-align: left; font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Our Store Location</div>
-          <div style="background: #ffffff; border-radius: 14px; padding: 14px; text-align: left; border: 1px solid rgba(0,0,0,0.06); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
-            📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
-            Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
-            ⏰ <strong>Opening Hours:</strong> 08.00 - 22.00 WIB<br>
-            📞 <strong>Phone / WA:</strong> +62 811-1289-940
-          </div>
+<!-- KOTAK LOKASI VERSI BAHASA INGGRIS -->
+<div class="location-glass-box">
+  📍 <strong>Sajiva Coffee &amp; Ceramics</strong><br>
+  Karawaci Office Park (Ruko Pinangsia) Blok E/Excelis 21, Jalan Imam Bonjol, Karawaci, RT.001/RW.009, Panungganan Barat, Cibodas, Tangerang City, Banten 15115<br><br>
+  ⏰ <strong>Opening Hours:</strong> 08.00 - 22.00 WIB<br>
+  📞 <strong>Phone / WA:</strong> +62 811-1289-940
+</div>
         </div>
 
         <!-- TOMBOL AKSI -->
@@ -2699,14 +3925,20 @@ select.form-input {
 		<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Gallery</h2>        
         <p class="card-subtitle"></p>
 
-        <div class="gallery-categories-app">
-          <button class="cat-btn-app active" onclick="filterGallery('all', event)">Semua</button>
-          <button class="cat-btn-app" onclick="filterGallery('fasad', event)">Fasad</button>
-          <button class="cat-btn-app" onclick="filterGallery('interior', event)">Interior</button>
-          <button class="cat-btn-app" onclick="filterGallery('ambience', event)">Ambience</button>
-          <button class="cat-btn-app" onclick="filterGallery('event', event)">Event</button>
-          <button class="cat-btn-app" onclick="filterGallery('kru', event)">Kru</button>
-        </div>
+<div class="gallery-select-wrapper">
+  <div class="gallery-glass-select" onclick="toggleGalleryDropdown(event)">
+    <span id="selected-gallery-cat">All Categories</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </div>
+  <div class="gallery-dropdown-list" id="gallery-cat-menu">
+    <div class="gallery-cat-item active" onclick="selectGalleryCat('all', 'All Categories', event)">All Categories</div>
+    <div class="gallery-cat-item" onclick="selectGalleryCat('fasad', 'Facade', event)">Facade</div>
+    <div class="gallery-cat-item" onclick="selectGalleryCat('interior', 'Interior', event)">Interior</div>
+    <div class="gallery-cat-item" onclick="selectGalleryCat('ambience', 'Ambience', event)">Ambience</div>
+    <div class="gallery-cat-item" onclick="selectGalleryCat('event', 'Event', event)">Event</div>
+    <div class="gallery-cat-item" onclick="selectGalleryCat('kru', 'Crew', event)">Crew</div>
+  </div>
+</div>
 
         <div class="gallery-grid-app" id="gallery-container"></div>
       </main>
@@ -2778,31 +4010,67 @@ select.form-input {
     </div>
 
     <!-- 9. HALAMAN MY VOUCHER -->
+<!-- 9. HALAMAN MY VOUCHER -->
     <div id="page-my-voucher" class="page-view">
       <main class="card">
         <h2 class="card-headline">My Voucher</h2>
-        <p class="card-subtitle"></p>
+        <p class="card-subtitle" id="my-voucher-subtitle">Pilih voucher yang ingin digunakan</p>
 
-        <div id="voucher-empty-state" style="display: block; padding: 20px 0;">
+        <!-- KONDISI JIKA TIDAK ADA VOUCHER -->
+        <div id="voucher-empty-state" style="display: none; padding: 20px 0;">
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Anda belum memiliki voucher aktif.</p>
           <button onclick="navigateTo('page-review-us')" class="btn-submit" style="padding: 10px; font-size: 0.82rem; background: var(--accent-gold);">Beri Review &amp; Dapatkan Voucher</button>
         </div>
 
-        <div id="voucher-display-container" style="display: none;">
-          <div class="voucher-card" id="voucher-to-download">
-            <div class="voucher-header">SAJIVA</div>
-            <div class="voucher-title">REWARD VOUCHER</div>
+        <!-- TAMPILAN 1: SLIDER / LIST KARTU VOUCHER SAYA -->
+        <div id="voucher-list-view" style="display: block;">
+          <div class="voucher-card-slider" id="voucher-card-slider">
+            
+<!-- KARTU 1: REWARD VOUCHER REVIEW -->
+            <div class="voucher-summary-card" id="card-voucher-reward" style="display: none;">
+              <div class="v-card-badge">REVIEW SPECIAL</div>
+              <div class="v-card-title">Reward Voucher 10%</div>
+              <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); margin-bottom: 3px;">
+                Review kami dan dapatkan reward voucher
+              </div>
+              <div class="v-card-amount">Diskon Hingga Rp. 100.000</div>
+              <div class="v-card-meta">Tanpa minimum belanja • Sebelum Pajak &amp; Service</div>
+              <button type="button" class="btn-use-voucher" onclick="openVoucherDetail('reward')">
+                Lihat Voucher
+              </button>
+            </div>
 
-            <div style="display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin-bottom: 8px; font-family: 'Cinzel', serif; color: var(--accent-gold);">
-              <div style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1;">
+          </div>
+        </div>
+
+        <!-- TAMPILAN 2: TIKET DETAIL QR & KODE (PUTIH SUSU 3D) -->
+        <div id="voucher-detail-view" style="display: none;">
+          <div style="text-align: left; margin-bottom: 12px;">
+            <button type="button" class="btn-back-auth" onclick="backToVoucherList()" title="Kembali ke Daftar">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-left: 6px;">Daftar Voucher</span>
+            </button>
+          </div>
+
+<div class="voucher-card" id="voucher-to-download">
+            <div class="voucher-header">SAJIVA</div>
+            <div class="voucher-title" id="detail-voucher-title">REWARD VOUCHER</div>
+
+            <!-- CONTAINER VALUE / AMOUNT (DINAMIS) -->
+            <div id="voucher-amount-box" style="display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin-bottom: 8px; font-family: 'Cinzel', serif; color: var(--accent-gold);">
+              <div id="prefix-upto-box" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1;">
                 <span style="font-size: 0.75rem; font-style: italic; font-weight: 400; font-family: sans-serif; color: var(--text-secondary);">Up To</span>
                 <span style="font-size: 1.8rem; font-weight: 500;">Rp.</span>
               </div>
-              <span style="font-size: 2.5rem; font-weight: 500; line-height: 0.9;">100.000</span>
+              <span style="font-size: 2.5rem; font-weight: 600; line-height: 0.9;" id="detail-voucher-amount">100.000</span>
             </div>
 
-            <div style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 4px; font-weight: 600;">Enjoy 10% Discount</div>
-            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;">No Minimum Spending <br> Before Tax &amp; Service</div>
+            <!-- DETAIL KETENTUAN -->
+            <div style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 4px; font-weight: 600;" id="detail-voucher-desc">Enjoy 10% Discount</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;" id="detail-voucher-terms">No Minimum Spending <br> Before Tax &amp; Service</div>
                     
             <div class="qr-container">
               <div class="qr-box" id="qrcode-box"></div>
@@ -2819,6 +4087,7 @@ select.form-input {
 
           <button type="button" onclick="downloadVoucherImage()" id="btn-download-voucher" class="btn-download">Unduh Voucher</button>
         </div>
+
       </main>
     </div>
 
@@ -3139,7 +4408,27 @@ const idToEnMap = {
 "Petunjuk Arah (Google Maps)": "Directions (Google Maps)", // <-- KOMA SUDAH DIPASANG  "Jam Operasional:": "Opening Hours:",
   "Telepon / WA:": "Phone / WA:",
   "Our Store Location": "Our Store Location",
-
+  // --- Sinkronisasi Teks Kartu Reward Voucher ---
+  "Review kami dan dapatkan reward voucher": "Review us and get a reward voucher",
+  "Diskon Hingga Rp. 100.000": "Discount Up To Rp 100.000",
+  "Tanpa minimum belanja • Sebelum Pajak & Service": "No minimum spending • Before Tax & Service",
+  "Lihat Voucher": "View Voucher",
+  // --- Sinkronisasi Kartu Monday Promo ---
+  "Setiap hari Senin, dapatkan diskon spesial 20% untuk pembelian varian Flavoured Artisan Coffee khusus Dine In.": "Every Monday, get a special 20% discount on Flavoured Artisan Coffee variants for Dine In only.",
+  // --- Wednesday Promo Pop-up Dual Language ---
+  "Wednesday Promo 20% OFF": "Wednesday Promo 20% OFF",
+  "PILIHAN MENU BERLAKU:": "ELIGIBLE MENU ITEMS:",
+  "Nikmati diskon spesial 20% setiap hari Rabu dengan ketentuan berikut:": "Enjoy a special 20% discount every Wednesday with the following terms:",
+  "Khusus untuk minum di tempat (Dine In).": "For Dine In only.",
+  "Berlaku untuk semua varian menu Artisan Coffee - Black.": "Valid for all Artisan Coffee - Black menu variants.",
+  "Maksimal pembelian 1 minuman per transaksi.": "Maximum purchase of 1 drink per transaction.",
+// --- Ketentuan Promo Berpoin ---
+  "Nikmati diskon spesial 20% setiap hari Rabu dengan ketentuan berikut:": "Enjoy a special 20% discount every Wednesday with the following terms:",
+  "Nikmati diskon spesial 20% setiap hari Senin dengan ketentuan berikut:": "Enjoy a special 20% discount every Monday with the following terms:",
+  "Khusus untuk santap di tempat (Dine In).": "For Dine In only.",
+  "Berlaku untuk semua varian menu Artisan Coffee - Black.": "Valid for all Artisan Coffee - Black variants.",
+  "Berlaku untuk semua varian menu Flavoured Artisan Coffee.": "Valid for all Flavoured Artisan Coffee variants.",
+  "Maksimal pembelian 1 minuman per transaksi.": "Maximum purchase of 1 beverage per transaction.",
   // --- Modal Profil Pengguna ---
   "Profil Pengguna": "User Profile",
   "Edit Profil": "Edit Profile",
@@ -3302,7 +4591,40 @@ const idToEnMap = {
   "Kirim via WhatsApp": "Send via WhatsApp",
   "Reserve a Table & Event Space": "Reserve a Table & Event Space",
   "Untuk informasi ketersediaan tempat dan reservasi acara, tim kami siap membantu segala kebutuhan Anda.": "For table availability and private event reservations, our team is ready to assist you.",
-
+// --- Klaim & Penggunaan Voucher ---
+  "Klaim Voucher": "Claim Voucher",
+  "Klaim Voucher / Gunakan": "Claim Voucher / Use",
+  "Klaim e-Voucher Diskon Rp 100k": "Claim Rp 100k Discount e-Voucher",
+  "Klaim e-Voucher Anda": "Claim Your e-Voucher",
+  "Lihat Tiket & QR ➔": "View Ticket & QR ➔",
+  "Gunakan Penawaran ➔": "Use Offer ➔",
+  "Daftar Voucher": "Voucher List",
+  // --- Detail Tiket Voucher Dual Language ---
+  "Tunjukkan QR ini ke Kasir Sajiva": "Show this QR to Sajiva cashier",
+  "Daftar Voucher": "Voucher List",
+  "Voucher List": "Voucher List",
+  "VOUCHER MINGGUAN": "WEEKLY VOUCHER",
+  "VOUCHER REWARD": "REWARD VOUCHER",
+  "WEEKLY VOUCHER": "WEEKLY VOUCHER",
+  "REWARD VOUCHER": "REWARD VOUCHER",
+  "Nikmati Diskon 10%": "Enjoy 10% Discount",
+  "Tanpa Minimum Pembelian <br> Sebelum Pajak & Servis": "No Minimum Spending <br> Before Tax & Service",
+  "Berlaku Setiap Hari Selasa • Khusus Dine In <br> Tunjukkan ke Barista Sajiva": "Valid Every Tuesday • Dine In Only <br> Show to Sajiva Barista",
+  "Tunjukkan voucher ini ke kasir": "Show this voucher to the cashier",
+  "Tunjukkan Voucher Ini Ke Kasir": "Show this voucher to the cashier",
+  "KODE VOUCHER ANDA:": "YOUR VOUCHER CODE:",
+  "Berlaku: Setiap Hari Selasa": "Valid: Every Tuesday",
+  "Klaim Sebelum:": "Claim Before:",
+  "Unduh Voucher": "Download Voucher",
+  "Pilih voucher yang ingin digunakan": "Select a voucher to use",
+  "Berlaku Khusus Hari Selasa": "Valid Only on Tuesdays",
+  "Khusus Dine In": "Dine In Only",
+  "Berlaku Khusus Hari Selasa <br> Khusus Dine In": "Valid Only on Tuesdays <br> Dine In Only",
+  "Khusus Dine In <br> Sebelum Pajak & Servis": "Dine In Only <br> Before Tax & Service",
+  "Wednesday Promo": "Wednesday Promo",
+  "Setiap hari Rabu, dapatkan diskon spesial 20% untuk pembelian varian Artisan Coffee - Black khusus Dine In.": "Every Wednesday, get a special 20% discount on Artisan Coffee - Black variants for Dine In only.",
+  "Lihat Ketentuan & Menu": "View Terms & Menu",
+  
   // --- PWA Bottom Sheet ---
   "APLIKASI RESMI SAJIVA+": "OFFICIAL SAJIVA+ APP",
   "Pasang Sajiva+ di layar utama ponsel Anda. Akses promo, menu, RSVP, dan voucher jadi lebih cepat.": "Install Sajiva+ on your home screen. Fast access to promos, menu, reservations, and vouchers.",
@@ -3555,7 +4877,7 @@ function processGoogleEmail(email, accessToken) {
         customerData.gender = result.gender || "";
 
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama)}!`;
+        document.getElementById('welcome-user-text').innerText = `👋 Hello, ${escapeHtml(customerData.nama)}!`;
         navigateTo('page-promo');
       } else {
         showElegantAlert(
@@ -3730,6 +5052,12 @@ const isLoggedIn = !!localStorage.getItem('sajiva_crm_user');
         navigateTo('page-review-us');
       }
     }
+
+// Navigasi instan dari Home Promo langsung ke Tiket Detail Weekly Offer
+function claimWeeklyOffer() {
+  navigateTo('page-my-voucher');
+  openVoucherDetail('bogo');
+}
 
     function toggleDropdownMenu() {
       document.getElementById('dropdown-menu').classList.toggle('show');
@@ -3969,12 +5297,16 @@ function switchToEditMode() {
   const inNama = document.getElementById('edit-nama-input');
   const inEmail = document.getElementById('edit-email-input');
   const inNohp = document.getElementById('edit-nohp-input');
-  const inDob = document.getElementById('edit-dob-input');
+  const inDobInput = document.getElementById('edit-dob-input');
+  const inDobDisplay = document.getElementById('edit-dob-display');
 
   if (inNama) inNama.value = customerData.nama || "";
   if (inEmail) inEmail.value = customerData.email || "";
   if (inNohp) inNohp.value = customerData.nohp || "";
-  if (inDob) inDob.value = customerData.dob || "";
+  
+  // Isi nilai ISO dan format tampilan (DD/MM/YYYY)
+  if (inDobInput) inDobInput.value = customerData.dob || "";
+  if (inDobDisplay) inDobDisplay.value = formatDisplayDate(customerData.dob);
 
   selectEditGender(customerData.gender || "");
 }
@@ -4295,6 +5627,195 @@ function selectDate(d) {
   document.getElementById("custom-calendar-popup").classList.remove("show");
 }
 
+// ========================================================
+// LOGIKA CUSTOM DATEPICKER UNTUK EDIT PROFIL
+// ========================================================
+
+let editCalCurrentYear = maxAllowedDob.getFullYear();
+let editCalCurrentMonth = maxAllowedDob.getMonth();
+let editCalSelectedDate = null;
+let editCalViewMode = "days";
+
+function toggleEditCalendar() {
+  const popup = document.getElementById("edit-calendar-popup");
+  if (!popup) return;
+  const isShown = popup.classList.contains("show");
+  if (isShown) {
+    popup.classList.remove("show");
+  } else {
+    // Tutup kalender registrasi jika sempat terbuka
+    const regPopup = document.getElementById("custom-calendar-popup");
+    if (regPopup) regPopup.classList.remove("show");
+
+    // Ambil tanggal yang sudah tersimpan jika ada
+    const currentDobVal = document.getElementById("edit-dob-input").value;
+    if (currentDobVal && currentDobVal.includes('-')) {
+      const parts = currentDobVal.split('-');
+      editCalCurrentYear = parseInt(parts[0], 10);
+      editCalCurrentMonth = parseInt(parts[1], 10) - 1;
+      editCalSelectedDate = new Date(editCalCurrentYear, editCalCurrentMonth, parseInt(parts[2], 10));
+    }
+
+    popup.classList.add("show");
+    editCalViewMode = "days";
+    renderEditCalendar();
+  }
+}
+
+function switchEditCalendarView() {
+  if (editCalViewMode === "days") {
+    editCalViewMode = "months";
+  } else if (editCalViewMode === "months") {
+    editCalViewMode = "decades";
+  } else {
+    editCalViewMode = "days";
+  }
+  renderEditCalendar();
+}
+
+function prevEditCalendarStep() {
+  if (editCalViewMode === "days") {
+    editCalCurrentMonth--;
+    if (editCalCurrentMonth < 0) {
+      editCalCurrentMonth = 11;
+      editCalCurrentYear--;
+    }
+  } else if (editCalViewMode === "months") {
+    editCalCurrentYear--;
+  } else if (editCalViewMode === "decades") {
+    editCalCurrentYear -= 30;
+  }
+  renderEditCalendar();
+}
+
+function nextEditCalendarStep() {
+  if (editCalViewMode === "days") {
+    if (new Date(editCalCurrentYear, editCalCurrentMonth + 1, 1) <= new Date(maxAllowedDob.getFullYear(), maxAllowedDob.getMonth() + 1, 1)) {
+      editCalCurrentMonth++;
+      if (editCalCurrentMonth > 11) {
+        editCalCurrentMonth = 0;
+        editCalCurrentYear++;
+      }
+    }
+  } else if (editCalViewMode === "months") {
+    if (editCalCurrentYear < maxAllowedDob.getFullYear()) {
+      editCalCurrentYear++;
+    }
+  } else if (editCalViewMode === "decades") {
+    if (editCalCurrentYear + 30 <= maxAllowedDob.getFullYear() + 20) {
+      editCalCurrentYear += 30;
+    }
+  }
+  renderEditCalendar();
+}
+
+function renderEditCalendar() {
+  const titleBtn = document.getElementById("edit-cal-title-btn");
+  const container = document.getElementById("edit-calendar-content");
+  if (!container || !titleBtn) return;
+
+  if (editCalViewMode === "days") {
+    titleBtn.innerText = `${monthNamesId[editCalCurrentMonth]} ${editCalCurrentYear}`;
+    renderEditDaysGrid(container);
+  } else if (editCalViewMode === "months") {
+    titleBtn.innerText = `${editCalCurrentYear}`;
+    renderEditMonthsGrid(container);
+  } else if (editCalViewMode === "decades") {
+    titleBtn.innerText = "Pilih Periode Tahun";
+    renderEditDecadesGrid(container);
+  }
+}
+
+function renderEditDaysGrid(container) {
+  let html = `<div class="calendar-weekdays">${weekDaysId.map(d => `<span>${d}</span>`).join('')}</div><div class="calendar-days-grid">`;
+  const firstDayIndex = (new Date(editCalCurrentYear, editCalCurrentMonth, 1).getDay() + 6) % 7;
+  const totalDays = new Date(editCalCurrentYear, editCalCurrentMonth + 1, 0).getDate();
+  const prevMonthTotalDays = new Date(editCalCurrentYear, editCalCurrentMonth, 0).getDate();
+
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    html += `<div class="calendar-cell muted disabled">${prevMonthTotalDays - i}</div>`;
+  }
+
+  for (let d = 1; d <= totalDays; d++) {
+    const curDateObj = new Date(editCalCurrentYear, editCalCurrentMonth, d);
+    const isDisabled = curDateObj > maxAllowedDob;
+    const isSelected = editCalSelectedDate &&
+      curDateObj.getFullYear() === editCalSelectedDate.getFullYear() &&
+      curDateObj.getMonth() === editCalSelectedDate.getMonth() &&
+      curDateObj.getDate() === editCalSelectedDate.getDate();
+
+    html += `<div class="calendar-cell ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isDisabled ? '' : `selectEditDate(${d})`}">${d}</div>`;
+  }
+
+  const totalCellsRendered = firstDayIndex + totalDays;
+  const remainingCells = (7 - (totalCellsRendered % 7)) % 7;
+  for (let n = 1; n <= remainingCells; n++) {
+    html += `<div class="calendar-cell muted disabled">${n}</div>`;
+  }
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function renderEditMonthsGrid(container) {
+  let html = `<div class="calendar-range-grid">`;
+  for (let m = 0; m < 12; m++) {
+    const isFuture = new Date(editCalCurrentYear, m, 1) > maxAllowedDob;
+    const isSelected = editCalSelectedDate && editCalSelectedDate.getFullYear() === editCalCurrentYear && editCalSelectedDate.getMonth() === m;
+
+    html += `<div class="calendar-range-cell ${isFuture ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isFuture ? '' : `selectEditMonth(${m})`}">${monthNamesId[m].substring(0, 3)}</div>`;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function renderEditDecadesGrid(container) {
+  let html = `<div class="calendar-range-grid">`;
+  const ranges = [
+    [1970, 1975], [1976, 1980], [1981, 1985],
+    [1986, 1990], [1991, 1995], [1996, 2000],
+    [2001, 2005], [2006, 2010], [2011, 2015],
+    [2016, 2020], [2021, 2025], [2026, 2026]
+  ];
+
+  ranges.forEach(([start, end]) => {
+    const isDisabled = start > maxAllowedDob.getFullYear();
+    const isSelected = editCalCurrentYear >= start && editCalCurrentYear <= end;
+
+    html += `<div class="calendar-range-cell ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                  onclick="${isDisabled ? '' : `selectEditRange(${start},${end})`}">${start}-${end}</div>`;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function selectEditRange(start, end) {
+  editCalCurrentYear = Math.min(end, maxAllowedDob.getFullYear());
+  editCalViewMode = "months";
+  renderEditCalendar();
+}
+
+function selectEditMonth(m) {
+  editCalCurrentMonth = m;
+  editCalViewMode = "days";
+  renderEditCalendar();
+}
+
+function selectEditDate(d) {
+  editCalSelectedDate = new Date(editCalCurrentYear, editCalCurrentMonth, d);
+  const dd = String(d).padStart(2, '0');
+  const mm = String(editCalCurrentMonth + 1).padStart(2, '0');
+  const yyyy = editCalCurrentYear;
+
+  document.getElementById("edit-dob-display").value = `${dd}/${mm}/${yyyy}`;
+  document.getElementById("edit-dob-input").value = `${yyyy}-${mm}-${dd}`;
+
+  document.getElementById("edit-calendar-popup").classList.remove("show");
+}
+
     function closeForgotPasswordModal() {
       document.getElementById('forgot-modal').classList.remove('show');
     }
@@ -4358,18 +5879,119 @@ function logoutUser() {
   navigateTo('page-login');
 }
 
+// Render status tiket voucher dari kode unik
     function renderVoucherTicket(code) {
-      document.getElementById('voucher-empty-state').style.display = 'none';
-      document.getElementById('voucher-display-container').style.display = 'block';
-      document.getElementById('display-voucher-code').innerText = code;
-      
-      const qrBox = document.getElementById('qrcode-box');
-      qrBox.innerHTML = "";
-      new QRCode(qrBox, { text: code, width: 120, height: 120 });
+      const cardReward = document.getElementById('card-voucher-reward');
+      const emptyState = document.getElementById('voucher-empty-state');
+      const listView = document.getElementById('voucher-list-view');
 
+      if (code && code.trim() !== "" && code.trim() !== "-") {
+        if (cardReward) cardReward.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'none';
+        if (listView) listView.style.display = 'block';
+
+        document.getElementById('display-voucher-code').innerText = code;
+        
+        const qrBox = document.getElementById('qrcode-box');
+        if (qrBox) {
+          qrBox.innerHTML = "";
+          new QRCode(qrBox, { text: code, width: 120, height: 120 });
+        }
+
+        const d = new Date();
+        d.setDate(d.getDate() + 30);
+        const claimBeforeEl = document.getElementById('claim-before');
+        if (claimBeforeEl) {
+          claimBeforeEl.innerText = `Claim Before: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+        }
+      }
+    }
+
+ // Helper untuk generate / mengambil kode unik 8 angka Buy 1 Get 1
+    function getOrGenerateBogoCode() {
+      let bogoCode = localStorage.getItem('sajiva_bogo_code');
+      if (!bogoCode) {
+        const part1 = Math.floor(1000 + Math.random() * 9000);
+        const part2 = Math.floor(1000 + Math.random() * 9000);
+        bogoCode = `${part1}-${part2}`;
+        localStorage.setItem('sajiva_bogo_code', bogoCode);
+      }
+      return bogoCode;
+    }
+
+    // Fungsi Render QR Code & Tanggal Kadaluarsa
+    function renderQRCodeDisplay(codeStr, expiryText) {
+      const qrBox = document.getElementById('qrcode-box');
+      if (qrBox) {
+        qrBox.innerHTML = "";
+        new QRCode(qrBox, { text: codeStr, width: 120, height: 120 });
+      }
+      document.getElementById('display-voucher-code').innerText = codeStr;
+      
+      const claimBeforeEl = document.getElementById('claim-before');
+      if (claimBeforeEl) {
+        claimBeforeEl.innerText = expiryText;
+      }
+    }
+
+  function openVoucherDetail(type) {
+      const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
+
+      document.getElementById('voucher-list-view').style.display = 'none';
+      document.getElementById('voucher-detail-view').style.display = 'block';
+      
+      const subTitleEl = document.getElementById('my-voucher-subtitle');
+      if (subTitleEl) {
+        subTitleEl.innerText = isEn ? "Show this QR to Sajiva cashier" : "Tunjukkan QR ini ke Kasir Sajiva";
+      }
+
+      const prefixBox = document.getElementById('prefix-upto-box');
+      const titleEl = document.getElementById('detail-voucher-title');
+      const amountEl = document.getElementById('detail-voucher-amount');
+      const descEl = document.getElementById('detail-voucher-desc');
+      const termsEl = document.getElementById('detail-voucher-terms');
+      const labelCodeEl = document.querySelector('.voucher-code-label');
+      const showCashierEl = document.querySelector('#voucher-to-download div[style*="Tunjukkan"], #voucher-to-download div[style*="Show"]');
+      const btnDl = document.getElementById('btn-download-voucher');
+
+      if (labelCodeEl) {
+        labelCodeEl.innerText = isEn ? "YOUR VOUCHER CODE:" : "KODE VOUCHER ANDA:";
+      }
+      if (showCashierEl) {
+        showCashierEl.innerText = isEn ? "Show this voucher to the cashier" : "Tunjukkan voucher ini ke kasir";
+      }
+      if (btnDl) {
+        btnDl.innerText = isEn ? "Download Voucher" : "Unduh Voucher";
+      }
+
+      // Render Reward Voucher Ulasan Resmi (OdooCodes)
+      titleEl.innerText = isEn ? "REWARD VOUCHER" : "VOUCHER REWARD";
+      if (prefixBox) prefixBox.style.display = "flex";
+      amountEl.style.fontSize = "2.5rem";
+      amountEl.innerText = "100.000";
+      descEl.innerText = isEn ? "Enjoy 10% Discount" : "Nikmati Diskon 10%";
+      if (termsEl) {
+        termsEl.innerHTML = isEn 
+          ? "No Minimum Spending <br> Before Tax & Service" 
+          : "Tanpa Minimum Pembelian <br> Sebelum Pajak & Servis";
+      }
+
+      const rewardCode = customerData.voucherCode || "OD-REVIEW-100K";
       const d = new Date();
       d.setDate(d.getDate() + 30);
-      document.getElementById('claim-before').innerText = `Claim Before: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+      const expStr = isEn 
+        ? `Claim Before: ${d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}`
+        : `Klaim Sebelum: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+      
+      renderQRCodeDisplay(rewardCode, expStr);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Kembali ke Tampilan 1 (Daftar Voucher)
+    function backToVoucherList() {
+      document.getElementById('voucher-detail-view').style.display = 'none';
+      document.getElementById('voucher-list-view').style.display = 'block';
+      document.getElementById('my-voucher-subtitle').innerText = "Pilih voucher yang ingin digunakan";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
@@ -4467,6 +6089,21 @@ let payload = {
 
 let countdownInterval = null; // Variabel untuk menyimpan timer hitung mundur
 
+function setGreetingText(name) {
+  const welcomeEl = document.getElementById('welcome-user-text');
+  if (!welcomeEl) return;
+  const userName = name || customerData.nama || 'Member';
+  
+  welcomeEl.innerHTML = `
+    <svg class="wave-hand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main); flex-shrink: 0;">
+      <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+      <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+      <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+      <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+    </svg>
+    <span>Hello, ${escapeHtml(userName)}!</span>
+  `;
+}
 function setupStarRating() {
   const stars = document.querySelectorAll('#stars-container .star-icon');
   const ratingText = document.getElementById('rating-text');
@@ -4620,20 +6257,22 @@ function initAuthSlider() {
   }, 3500); // Berganti otomatis setiap 3.5 detik
 }
     function initSlider() {
-      const slides = document.querySelectorAll('.banner-slide');
+      const slides = document.querySelectorAll('#banner-slides .banner-slide');
       totalSlides = slides.length;
       if (totalSlides === 0) return;
 
       const dotsContainer = document.getElementById('slider-dots');
-      dotsContainer.innerHTML = '';
-      
-      for(let i=0; i<totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.className = `dot ${i===0 ? 'active':''}`;
-        dot.onclick = () => goToSlide(i);
-        dotsContainer.appendChild(dot);
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement('div');
+          dot.className = `dot ${i === currentSlide ? 'active' : ''}`;
+          dot.onclick = () => goToSlide(i);
+          dotsContainer.appendChild(dot);
+        }
       }
 
+      updateSlidePosition();
       startAutoSlide();
     }
 
@@ -4643,20 +6282,21 @@ function initAuthSlider() {
         slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
       }
       
-      const dots = document.querySelectorAll('.slider-dots .dot');
+      const dots = document.querySelectorAll('#slider-dots .dot');
       dots.forEach((dot, index) => {
-        if (index === currentSlide) dot.classList.add('active');
-        else dot.classList.remove('active');
+        dot.classList.toggle('active', index === currentSlide);
       });
     }
 
-    function nextSlide() {
+  function nextSlide() {
+      if (totalSlides <= 1) return;
       currentSlide = (currentSlide + 1) % totalSlides;
       updateSlidePosition();
       resetAutoSlide();
     }
 
     function prevSlide() {
+      if (totalSlides <= 1) return;
       currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
       updateSlidePosition();
       resetAutoSlide();
@@ -4670,10 +6310,12 @@ function initAuthSlider() {
 
     function startAutoSlide() {
       stopAutoSlide();
-      bannerInterval = setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        updateSlidePosition();
-      }, 4000);
+      if (totalSlides > 1) {
+        bannerInterval = setInterval(() => {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          updateSlidePosition();
+        }, 4000);
+      }
     }
 
     function stopAutoSlide() {
@@ -4682,6 +6324,18 @@ function initAuthSlider() {
 
     function resetAutoSlide() {
       startAutoSlide();
+    }
+
+    // GALLERY FUNCTIONS
+// Helper otomatis ubah link Imgur web page ke Direct Image
+    function formatDirectUrl(url) {
+      if (!url) return '';
+      let clean = String(url).trim();
+      if (clean.includes('imgur.com') && !clean.includes('i.imgur.com')) {
+        const id = clean.split('/').pop().replace(/\.[^/.]+$/, "");
+        return `https://i.imgur.com/${id}.jpg`;
+      }
+      return clean;
     }
 
     // GALLERY FUNCTIONS
@@ -4700,18 +6354,35 @@ function initAuthSlider() {
         return;
       }
 
+      const catLabels = {
+        fasad: "Facade",
+        interior: "Interior",
+        ambience: "Ambience",
+        event: "Event",
+        kru: "Crew"
+      };
+
       filtered.forEach(item => {
+        const directImg = formatDirectUrl(item.url);
+        let labelText = (item.title && item.title.trim() !== "") 
+          ? item.title.trim() 
+          : (catLabels[item.category] || item.category || "Sajiva");
+
         const el = document.createElement('div');
         el.className = 'gallery-item-app';
-        el.onclick = () => openLightbox(item.url);
+        el.onclick = () => openLightbox(directImg);
         el.innerHTML = `
-          <img src="${item.url}" alt="${item.title}" loading="lazy">
-          <div class="gallery-item-info-app">${item.title}</div>
+          <img src="${escapeHtml(directImg)}" 
+               alt="${escapeHtml(labelText)}" 
+               loading="lazy"
+               onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600';">
+          <div class="gallery-item-info-app">
+            <span>${escapeHtml(labelText)}</span>
+          </div>
         `;
         container.appendChild(el);
       });
     }
-
     function filterGallery(category, event) {
       document.querySelectorAll('.cat-btn-app').forEach(btn => btn.classList.remove('active'));
       if (event && event.target) {
@@ -4719,6 +6390,45 @@ function initAuthSlider() {
       }
       renderGallery(category);
     }
+	
+	// ==========================================
+// LOGIKA DROPDOWN GALERI
+// ==========================================
+function toggleGalleryDropdown(event) {
+  if (event) event.stopPropagation();
+  const menu = document.getElementById('gallery-cat-menu');
+  if (menu) {
+    menu.classList.toggle('show');
+  }
+}
+
+function selectGalleryCat(category, label, event) {
+  if (event) event.stopPropagation();
+  
+  const titleSpan = document.getElementById('selected-gallery-cat');
+  if (titleSpan) titleSpan.innerText = label;
+
+  document.querySelectorAll('.gallery-cat-item').forEach(el => el.classList.remove('active'));
+  if (event && event.target) {
+    event.target.classList.add('active');
+  }
+
+  const menu = document.getElementById('gallery-cat-menu');
+  if (menu) menu.classList.remove('show');
+
+  if (typeof filterGallery === 'function') {
+    filterGallery(category, event);
+  }
+}
+
+// Tutup menu otomatis jika pengguna menyentuh area di luar kotak dropdown
+document.addEventListener('click', function(e) {
+  const wrap = document.querySelector('.gallery-select-wrapper');
+  const menu = document.getElementById('gallery-cat-menu');
+  if (wrap && !wrap.contains(e.target) && menu) {
+    menu.classList.remove('show');
+  }
+});
 
     function openLightbox(url) {
       const lb = document.getElementById('lightbox');
@@ -4732,6 +6442,101 @@ function initAuthSlider() {
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
     }
+	
+function openPromoTermsModal() {
+  const modal = document.getElementById('promo-terms-modal');
+  if (!modal) return;
+
+  const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
+
+  const subTagEl = modal.querySelector('.promo-tag');
+  const menuHeaderEl = document.getElementById('monday-menu-header');
+  const descContainer = document.getElementById('monday-promo-desc');
+
+  if (subTagEl) {
+    subTagEl.innerText = isEn ? "SPECIAL OFFER" : "PENAWARAN SPESIAL";
+  }
+  if (menuHeaderEl) {
+    menuHeaderEl.innerText = isEn ? "ELIGIBLE MENU ITEMS:" : "PILIHAN MENU BERLAKU:";
+  }
+
+  if (descContainer) {
+    descContainer.innerHTML = isEn ? `
+      <p style="margin-bottom: 6px;">
+        Enjoy a special <strong>20%</strong> discount every <strong>Monday</strong> with the following terms:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">For <em>Dine In</em> only.</li>
+        <li style="margin-bottom: 3px;">Valid for all <em>Flavoured Artisan Coffee</em> menu variants.</li>
+        <li>Maximum purchase of <strong>1 drink</strong> per transaction.</li>
+      </ul>
+    ` : `
+      <p style="margin-bottom: 6px;">
+        Nikmati diskon spesial <strong>20%</strong> setiap hari <strong>Senin</strong> dengan ketentuan berikut:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">Khusus untuk minum di tempat (<em>Dine In</em>).</li>
+        <li style="margin-bottom: 3px;">Berlaku untuk semua varian menu <em>Flavoured Artisan Coffee</em>.</li>
+        <li>Maksimal pembelian <strong>1 minuman</strong> per transaksi.</li>
+      </ul>
+    `;
+  }
+
+  modal.classList.add('show');
+}
+
+function closePromoModal(e) {
+  const modal = document.getElementById('promo-terms-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+// Buka & Tutup Modal Pop-up Wednesday Promo (Mendukung ID & EN)
+function openWednesdayPromoModal() {
+  const modal = document.getElementById('wednesday-promo-modal');
+  if (!modal) return;
+
+  const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
+
+  const subTagEl = modal.querySelector('.promo-tag');
+  const menuHeaderEl = document.getElementById('wednesday-menu-header');
+  const descContainer = document.getElementById('wednesday-promo-desc');
+
+  if (subTagEl) {
+    subTagEl.innerText = isEn ? "WEEKLY OFFER" : "PENAWARAN MINGGUAN";
+  }
+  if (menuHeaderEl) {
+    menuHeaderEl.innerText = isEn ? "ELIGIBLE MENU ITEMS:" : "PILIHAN MENU BERLAKU:";
+  }
+
+  if (descContainer) {
+    descContainer.innerHTML = isEn ? `
+      <p style="margin-bottom: 6px;">
+        Enjoy a special <strong>20%</strong> discount every <strong>Wednesday</strong> with the following terms:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">For <em>Dine In</em> only.</li>
+        <li style="margin-bottom: 3px;">Valid for all <em>Artisan Coffee - Black</em> menu variants.</li>
+        <li>Maximum purchase of <strong>1 drink</strong> per transaction.</li>
+      </ul>
+    ` : `
+      <p style="margin-bottom: 6px;">
+        Nikmati diskon spesial <strong>20%</strong> setiap hari <strong>Rabu</strong> dengan ketentuan berikut:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">Khusus untuk minum di tempat (<em>Dine In</em>).</li>
+        <li style="margin-bottom: 3px;">Berlaku untuk semua varian menu <em>Artisan Coffee - Black</em>.</li>
+        <li>Maksimal pembelian <strong>1 minuman</strong> per transaksi.</li>
+      </ul>
+    `;
+  }
+
+  modal.classList.add('show');
+}
+
+function closeWednesdayPromoModal(e) {
+  const modal = document.getElementById('wednesday-promo-modal');
+  if (modal) modal.classList.remove('show');
+}
 	
 // ==========================================
 // FUNGSI LOAD DYNAMIC EVENT & PROMO
@@ -4763,20 +6568,50 @@ async function loadDynamicContent() {
       `).join('');
     }
 
-// Render Promo Tambahan
+// Render Promo Tambahan dari Admin Dashboard
+// Render Promo Tambahan dari Admin Dashboard
     const promoContainer = document.getElementById('dynamic-promo-container');
     if (promoContainer && pJson.status === "success" && Array.isArray(pJson.data)) {
-      // Saring promo selain Review Reward agar kartu utama tidak terduplikasi
-      const extraPromos = pJson.data.filter(pr => !pr.title.toLowerCase().includes('review reward'));
-      
+      const extraPromos = pJson.data.filter(pr => {
+        const titleLower = (pr.title || '').toLowerCase();
+        return !titleLower.includes('review reward') && !titleLower.includes('buy 1 get 1');
+      });
+
       if (extraPromos.length > 0) {
-        promoContainer.innerHTML = extraPromos.map(pr => `
-          <div class="promo-banner" style="border-color: rgba(0,0,0,0.1); background: #ffffff; margin-bottom: 12px;">
-            <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">${escapeHtml(pr.price || 'Special Offer')}</span>
-            <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(pr.title)}</div>
-            <div style="font-size: 0.78rem; color: var(--text-secondary);">${escapeHtml(pr.desc)}</div>
-          </div>
-        `).join('');
+        const isEn = (localStorage.getItem('sajiva_lang') || 'id') === 'en';
+
+        promoContainer.innerHTML = extraPromos.map(pr => {
+          const isMonday = (pr.title || '').toLowerCase().includes('monday');
+          
+          // Deskripsi otomatis mengikuti format Wednesday Promo dalam 2 bahasa
+          const defaultDesc = isMonday 
+            ? (isEn 
+                ? "Every Monday, get a special 20% discount on Flavoured Artisan Coffee variants for Dine In only."
+                : "Setiap hari Senin, dapatkan diskon spesial 20% untuk pembelian varian Flavoured Artisan Coffee khusus Dine In.")
+            : escapeHtml(pr.desc);
+
+          const btnText = isEn ? "View Terms &amp; Menu" : "Lihat Ketentuan &amp; Menu";
+          const tagText = isEn ? "Special Offer" : "Penawaran Spesial";
+
+          return `
+            <div class="promo-banner custom-promo-box" style="margin-bottom: 12px;">
+              <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E;">
+                ${escapeHtml(pr.price || tagText)}
+              </span>
+              <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
+                ${escapeHtml(pr.title)}
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px;">
+                ${defaultDesc}
+              </div>
+              <button type="button" onclick="openPromoTermsModal()" class="btn-weekly-claim">
+                ${btnText}
+              </button>
+            </div>
+          `;
+        }).join('');
+      } else {
+        promoContainer.innerHTML = '';
       }
     }
   } catch (err) {
@@ -4811,43 +6646,62 @@ async function fetchDynamicContentForUser() {
       bRes.json(), gRes.json(), eRes.json(), pRes.json()
     ]);
 
-// Update Banners jika data tersedia
-    if (bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0) {
-      const sliderContainer = document.getElementById('banner-slides');
-      if (sliderContainer) {
-        sliderContainer.innerHTML = bJson.data.map(item => {
-          // Cegah URL masuk sebagai judul jika salah input
-          let displayTitle = item.title || 'Artisanal Coffee Roastery';
-          if (displayTitle.startsWith('http://') || displayTitle.startsWith('https://')) {
-            displayTitle = 'Artisanal Coffee Roastery';
-          }
-          
-          let imgUrl = item.url || 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000';
+// ========================================================
+    // 1. UPDATE BANNER DARI DASHBOARD ADMIN (DINAMIS 100%)
+    // ========================================================
+    const defaultImgurBanners = [
+      "https://i.imgur.com/MzLHfy4.jpg",
+      "https://i.imgur.com/QhOe3j2.jpg",
+      "https://i.imgur.com/8bmH68Q.jpg",
+      "https://i.imgur.com/l4xN4iF.jpg",
+      "https://i.imgur.com/3wswMgT.jpg"
+    ];
 
-          return `
-            <div class="banner-slide">
-              <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(displayTitle)}" onerror="this.src='https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1000'">
-              <div class="banner-overlay">
-                <h4>${escapeHtml(displayTitle)}</h4>
-              </div>
-            </div>
-          `;
-        }).join('');
-        initSlider(); // Inisialisasi ulang slide dan dots
-      }
+    // Jika admin sudah mengisi banner di Dashboard, gunakan banner dari admin.
+    // Jika masih kosong di database, gunakan fallback 5 foto Imgur.
+    let bannerList = (bJson && bJson.status === "success" && Array.isArray(bJson.data) && bJson.data.length > 0)
+      ? bJson.data.map(item => item.url)
+      : defaultImgurBanners;
+
+    const sliderContainer = document.getElementById('banner-slides');
+    if (sliderContainer) {
+      stopAutoSlide(); // Matikan timer sebelum render baru
+
+      sliderContainer.innerHTML = bannerList.map((url, idx) => {
+        let cleanUrl = String(url || '').trim();
+        // Konversi link imgur biasa ke format gambar langsung (i.imgur.com) jika admin memasukkan link page
+        if (cleanUrl.includes('imgur.com') && !cleanUrl.includes('i.imgur.com')) {
+          const imgId = cleanUrl.split('/').pop().replace(/\.[^/.]+$/, "");
+          cleanUrl = `https://i.imgur.com/${imgId}.jpg`;
+        }
+
+        return `
+          <div class="banner-slide">
+            <img src="${escapeHtml(cleanUrl)}" 
+                 alt="Sajiva Banner ${idx + 1}" 
+                 loading="eager"
+                 onerror="this.onerror=null; this.src='https://i.imgur.com/MzLHfy4.jpg';">
+          </div>
+        `;
+      }).join('');
+
+      currentSlide = 0;
+      initSlider(); // Buat titik dots sesuai jumlah banner yang ada di dashboard admin
     }
-
-    // Update Gallery jika data tersedia
+    // ========================================================
+    // 2. UPDATE GALLERY
+    // ========================================================
     if (gJson.status === "success" && Array.isArray(gJson.data)) {
-      galleryItems = gJson.data; // Timpa array global galleryItems
+      galleryItems = gJson.data;
       renderGallery('all');
     }
 
-    // Update Events jika data tersedia
+    // ========================================================
+    // 3. UPDATE EVENTS
+    // ========================================================
     if (eJson.status === "success" && Array.isArray(eJson.data) && eJson.data.length > 0) {
       const eventPageContainer = document.querySelector('#page-event main.card');
       if (eventPageContainer) {
-        // Render dinamis daftar event
         let eventHtml = `<h2 class="card-headline" style="text-align: center;"><span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span> Events</h2>`;
         eventHtml += eJson.data.map(item => `
           <div style="background: #ffffff; border-radius: 16px; padding: 16px; text-align: left; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
@@ -4942,11 +6796,34 @@ const savedUser = localStorage.getItem('sajiva_crm_user');
         
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
-        document.getElementById('welcome-user-text').innerText = `Hello, ${escapeHtml(customerData.nama || 'Pelanggan Setia')}!`;
+		setGreetingText(customerData.nama);
         
         // ... lanjutkan sinkronisasi status ke server ...
         
 // Sinkronisasi data profil & voucher dari server
+// ========================================================
+        // LOGIKA SESI 30 HARI
+        // ========================================================
+        const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+        const now = Date.now();
+
+        // Jika data login belum memiliki catatan waktu, inisialisasi dengan waktu sekarang
+        if (!customerData.loginTime) {
+          customerData.loginTime = now;
+          localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+        }
+
+        // Hitung apakah sudah melewati 30 hari sejak login terakhir
+        const isSessionExpired = (now - customerData.loginTime) > THIRTY_DAYS_MS;
+
+        if (isSessionExpired) {
+          showElegantAlert("Sesi login Anda telah berakhir (30 hari). Silakan masuk kembali.", "Keamanan", "✦", () => {
+            logoutUser();
+          });
+          return;
+        }
+
+        // Sinkronisasi data latar belakang tanpa memutus login jika koneksi lambat/eror
         sendDataToBackend('check_status', null, (res) => {
           if (res && res.status === "success") {
             if (res.existingName) customerData.nama = res.existingName;
@@ -4956,27 +6833,26 @@ const savedUser = localStorage.getItem('sajiva_crm_user');
             if (res.gender) customerData.gender = res.gender;
             if (res.photo) customerData.photo = res.photo;
 
-            // CEGAH VOUCHER PALSU: Jika server bilang ada voucher, tampilkan. Jika kosong, bersihkan!
             if (res.voucherCode && res.voucherCode.trim() !== "" && res.voucherCode !== "-") {
               customerData.voucherCode = res.voucherCode;
               renderVoucherTicket(res.voucherCode);
-              document.getElementById('review-form-wrapper').style.display = 'none';
-              document.getElementById('review-already-claimed').style.display = 'block';
+              const rWrapper = document.getElementById('review-form-wrapper');
+              const rClaimed = document.getElementById('review-already-claimed');
+              if (rWrapper) rWrapper.style.display = 'none';
+              if (rClaimed) rClaimed.style.display = 'block';
             } else {
               customerData.voucherCode = "";
-              document.getElementById('voucher-empty-state').style.display = 'block';
-              document.getElementById('voucher-display-container').style.display = 'none';
-              document.getElementById('review-form-wrapper').style.display = 'block';
-              document.getElementById('review-already-claimed').style.display = 'none';
+              const vEmpty = document.getElementById('voucher-empty-state');
+              const rWrapper = document.getElementById('review-form-wrapper');
+              const rClaimed = document.getElementById('review-already-claimed');
+              if (vEmpty) vEmpty.style.display = 'block';
+              if (rWrapper) rWrapper.style.display = 'block';
+              if (rClaimed) rClaimed.style.display = 'none';
             }
             localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-          } 
-          // CEGAH SESI ZOMBIE: Jika sesi ditolak atau akun sudah dihapus oleh admin di spreadsheet
-          else if (res && (res.status === "error" || res.status === "not_found")) {
-            showElegantAlert("Sesi login Anda telah berakhir atau tidak valid. Silakan masuk kembali.", "Keamanan", "✦", () => {
-              logoutUser();
-            });
           }
+          // Catatan: blok 'else if' yang memanggil showElegantAlert sengaja dihilangkan
+          // agar gangguan sinyal atau keterlambatan server tidak langsung memicu logout paksa.
         });
 
         if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
@@ -5044,13 +6920,11 @@ customerData.nama = result.existingName || userInput;
         customerData.photo = result.photo || "";
         customerData.dob = result.dob || customerData.dob || "";
         customerData.gender = result.gender || customerData.gender || "";
+		customerData.loginTime = Date.now(); // Simpan timestamp login
 
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
 
-        const welcomeEl = document.getElementById('welcome-user-text');
-        if (welcomeEl) {
-          welcomeEl.innerText = `Hello, ${customerData.nama}!`;
-        }
+		setGreetingText(customerData.nama);
 
         if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
           renderVoucherTicket(customerData.voucherCode);
@@ -5199,7 +7073,7 @@ btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
-        document.getElementById('welcome-user-text').innerText = "Halo, " + customerData.nama + "!";
+        setGreetingText(customerData.nama);
         navigateTo('page-promo');
       }
     }, "", pass, dob, gender);
@@ -5321,6 +7195,19 @@ window.addEventListener('popstate', function(event) {
   const tncModal = document.getElementById('tnc-modal');
   if (tncModal && tncModal.classList.contains('show')) {
     closeTnCModal(false);
+    return;
+  }
+  
+  // >>> TEMPELKAN KODE PROMO MODAL DI SINI <<<
+  const promoModal = document.getElementById('promo-terms-modal');
+  if (promoModal && promoModal.classList.contains('show')) {
+    closePromoModal();
+    return;
+  }
+
+  const wednesdayModal = document.getElementById('wednesday-promo-modal');
+  if (wednesdayModal && wednesdayModal.classList.contains('show')) {
+    closeWednesdayPromoModal();
     return;
   }
 
@@ -5457,5 +7344,138 @@ window.addEventListener('popstate', function(event) {
   <button type="button" class="btn-sheet-dismiss" onclick="dismissInstallSheet()">Nanti Saja</button>
 </div>
 
+<!-- MODAL POPUP DETAIL MONDAY PROMO -->
+<div id="promo-terms-modal" class="modal" onclick="closePromoModal(event)">
+  <div class="modal-content promo-modal-box" onclick="event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E; margin: 0;">SPECIAL OFFER</span>
+      <button type="button" class="btn-close-modal-copper" onclick="closePromoModal()" title="Tutup">✕</button>
+    </div>
+
+    <h3 style="font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Monday Promo 20% OFF</h3>
+    
+    <!-- KONTAINER DESKRIPSI (DUAL LANGUAGE) -->
+    <div id="monday-promo-desc" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 16px;">
+      <p style="margin-bottom: 6px;">
+        Nikmati diskon spesial <strong>20%</strong> setiap hari <strong>Senin</strong> dengan ketentuan berikut:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">Khusus untuk minum di tempat (<em>Dine In</em>).</li>
+        <li style="margin-bottom: 3px;">Berlaku untuk semua varian menu <em>Flavoured Artisan Coffee</em>.</li>
+        <li>Maksimal pembelian <strong>1 minuman</strong> per transaksi.</li>
+      </ul>
+    </div>
+
+    <!-- HEADER MENU -->
+    <div id="monday-menu-header" style="font-size: 0.72rem; font-weight: 700; letter-spacing: 1.2px; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 10px;">
+      PILIHAN MENU BERLAKU:
+    </div>
+
+    <!-- LIST MENU -->
+    <div class="promo-menu-list">
+      <div class="promo-menu-item">
+        <span>Zesty Americano</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Orange Coffee</span>
+        <div class="promo-price-group"><del class="price-old">55k</del><strong class="price-discount">44k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Hazelnut Latte</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Vanilla Latte</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Caramel Latte</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Mocha Thick Latte</span>
+        <div class="promo-price-group"><del class="price-old">60k</del><strong class="price-discount">48k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Avocado Latte</span>
+        <div class="promo-price-group"><del class="price-old">55k</del><strong class="price-discount">44k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Salted Caramel Latte</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Caffogato</span>
+        <div class="promo-price-group"><del class="price-old">55k</del><strong class="price-discount">44k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Dirty Matcha</span>
+        <div class="promo-price-group"><del class="price-old">55k</del><strong class="price-discount">44k</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL POPUP DETAIL WEDNESDAY PROMO -->
+<div id="wednesday-promo-modal" class="modal" onclick="closeWednesdayPromoModal(event)">
+  <div class="modal-content promo-modal-box" onclick="event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <span class="promo-tag" style="background: rgba(37, 211, 102, 0.15); color: #128C7E; margin: 0;">SPECIAL OFFER</span>
+      <button type="button" class="btn-close-modal-copper" onclick="closeWednesdayPromoModal()" title="Tutup">✕</button>
+    </div>
+
+    <h3 style="font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Wednesday Promo 20% OFF</h3>
+    
+    <!-- KONTAINER DESKRIPSI (DIBERI ID AGAR TARGET AKURAT) -->
+    <div id="wednesday-promo-desc" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 16px;">
+      <p style="margin-bottom: 6px;">
+        Nikmati diskon spesial <strong>20%</strong> setiap hari <strong>Rabu</strong> dengan ketentuan berikut:
+      </p>
+      <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+        <li style="margin-bottom: 3px;">Khusus untuk minum di tempat (<em>Dine In</em>).</li>
+        <li style="margin-bottom: 3px;">Berlaku untuk semua varian menu <em>Artisan Coffee - Black</em>.</li>
+        <li>Maksimal pembelian <strong>1 minuman</strong> per transaksi.</li>
+      </ul>
+    </div>
+
+    <!-- HEADER MENU -->
+    <div id="wednesday-menu-header" style="font-size: 0.72rem; font-weight: 700; letter-spacing: 1.2px; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 10px;">
+      PILIHAN MENU BERLAKU:
+    </div>
+
+    <!-- LIST MENU -->
+    <div class="promo-menu-list">
+      <div class="promo-menu-item">
+        <span>Espresso</span>
+        <div class="promo-price-group"><del class="price-old">35k</del><strong class="price-discount">28k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Double Ristretto</span>
+        <div class="promo-price-group"><del class="price-old">35k</del><strong class="price-discount">28k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Americano</span>
+        <div class="promo-price-group"><del class="price-old">35k</del><strong class="price-discount">28k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Macchiato</span>
+        <div class="promo-price-group"><del class="price-old">35k</del><strong class="price-discount">28k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>V60</span>
+        <div class="promo-price-group"><del class="price-old">35k</del><strong class="price-discount">28k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Japanese</span>
+        <div class="promo-price-group"><del class="price-old">40k</del><strong class="price-discount">32k</strong></div>
+      </div>
+      <div class="promo-menu-item">
+        <span>Aeropress</span>
+        <div class="promo-price-group"><del class="price-old">45k</del><strong class="price-discount">36k</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
