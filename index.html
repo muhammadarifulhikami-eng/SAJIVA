@@ -71,15 +71,18 @@ body {
   box-shadow: none !important;
 }
 
-/* Tanda + Pangkat Khusus Navbar & Welcome */
+/* Styling Universal Tanda + Pangkat Khusus (Persis Navbar) */
 .brand-plus-sup {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.55em;
-  font-weight: 400;
-  vertical-align: super;
-  margin-left: 1px;
-  letter-spacing: normal;
-  line-height: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.55em !important;
+  font-weight: 400 !important;
+  vertical-align: super !important;
+  position: relative !important;
+  top: -0.35em !important;          /* Memaksa tanda + naik ke atas */
+  margin-left: 2px !important;
+  letter-spacing: normal !important;
+  line-height: 0 !important;
+  display: inline-block !important; /* Mencegah terdorong ke bawah */
 }
 
 /* ===================================================
@@ -894,6 +897,7 @@ body {
   top: 52px;
   left: 0;
   width: 220px;
+  z-index: 100 !important;
 
   /* Efek Kaca Frosted Halus */
   background: rgba(255, 255, 255, 0.88) !important;
@@ -3149,6 +3153,781 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
   60%  { transform: rotate(0deg); }
   100% { transform: rotate(0deg); }
 }
+/* ========================================================
+   MODAL PILIHAN AKUN: PUTIH GADING GRADASI & BISA DIKLIK
+   ======================================================== */
+
+/* Backdrop Pop-up Modal */
+#auth-choice-modal.modal-overlay {
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99999 !important;
+}
+
+/* Wadah Utama Pop-up (Solid Putih Gading) */
+.modal-auth-choice-glass {
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    #fcfaf6 50%, 
+    #f8f4ed 100%
+  ) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 28px !important;
+  padding: 32px 22px 26px !important;
+  
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    inset 0 -1.5px 2px rgba(184, 125, 75, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 0 24px rgba(184, 125, 75, 0.18) !important;
+    
+  position: relative !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  pointer-events: auto !important;
+  z-index: 100000 !important;
+}
+
+/* Garis Pendaran Tembaga di Atas (KUNCI: pointer-events: none agar tidak memblokir klik) */
+.modal-auth-choice-glass::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2.5px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 12px var(--copper-glow) !important;
+  z-index: 1 !important;
+  pointer-events: none !important; /* Mencegah memblokir klik */
+}
+
+/* 1. Tombol X Copper Muda Gradasi Glassmorphism */
+.btn-auth-close-copper {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  outline: none !important;
+  pointer-events: auto !important; /* Pastikan tombol X bisa diklik */
+  z-index: 20 !important;
+
+  background: linear-gradient(135deg, rgba(223, 169, 123, 0.28) 0%, rgba(184, 125, 75, 0.18) 100%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(212, 155, 106, 0.5) !important;
+  color: var(--accent-gold-light) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 2px 8px rgba(184, 125, 75, 0.25),
+    0 0 10px rgba(212, 155, 106, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-auth-close-copper:hover {
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 4px 14px rgba(184, 125, 75, 0.45),
+    0 0 14px rgba(212, 155, 106, 0.6) !important;
+}
+
+.btn-auth-close-copper:active {
+  transform: scale(0.94) !important;
+}
+
+/* 2. Logo SAJIVA+ di Pop-up */
+.auth-clean-brand {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.65rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 4px !important;
+  color: var(--text-main) !important;
+  line-height: 1.2 !important;
+  margin-bottom: 8px !important;
+  display: inline-block !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Tanda + Pangkat Konsisten Naik ke Atas */
+.brand-plus-sup {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.55em !important;
+  font-weight: 400 !important;
+  vertical-align: super !important;
+  position: relative !important;
+  top: -0.35em !important;
+  margin-left: 2px !important;
+  line-height: 0 !important;
+  letter-spacing: normal !important;
+  display: inline-block !important;
+}
+
+/* 3. Teks Judul dan SAJIVA+ Sejajar */
+.auth-choice-title {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #2b231d !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.brand-inline-text {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  color: var(--text-main) !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+.brand-inline-text .brand-plus-sup {
+  position: relative !important;
+  top: -0.35em !important;
+  margin-left: 1px !important;
+}
+
+/* Deskripsi Teks Subtitle */
+.auth-choice-subtitle {
+  font-size: 0.78rem !important;
+  color: #665f58 !important;
+  line-height: 1.5 !important;
+  margin: 0 auto 20px !important;
+  max-width: 290px !important;
+}
+
+/* Area Wadah Tombol Aksi */
+.auth-choice-buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* 4. Tombol Login Copper Muda Gradasi + Glow */
+.btn-auth-copper-glass {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.2px !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+  position: relative !important;
+  z-index: 15 !important;
+  pointer-events: auto !important; /* Pastikan tombol Login bisa diklik */
+
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-auth-copper-glass:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-auth-copper-glass:active {
+  transform: scale(0.98) !important;
+}
+
+/* 5. Tombol Register Abu Gradasi List Copper + Glow */
+.btn-auth-grey-glass {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.2px !important;
+  cursor: pointer !important;
+  color: #2b231d !important;
+  position: relative !important;
+  z-index: 15 !important;
+  pointer-events: auto !important; /* Pastikan tombol Register bisa diklik */
+
+  background: linear-gradient(
+    135deg, 
+    rgba(245, 241, 236, 0.88) 0%, 
+    rgba(230, 224, 216, 0.75) 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+
+  border: 1.5px solid rgba(184, 125, 75, 0.55) !important;
+
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    0 6px 18px rgba(0, 0, 0, 0.05),
+    0 0 14px rgba(184, 125, 75, 0.18) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-auth-grey-glass:hover {
+  background: linear-gradient(
+    135deg, 
+    rgba(250, 248, 244, 0.95) 0%, 
+    rgba(238, 233, 226, 0.85) 100%
+  ) !important;
+  border-color: rgba(184, 125, 75, 0.85) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 8px 22px rgba(184, 125, 75, 0.25),
+    0 0 18px rgba(212, 155, 106, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-auth-grey-glass:active {
+  transform: scale(0.98) !important;
+}
+
+/* Logo SAJIVA+ Bersih Tanpa Bayangan Hitam */
+.auth-clean-brand {
+  font-family: 'Cinzel', serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: #1a1a1a;
+  line-height: 1;
+  margin-bottom: 12px;
+  text-shadow: none !important;
+  filter: none !important; /* Menghilangkan efek blur hitam */
+}
+
+.auth-choice-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.auth-choice-subtitle {
+  font-size: 0.84rem;
+  color: #665f58;
+  line-height: 1.5;
+  margin: 0 auto 24px;
+  max-width: 320px;
+}
+
+.auth-choice-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Tombol Login Warm Amber Glassmorphism */
+.btn-auth-glass-login {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 1px;
+  color: #ffffff;
+  cursor: pointer;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.8),
+    0 8px 22px rgba(184, 125, 75, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-auth-glass-login:active {
+  transform: scale(0.98);
+}
+
+/* Tombol Register Dark Frosted Glass */
+.btn-auth-glass-register {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 1px;
+  color: #ffffff;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #1a1a1a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.btn-auth-glass-register:active {
+  transform: scale(0.98);
+}
+
+/* 2. Tulisan SAJIVA+ di Judul "Akun Member SAJIVA+" */
+.brand-inline-text {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  color: var(--text-main) !important;
+  display: inline-block !important; /* Wajib inline-block, bukan flex */
+  line-height: 1 !important;
+}
+
+.brand-inline-text .brand-plus-sup {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.55em !important;
+  font-weight: 400 !important;
+  vertical-align: super !important;
+  margin-left: 1px !important;
+  line-height: 0 !important;
+}
+
+/* Styling Khusus Modal Form (Login & Register) */
+#modal-auth-login.modal-overlay,
+#modal-auth-register.modal-overlay {
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 100000 !important;
+}
+
+.modal-auth-form-box {
+  max-width: 420px !important;
+  width: 100% !important;
+  max-height: 90vh !important;
+  max-height: 90dvh !important;
+  overflow-y: auto !important;
+  padding: 24px 20px 24px !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 125, 75, 0.3) transparent;
+}
+
+.modal-auth-form-box::-webkit-scrollbar {
+  width: 4px;
+}
+.modal-auth-form-box::-webkit-scrollbar-thumb {
+  background: rgba(184, 125, 75, 0.3);
+  border-radius: 10px;
+}
+
+/* ========================================================
+   MODAL TNC / PRIVASI: CREAM GADING GRADASI & COPPER GLOW
+   ======================================================== */
+
+/* Backdrop Overlay Gelap Lembut */
+#tnc-modal.modal-overlay {
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 100000 !important;
+}
+
+/* Kotak Utama Modal TnC */
+#tnc-modal .modal-box {
+  /* Gradasi Putih Cream Gading Solid */
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    #fcfaf6 50%, 
+    #f8f4ed 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  
+  /* Border Pinggir Halus Bercahaya */
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 28px !important;
+  padding: 30px 22px 24px !important;
+  max-width: 420px !important;
+  width: 100% !important;
+  
+  /* Efek Cahaya Pinggir Form (Outer Ambient Copper Glow + Inner Specular Rim) */
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    inset 0 -1.5px 2px rgba(184, 125, 75, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 0 28px rgba(184, 125, 75, 0.22) !important;
+    
+  position: relative !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+}
+
+/* Garis Pendaran Tembaga di Bibir Atas Modal */
+#tnc-modal .modal-box::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2.5px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 14px var(--copper-glow) !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* Tombol Tutup (X) Copper Muda Kaca */
+#tnc-modal .modal-close-btn {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  outline: none !important;
+  z-index: 10 !important;
+
+  background: linear-gradient(135deg, rgba(223, 169, 123, 0.28) 0%, rgba(184, 125, 75, 0.18) 100%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(212, 155, 106, 0.5) !important;
+  color: var(--accent-gold-light) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 2px 8px rgba(184, 125, 75, 0.25),
+    0 0 10px rgba(212, 155, 106, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#tnc-modal .modal-close-btn:hover {
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 4px 14px rgba(184, 125, 75, 0.45),
+    0 0 14px rgba(212, 155, 106, 0.6) !important;
+}
+
+/* Scrollbar Halus Pada Konten Teks */
+#tnc-body-id,
+#tnc-body-en {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 125, 75, 0.35) transparent;
+}
+#tnc-body-id::-webkit-scrollbar,
+#tnc-body-en::-webkit-scrollbar {
+  width: 4px;
+}
+#tnc-body-id::-webkit-scrollbar-thumb,
+#tnc-body-en::-webkit-scrollbar-thumb {
+  background: rgba(184, 125, 75, 0.35);
+  border-radius: 10px;
+}
+
+/* ========================================================
+   TOMBOL MENGERTI: COPPER GRADASI GLASS & AMBIENT GLOW
+   ======================================================== */
+#tnc-btn-agree {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  margin-top: 16px !important;
+  color: #ffffff !important;
+
+  /* Gradasi Copper Muda Mengalir */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Pendaran Cahaya Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#tnc-btn-agree:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+#tnc-btn-agree:active {
+  transform: scale(0.98) !important;
+}
+
+/* ========================================================
+   TOMBOL LOGIN: COPPER MUDA GRADASI GLASSMORPHISM + GLOW
+   ======================================================== */
+#modal-auth-login #btn-submit-login {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.2px !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+  margin-top: 10px !important;
+
+  /* Gradasi Copper Muda */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Inner Highlight Putih + Ambient Copper Glow */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#modal-auth-login #btn-submit-login:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+#modal-auth-login #btn-submit-login:active {
+  transform: scale(0.98) !important;
+}
+
+/* ========================================================
+   TOMBOL GOOGLE: PUTIH GADING GRADASI GLASSMORPHISM + GLOW
+   ======================================================== */
+#modal-auth-login .btn-google-auth,
+#modal-auth-register .btn-google-auth {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  padding: 13px 18px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: #2b231d !important;
+  cursor: pointer !important;
+
+  /* Gradasi Putih Gading Transparan Khas Kaca */
+  background: linear-gradient(
+    145deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(253, 250, 245, 0.88) 50%, 
+    rgba(247, 242, 234, 0.85) 100%
+  ) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1.5px solid rgba(212, 155, 106, 0.45) !important;
+
+  /* Pantulan Cahaya Putih Kaca + Pendaran Cahaya Halus */
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 0 14px rgba(184, 125, 75, 0.18) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#modal-auth-login .btn-google-auth:hover,
+#modal-auth-register .btn-google-auth:hover {
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    rgba(255, 253, 250, 0.95) 100%
+  ) !important;
+  border-color: rgba(184, 125, 75, 0.75) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 6px 20px rgba(184, 125, 75, 0.25),
+    0 0 18px rgba(212, 155, 106, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+#modal-auth-login .btn-google-auth:active,
+#modal-auth-register .btn-google-auth:active {
+  transform: scale(0.98) !important;
+}
+
+/* ========================================================
+   TOMBOL REGISTER: COPPER MUDA GRADASI GLASSMORPHISM + GLOW
+   ======================================================== */
+#modal-auth-register #btn-submit-register {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.2px !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+  margin-top: 10px !important;
+
+  /* Gradasi Copper Muda Mengalir */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Highlight Putih Atas + Ambient Copper Glow */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#modal-auth-register #btn-submit-register:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+#modal-auth-register #btn-submit-register:active {
+  transform: scale(0.98) !important;
+}
+
+/* ========================================================
+   TOMBOL DAFTAR DENGAN GOOGLE: PUTIH GADING GRADASI GLASS + GLOW
+   ======================================================== */
+#modal-auth-register .btn-google-auth {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  padding: 13px 18px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: #2b231d !important;
+  cursor: pointer !important;
+
+  /* Gradasi Putih Gading Transparan Khas Kaca */
+  background: linear-gradient(
+    145deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(253, 250, 245, 0.88) 50%, 
+    rgba(247, 242, 234, 0.85) 100%
+  ) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1.5px solid rgba(212, 155, 106, 0.45) !important;
+
+  /* Pantulan Cahaya Putih Kaca + Pendaran Cahaya Halus */
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 0 14px rgba(184, 125, 75, 0.18) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#modal-auth-register .btn-google-auth:hover {
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    rgba(255, 253, 250, 0.95) 100%
+  ) !important;
+  border-color: rgba(184, 125, 75, 0.75) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 6px 20px rgba(184, 125, 75, 0.25),
+    0 0 18px rgba(212, 155, 106, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+#modal-auth-register .btn-google-auth:active {
+  transform: scale(0.98) !important;
+}
+
+/* Badge Teks CLUB di Samping Logo */
+.brand-member-tag {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 2.5px !important;
+  color: var(--accent-gold-light) !important;
+  margin-left: 6px !important;
+  vertical-align: middle !important;
+}
+
+/* Deskripsi Teks Tanpa Judul Atas */
+.auth-choice-subtitle {
+  font-size: 0.82rem !important;
+  color: #665f58 !important;
+  line-height: 1.55 !important;
+  margin: 10px auto 22px !important; /* Diberi margin atas yang pas */
+  max-width: 300px !important;
+}
+
   </style>
 </head>
 <body>
@@ -3197,11 +3976,12 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
 
 <!-- MODAL PRIVASI & TNC DUAL LANGUAGE -->
   <div class="modal-overlay" id="tnc-modal">
-    <div class="modal-box" style="max-width: 420px;">
-      <button type="button" class="modal-close-btn" onclick="closeTnCModal()">✕</button>
+    <div class="modal-box modal-auth-choice-glass modal-auth-form-box">
+      <!-- Tombol Tutup X Copper Kaca -->
+      <button type="button" class="btn-auth-close-copper" onclick="closeTnCModal()" title="Tutup">✕</button>
       
       <!-- JUDUL -->
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px;" id="tnc-modal-title">
+      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px; margin-top: 6px;" id="tnc-modal-title">
         Komitmen Privasi &amp; Perlindungan Data Anda
       </h3>
       
@@ -3272,13 +4052,13 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
       </div>
 
       <!-- TOMBOL KONFIRMASI -->
-      <button type="button" class="btn-submit" id="tnc-btn-agree" style="background: var(--accent-gold); margin-top: 10px;" onclick="closeTnCModal(true)">
-        Mengerti
+      <button type="button" class="btn-submit" id="tnc-btn-agree" onclick="closeTnCModal(true)">
+        SETUJU
       </button>
     </div>
   </div>
   <div class="wrapper">
-    
+  
 <!-- TOP APP BAR -->
     <div class="top-app-bar" id="top-app-bar">
       <div style="position: relative;">
@@ -3348,11 +4128,14 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
    <!-- LOGO SAJIVA+ KLIKABLE MENUJU PAGE PROMO DENGAN EFEK CAHAYA -->
 <div onclick="navigateTo('page-promo')" class="nav-brand-clickable" title="Kembali ke Promo">
   SAJIVA<sup class="brand-plus-sup">+</sup>
-</div>       
+</div>   
 	  
-      <button class="top-bar-btn" onclick="openProfileModal()">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      </button>
+<button class="top-bar-btn" onclick="handleProfileIconClick()" title="Profil">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+</button>
     </div>
 
 <!-- 0. LANDING AUTH HERO (DILETAKKAN DI LUAR WRAPPER AGAR SELALU DI TENGAH LAYAR) -->
@@ -3435,178 +4218,213 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
       <p class="brand-subtext">ARTISAN ROASTERY</p>
     </header>
 
-    <!-- 0A. HALAMAN FORM LOGIN -->
-    <div id="page-auth-login" class="page-view">
-      <main class="card">
-        <div style="text-align: left; width: 100%;">
-<button type="button" class="btn-back-auth" onclick="navigateTo('page-login')" title="Kembali">
-  <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12"></line>
-    <polyline points="12 19 5 12 12 5"></polyline>
-  </svg>
-</button>
-        </div>
+<!-- MODAL POP-UP PILIHAN AKUN MEMBER -->
+<div class="modal-overlay" id="auth-choice-modal">
+  <div class="modal-box modal-auth-choice-glass">
+    <!-- Tombol Tutup X -->
+    <button type="button" class="btn-auth-close-copper" onclick="closeAuthChoiceModal()" title="Tutup">✕</button>
 
-        <h2 class="card-headline">Masuk ke Akun</h2>
-        <p class="card-subtitle">Silakan masukkan data akun Sajiva Anda</p>
-
-        <form id="form-login-user" novalidate onsubmit="return false;">
-          <div class="form-group">
-            <label class="form-label" for="login-user-input">Nama / Email / No. Whatsapp</label>
-            <input type="text" id="login-user-input" class="form-input" placeholder="Nama, Email, atau No. Whatsapp" autocomplete="off">
-            <div class="error-text" id="error-login-user">Isi kolom ini dengan benar.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="login-pass-input">Password</label>
-<div class="password-input-wrapper">
-  <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
-  <button type="button" id="btn-toggle-login-pass" class="toggle-password-btn" onclick="toggleLoginPass(event)">
-    <svg id="svg-login-pass" viewBox="0 0 24 24">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-      <line x1="1" y1="1" x2="23" y2="23"></line>
-    </svg>
-  </button>
-</div>
-            <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
-          </div>
-          <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
-          <button type="button" class="btn-forgot-link" onclick="openForgotPasswordModal()">Lupa Password?</button>
-        </form>
-
-<!-- OPSI MASUK DENGAN GOOGLE -->
-<div class="auth-divider"><span>ATAU</span></div>
-<button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('login')">
-  <svg width="18" height="18" viewBox="0 0 24 24">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-  </svg>
-  <span>Masuk dengan Google</span>
-</button>
-      </main>
+    <!-- Header Bersih: SAJIVA+ CLUB -->
+    <div class="auth-clean-brand">
+      SAJIVA<sup class="brand-plus-sup">+</sup> <span class="brand-member-tag">CLUB</span>
     </div>
 
-    <!-- 0B. HALAMAN FORM REGISTER -->
-    <div id="page-auth-register" class="page-view">
-      <main class="card">
-        <div style="text-align: left; width: 100%;">
-<button type="button" class="btn-back-auth" onclick="navigateTo('page-login')" title="Kembali">
-  <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12"></line>
-    <polyline points="12 19 5 12 12 5"></polyline>
-  </svg>
-</button>
+    <!-- Langsung Deskripsi (Tanpa Judul Duplikat) -->
+    <p class="auth-choice-subtitle" id="auth-choice-desc">
+      Masuk atau daftar untuk menikmati penawaran khusus, e-voucher diskon, dan promo
+    </p>
+
+    <!-- Tombol Aksi -->
+    <div class="auth-choice-buttons">
+      <button type="button" class="btn-auth-copper-glass" id="btn-choice-login" onclick="selectAuthAction('login')">
+        LOGIN
+      </button>
+      <button type="button" class="btn-auth-grey-glass" id="btn-choice-reg" onclick="selectAuthAction('register')">
+        REGISTER
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL POP-UP FORM LOGIN -->
+<!-- ======================================================== -->
+<div class="modal-overlay" id="modal-auth-login">
+  <div class="modal-box modal-auth-choice-glass modal-auth-form-box">
+    <!-- Tombol Tutup X -->
+    <button type="button" class="btn-auth-close-copper" onclick="closeLoginModal()" title="Tutup">✕</button>
+
+    <!-- Tombol Kembali ke Pilihan Akun -->
+    <div style="text-align: left; width: 100%; margin-bottom: 4px;">
+      <button type="button" class="btn-back-auth" onclick="backToChoiceFromLogin()" title="Kembali">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <h2 class="card-headline" style="font-size: 1.25rem; margin-bottom: 4px;">Masuk ke Akun</h2>
+    <p class="card-subtitle" style="font-size: 0.8rem; margin-bottom: 18px;">Silakan masukkan data akun Sajiva Anda</p>
+
+    <form id="form-login-user" novalidate onsubmit="return false;">
+      <div class="form-group">
+        <label class="form-label" for="login-user-input">Nama / Email / No. Whatsapp</label>
+        <input type="text" id="login-user-input" class="form-input" placeholder="Nama, Email, atau No. Whatsapp" autocomplete="off">
+        <div class="error-text" id="error-login-user">Isi kolom ini dengan benar.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-pass-input">Password</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="login-pass-input" class="form-input" placeholder="Masukkan Password Anda">
+          <button type="button" id="btn-toggle-login-pass" class="toggle-password-btn" onclick="toggleLoginPass(event)">
+            <svg id="svg-login-pass" viewBox="0 0 24 24">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
         </div>
+        <div class="error-text" id="error-login-pass">Password tidak boleh kosong.</div>
+      </div>
+      <button type="submit" id="btn-submit-login" class="btn-submit">LOGIN</button>
+      <button type="button" class="btn-forgot-link" onclick="openForgotPasswordModal()">Lupa Password?</button>
+    </form>
 
-        <h2 class="card-headline">Daftar Akun Baru</h2>
-        <p class="card-subtitle">Lengkapi identitas untuk menikmati privilege eksklusif</p>
+    <!-- OPSI MASUK DENGAN GOOGLE -->
+    <div class="auth-divider"><span>ATAU</span></div>
+    <button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('login')">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      <span>Masuk dengan Google</span>
+    </button>
+  </div>
+</div>
 
-        <form id="form-register-user" novalidate onsubmit="return false;">  
-          <div class="form-group">
-            <label class="form-label" for="reg-nama">Nama Lengkap</label>
-            <!-- KODE BARU: Langsung bersihkan angka/simbol saat diketik -->
-<input 
-  type="text" 
-  id="reg-nama" 
-  class="form-input" 
-  placeholder="Masukkan nama anda" 
-  autocomplete="off"
-  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
->
-            <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi (min. 3 karakter).</div>
-          </div>
+<!-- ======================================================== -->
+<!-- MODAL POP-UP FORM REGISTER -->
+<!-- ======================================================== -->
+<div class="modal-overlay" id="modal-auth-register">
+  <div class="modal-box modal-auth-choice-glass modal-auth-form-box">
+    <!-- Tombol Tutup X -->
+    <button type="button" class="btn-auth-close-copper" onclick="closeRegisterModal()" title="Tutup">✕</button>
 
-          <div class="form-group">
-            <label class="form-label" for="reg-email">Alamat Email</label>
-            <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
-            <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
-          </div>
+    <!-- Tombol Kembali ke Pilihan Akun -->
+    <div style="text-align: left; width: 100%; margin-bottom: 4px;">
+      <button type="button" class="btn-back-auth" onclick="backToChoiceFromRegister()" title="Kembali">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+    </div>
 
-          <div class="form-group">
-            <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
-            <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
-            <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
-          </div>
+    <h2 class="card-headline" style="font-size: 1.25rem; margin-bottom: 4px;">Daftar Akun Baru</h2>
+    <p class="card-subtitle" style="font-size: 0.8rem; margin-bottom: 18px;">Lengkapi identitas untuk menikmati privilege eksklusif</p>
 
-          <div class="form-group">
-            <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
-            <div class="custom-datepicker-wrapper">
-              <input type="text" id="reg-dob-display" class="form-input" placeholder="Pilih Tanggal Lahir" readonly onclick="toggleCustomCalendar()">
-              <input type="hidden" id="reg-dob" value="">
+    <form id="form-register-user" novalidate onsubmit="return false;">  
+      <div class="form-group">
+        <label class="form-label" for="reg-nama">Nama Lengkap</label>
+        <input 
+          type="text" 
+          id="reg-nama" 
+          class="form-input" 
+          placeholder="Masukkan nama anda" 
+          autocomplete="off"
+          oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+        >
+        <div class="error-text" id="error-reg-nama">Hanya Boleh Huruf dan Spasi (min. 3 karakter).</div>
+      </div>
 
-              <div class="custom-calendar-popup" id="custom-calendar-popup">
-                <div class="calendar-header">
-                  <button type="button" class="calendar-title-btn" id="cal-title-btn" onclick="switchCalendarView()">Okt 2026</button>
-                  <div class="calendar-nav-group">
-                    <button type="button" class="calendar-nav-btn" onclick="prevCalendarStep()">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </button>
-                    <button type="button" class="calendar-nav-btn" onclick="nextCalendarStep()">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
-                  </div>
-                </div>
-                <div id="calendar-content"></div>
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Alamat Email</label>
+        <input type="email" id="reg-email" class="form-input" placeholder="Contoh: nama@gmail.com" autocomplete="off">
+        <div class="error-text" id="error-reg-email">Masukkan Alamat Email yang valid.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg-nohp">Nomor WhatsApp</label>
+        <input type="tel" id="reg-nohp" class="form-input" placeholder="Contoh: 08123456789" maxlength="13" autocomplete="off">
+        <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
+        <div class="custom-datepicker-wrapper">
+          <input type="text" id="reg-dob-display" class="form-input" placeholder="Pilih Tanggal Lahir" readonly onclick="toggleCustomCalendar()">
+          <input type="hidden" id="reg-dob" value="">
+
+          <div class="custom-calendar-popup" id="custom-calendar-popup">
+            <div class="calendar-header">
+              <button type="button" class="calendar-title-btn" id="cal-title-btn" onclick="switchCalendarView()">Okt 2026</button>
+              <div class="calendar-nav-group">
+                <button type="button" class="calendar-nav-btn" onclick="prevCalendarStep()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button type="button" class="calendar-nav-btn" onclick="nextCalendarStep()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
               </div>
             </div>
-            <div class="error-text" id="error-reg-dob">Usia minimal pendaftar adalah 17 tahun.</div>
+            <div id="calendar-content"></div>
           </div>
+        </div>
+        <div class="error-text" id="error-reg-dob">Usia minimal pendaftar adalah 17 tahun.</div>
+      </div>
 
-          <div class="form-group">
-            <label class="form-label">Jenis Kelamin</label>
-            <div class="gender-selector-container">
-              <button type="button" class="gender-btn-option" data-value="Pria" onclick="selectGenderOption(this, 'Pria')">
-                Pria
-              </button>
-              <button type="button" class="gender-btn-option" data-value="Wanita" onclick="selectGenderOption(this, 'Wanita')">
-                Wanita
-              </button>
-            </div>
-            <input type="hidden" id="reg-gender" value="">
-            <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
-          </div>
-            
-          <div class="form-group">
-            <label class="form-label" for="reg-pass">Password</label>
- <div class="password-input-wrapper">
-  <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka">
-  <button type="button" id="btn-toggle-reg-pass" class="toggle-password-btn" onclick="toggleRegPass(event)">
-    <svg id="svg-reg-pass" viewBox="0 0 24 24">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-      <line x1="1" y1="1" x2="23" y2="23"></line>
-    </svg>
-  </button>
+      <div class="gender-selector-container">
+        <button type="button" class="gender-btn-option" data-value="Pria" onclick="selectGenderOption(this, 'Pria')">
+          Pria
+        </button>
+        <button type="button" class="gender-btn-option" data-value="Wanita" onclick="selectGenderOption(this, 'Wanita')">
+          Wanita
+        </button>
+      </div>
+      <input type="hidden" id="reg-gender" value="">
+      <div class="error-text" id="error-reg-gender">Silakan pilih jenis kelamin Anda.</div>
+        
+      <div class="form-group">
+        <label class="form-label" for="reg-pass">Password</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="reg-pass" class="form-input" placeholder="Kombinasi Huruf Kapital, Huruf Kecil, &amp; Angka">
+          <button type="button" id="btn-toggle-reg-pass" class="toggle-password-btn" onclick="toggleRegPass(event)">
+            <svg id="svg-reg-pass" viewBox="0 0 24 24">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
+      </div>
+      
+      <div class="tnc-checkbox-group">
+        <input type="checkbox" id="reg-tnc-check">
+        <label for="reg-tnc-check" class="tnc-label">
+          Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
+        </label>
+      </div>
+      <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
+        Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
+      </div>
+
+      <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
+    </form>
+    
+    <div class="auth-divider"><span>ATAU</span></div>
+    <button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('register')">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      <span>Daftar dengan Google</span>
+    </button>
+  </div>
 </div>
-            <div class="error-text" id="error-reg-pass">Password harus memuat minimal 6 karakter, huruf kapital, huruf kecil, dan angka.</div>
-          </div>
-          
-          <div class="tnc-checkbox-group">
-            <input type="checkbox" id="reg-tnc-check">
-            <label for="reg-tnc-check" class="tnc-label">
-              Saya menyetujui <span class="tnc-link" onclick="openTnCModal()">Syarat &amp; Ketentuan serta Kebijakan Privasi</span> Sajiva.
-            </label>
-          </div>
-          <div class="error-text" id="error-reg-tnc" style="display:none; margin-top:-10px; margin-bottom:10px;">
-            Anda harus menyetujui Syarat &amp; Ketentuan untuk mendaftar.
-          </div>
-
-          <button type="submit" id="btn-submit-register" class="btn-submit">REGISTER</button>
-        </form>
-		
-		<div class="auth-divider"><span>ATAU</span></div>
-<button type="button" class="btn-google-auth" onclick="handleGoogleAuthTrigger('register')">
-  <svg width="18" height="18" viewBox="0 0 24 24">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-  </svg>
-  <span>Daftar dengan Google</span>
-</button>
-
-      </main>
-    </div>
 	
 <!-- 1. HALAMAN PROMO -->
     <div id="page-promo" class="page-view">
@@ -4978,12 +5796,124 @@ function closeElegantAlert() {
   }
 }
 
-// SATU-SATUNYA FUNGSI NAVIGASI YANG MENGATUR HEADER SECARA KETAT
+// Cek status autentikasi pelanggan
+function checkIsLoggedIn() {
+  const user = localStorage.getItem('sajiva_crm_user');
+  if (!user) return false;
+  try {
+    const parsed = JSON.parse(user);
+    return !!(parsed && parsed.token);
+  } catch (e) {
+    return false;
+  }
+}
+
+function openAuthChoiceModal() {
+  const dropdown = document.getElementById('dropdown-menu');
+  if (dropdown) dropdown.classList.remove('show');
+
+  const currentLang = localStorage.getItem('sajiva_lang') || 'id';
+  const isEn = currentLang === 'en';
+
+  const descEl = document.getElementById('auth-choice-desc');
+  const btnLogin = document.getElementById('btn-choice-login');
+  const btnReg = document.getElementById('btn-choice-reg');
+
+  if (descEl) {
+    descEl.innerText = isEn 
+      ? "Sign in or register to enjoy special perks, discount e-vouchers, and weekly offers."
+      : "Masuk atau daftar untuk menikmati penawaran khusus, e-voucher diskon, dan promo";
+  }
+  if (btnLogin) {
+    btnLogin.innerText = isEn ? "LOG IN" : "LOGIN";
+  }
+  if (btnReg) {
+    btnReg.innerText = isEn ? "SIGN UP" : "REGISTER";
+  }
+
+  const modal = document.getElementById('auth-choice-modal');
+  if (modal) modal.classList.add('show');
+}
+
+// TAMBAHKAN FUNGSI INI (sebelumnya belum ada):
+function closeAuthChoiceModal() {
+  const modal = document.getElementById('auth-choice-modal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+// Handler saat klik ikon profil di navbar
+function handleProfileIconClick() {
+  if (checkIsLoggedIn()) {
+    openProfileModal(); // Membuka data profile jika sudah login
+  } else {
+    openAuthChoiceModal(); // Membuka pop-up form pilihan jika tamu (belum login)
+  }
+}
+
+// Membuka & Menutup Modal Login
+function openLoginModal() {
+  closeAuthChoiceModal();
+  const m = document.getElementById('modal-auth-login');
+  if (m) m.classList.add('show');
+}
+
+function closeLoginModal() {
+  const m = document.getElementById('modal-auth-login');
+  if (m) m.classList.remove('show');
+}
+
+function backToChoiceFromLogin() {
+  closeLoginModal();
+  openAuthChoiceModal();
+}
+
+// Membuka & Menutup Modal Register
+function openRegisterModal() {
+  closeAuthChoiceModal();
+  const m = document.getElementById('modal-auth-register');
+  if (m) m.classList.add('show');
+}
+
+function closeRegisterModal() {
+  const m = document.getElementById('modal-auth-register');
+  if (m) m.classList.remove('show');
+}
+
+function backToChoiceFromRegister() {
+  closeRegisterModal();
+  openAuthChoiceModal();
+}
+
+// Handler Saat Memilih Tombol dari Pop-up Pilihan Akun
+function selectAuthAction(type) {
+  if (type === 'login') {
+    openLoginModal();
+  } else if (type === 'register') {
+    openRegisterModal();
+  }
+}
+
+// 2. Revisi Navigasi Terpusat
 function navigateTo(pageId, isBackAction = false) {
-const isLoggedIn = !!localStorage.getItem('sajiva_crm_user');
-  if (isLoggedIn && (pageId === 'page-login' || pageId === 'page-auth-login' || pageId === 'page-auth-register')) {
+  const isLoggedIn = checkIsLoggedIn();
+
+// Proteksi Halaman Khusus Member (Protected Routes)
+  if (!isLoggedIn && (pageId === 'page-my-voucher')) {
+    showElegantAlert(
+      "Silakan masuk ke akun atau mendaftar terlebih dahulu untuk mengakses menu ini.",
+      "Akses Member",
+      "✦",
+      () => { openAuthChoiceModal(); }
+    );
+    return;
+  }
+  
+  // Jika sudah login dan mencoba mengakses pilihan auth, kembalikan ke promo
+  if (isLoggedIn && (pageId === 'page-auth-choice' || pageId === 'page-auth-login' || pageId === 'page-auth-register' || pageId === 'page-login')) {
     pageId = 'page-promo';
   }
+
   const currentActivePage = document.querySelector('.page-view.active');
   const currentId = currentActivePage ? currentActivePage.id : null;
 
@@ -4992,46 +5922,39 @@ const isLoggedIn = !!localStorage.getItem('sajiva_crm_user');
     history.pushState({ pageId: pageId, type: 'page' }, '', '#' + pageId);
   }
 
-  // 1. Sembunyikan semua halaman
+  // Sembunyikan seluruh halaman
   document.querySelectorAll('.page-view').forEach(p => {
     p.classList.remove('active');
     p.style.display = 'none';
   });
 
-  // 2. Tampilkan halaman target
+  // Tampilkan halaman target
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add('active');
-    if (targetPage.classList.contains('auth-fullscreen-view')) {
-      targetPage.style.display = 'flex';
-    } else {
-      targetPage.style.display = 'block';
-    }
+    targetPage.style.display = 'block';
   }
 
-  // 3. ATUR ATURAN TAMPILAN HEADER SECARA TEGAS:
+  // Atur Top Bar dan Branding Header
   const brandHeader = document.getElementById('main-brand-header');
   const topAppBar = document.getElementById('top-app-bar');
 
-  if (pageId === 'page-login') {
-    // Layar Slider Awal: Sembunyikan SEMUA header
-    if (brandHeader) brandHeader.style.display = 'none';
-    if (topAppBar) topAppBar.style.display = 'none';
-  } else if (pageId === 'page-auth-login' || pageId === 'page-auth-register') {
-    // Form Login / Register: HANYA munculkan logo Roastery, SEMBUNYIKAN navbar atas
+  if (pageId === 'page-auth-login' || pageId === 'page-auth-register' || pageId === 'page-auth-choice') {
+    // Mode otorisasi: tampilkan logo tengah, sembunyikan top app bar jika ingin fokus form
     if (brandHeader) brandHeader.style.display = 'flex';
     if (topAppBar) topAppBar.style.display = 'none';
   } else {
-    // Setelah Login (Promo, Menu, About, dsb): HANYA munculkan navbar atas, SEMBUNYIKAN logo Roastery
+    // Open access umum (Promo, Menu, About, dsb): selalu tampilkan navbar atas
     if (brandHeader) brandHeader.style.display = 'none';
     if (topAppBar) topAppBar.style.display = 'flex';
   }
 
   const dropdown = document.getElementById('dropdown-menu');
   if (dropdown) dropdown.classList.remove('show');
-  
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
     function switchAuthTab(tab) {
       const tabLogin = document.getElementById('tab-btn-login');
       const tabReg = document.getElementById('tab-btn-register');
@@ -5881,8 +6804,16 @@ function logoutUser() {
   customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };
   navigationHistory = [];
   closeProfileModal();
-  history.replaceState({ pageId: 'page-login', type: 'page' }, '', '#page-login');
-  navigateTo('page-login');
+  
+  // Reset sapaan selamat datang
+  const welcomeEl = document.getElementById('welcome-user-text');
+  if (welcomeEl) {
+    welcomeEl.innerHTML = `<span>Hello, Sahabat Sajiva!</span>`;
+  }
+  
+  history.replaceState({ pageId: 'page-promo', type: 'page' }, '', '#page-promo');
+  navigateTo('page-promo');
+  showElegantAlert("Anda telah berhasil keluar dari akun.", "Logout Berhasil", "✓");
 }
 
 // Render status tiket voucher dari kode unik
@@ -6784,12 +7715,15 @@ if (regEmailInput) {
 		}
 	  })
 
-const savedUser = localStorage.getItem('sajiva_crm_user');
+// ========================================================
+      // INISIALISASI STATUS PENGGUNA (SESI, TOKEN & SINKRONISASI)
+      // ========================================================
+      const savedUser = localStorage.getItem('sajiva_crm_user');
       if (savedUser) {
         try {
           customerData = JSON.parse(savedUser);
           
-          // Validasi tambahan: Jika data login ada tapi token kosong, paksa logout demi keamanan
+          // Validasi keamanan: Token wajib ada untuk sesi login
           if (!customerData.token) {
             console.warn("Sesi tidak memiliki token kriptografi yang sah. Membersihkan sesi lokal.");
             logoutUser();
@@ -6799,29 +7733,17 @@ const savedUser = localStorage.getItem('sajiva_crm_user');
           logoutUser();
           return;
         }
-        
-        document.getElementById('main-brand-header').style.display = 'none';
-        document.getElementById('top-app-bar').style.display = 'flex';
-		setGreetingText(customerData.nama);
-        
-        // ... lanjutkan sinkronisasi status ke server ...
-        
-// Sinkronisasi data profil & voucher dari server
-// ========================================================
-        // LOGIKA SESI 30 HARI
-        // ========================================================
+
+        // Logika Batas Waktu Sesi (30 Hari)
         const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
         const now = Date.now();
 
-        // Jika data login belum memiliki catatan waktu, inisialisasi dengan waktu sekarang
         if (!customerData.loginTime) {
           customerData.loginTime = now;
           localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
         }
 
-        // Hitung apakah sudah melewati 30 hari sejak login terakhir
         const isSessionExpired = (now - customerData.loginTime) > THIRTY_DAYS_MS;
-
         if (isSessionExpired) {
           showElegantAlert("Sesi login Anda telah berakhir (30 hari). Silakan masuk kembali.", "Keamanan", "✦", () => {
             logoutUser();
@@ -6829,7 +7751,10 @@ const savedUser = localStorage.getItem('sajiva_crm_user');
           return;
         }
 
-        // Sinkronisasi data latar belakang tanpa memutus login jika koneksi lambat/eror
+        // Tampilkan sapaan nama member
+        setGreetingText(customerData.nama);
+
+        // Sinkronisasi data latar belakang dari Google Sheets
         sendDataToBackend('check_status', null, (res) => {
           if (res && res.status === "success") {
             if (res.existingName) customerData.nama = res.existingName;
@@ -6857,22 +7782,36 @@ const savedUser = localStorage.getItem('sajiva_crm_user');
             }
             localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
           }
-          // Catatan: blok 'else if' yang memanggil showElegantAlert sengaja dihilangkan
-          // agar gangguan sinyal atau keterlambatan server tidak langsung memicu logout paksa.
         });
 
         if (customerData.voucherCode && customerData.voucherCode.trim() !== "" && customerData.voucherCode.trim() !== "-") {
           renderVoucherTicket(customerData.voucherCode);
-          document.getElementById('review-form-wrapper').style.display = 'none';
-          document.getElementById('review-already-claimed').style.display = 'block';
+          const rWrapper = document.getElementById('review-form-wrapper');
+          const rClaimed = document.getElementById('review-already-claimed');
+          if (rWrapper) rWrapper.style.display = 'none';
+          if (rClaimed) rClaimed.style.display = 'block';
         }
 
-        navigateTo('page-promo');
       } else {
-        document.getElementById('main-brand-header').style.display = 'flex';
-        document.getElementById('top-app-bar').style.display = 'none';
-        navigateTo('page-login');
+        // PENGGUNA BELUM LOGIN (GUEST / OPEN ACCESS)
+        const welcomeEl = document.getElementById('welcome-user-text');
+        if (welcomeEl) {
+          welcomeEl.innerHTML = `
+            <svg class="wave-hand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main); flex-shrink: 0;">
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+            </svg>
+            <span>Hello, Sahabat Sajiva!</span>
+          `;
+        }
       }
+
+      // SEMUA PENGGUNA LANGSUNG MASUK KE LANDING PAGE PROMO
+      document.getElementById('main-brand-header').style.display = 'none';
+      document.getElementById('top-app-bar').style.display = 'flex';
+      navigateTo('page-promo');
 
 // SUBMIT LOGIN
 const formLogin = document.getElementById('form-login-user');
@@ -6946,7 +7885,8 @@ customerData.nama = result.existingName || userInput;
 		navigationHistory = [];
         history.replaceState({ pageId: 'page-promo', type: 'page' }, '', '#page-promo');
 
-        navigateTo('page-promo');
+        closeLoginModal();
+		navigateTo('page-promo');
       } else {
         showElegantAlert(
           (result && result.message) ? result.message : (isEn ? "Incorrect account or password!" : "Password atau akun yang Anda masukkan salah!"), 
@@ -7080,6 +8020,7 @@ btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
         document.getElementById('main-brand-header').style.display = 'none';
         document.getElementById('top-app-bar').style.display = 'flex';
         setGreetingText(customerData.nama);
+		closeRegisterModal();
         navigateTo('page-promo');
       }
     }, "", pass, dob, gender);
