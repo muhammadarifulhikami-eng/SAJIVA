@@ -2,10 +2,11 @@
 <html lang="id">
 <head>
 <!-- CSP yang sudah dioptimalkan agar mengizinkan cdnjs -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://accounts.google.com https://images.unsplash.com https://script.google.com https://script.googleusercontent.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://www.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://images.unsplash.com https://i.imgur.com https://script.google.com https://script.googleusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://accounts.google.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; connect-src 'self' blob: data: https://cdn.jsdelivr.net https://tessdata.projectnaptha.com https://script.google.com https://script.googleusercontent.com https://www.googleapis.com;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 <!-- Google Identity Services SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -3928,6 +3929,438 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
   max-width: 300px !important;
 }
 
+/* ========================================================
+   WHEEL DATE PICKER (IOS DRUM ROLLER STYLE)
+   ======================================================== */
+.wheel-picker-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 100005;
+}
+
+.wheel-picker-overlay.show {
+  display: block;
+}
+
+.wheel-picker-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  padding: 16px 20px calc(24px + env(safe-area-inset-bottom, 16px));
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.15);
+  z-index: 100010;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.wheel-picker-sheet.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Header Action Bar: Cancel & Done */
+.wheel-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ========================================================
+   TOMBOL CANCEL & DONE (GLASSMORPHISM & AMBIENT GLOW)
+   ======================================================== */
+
+/* Pengaturan Dasar Tombol Bar Atas Roda */
+.btn-wheel-action {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  padding: 8px 18px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 1. TOMBOL CANCEL: GRADASI ABU MUDA GLASSMORPHISM + GLOW */
+.btn-wheel-cancel {
+  color: #4a3e35 !important;
+  background: linear-gradient(
+    135deg, 
+    rgba(245, 241, 236, 0.92) 0%, 
+    rgba(230, 224, 216, 0.82) 100%
+  ) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+
+  /* Inner rim highlight + soft shadow */
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 3px 10px rgba(0, 0, 0, 0.05),
+    0 0 10px rgba(184, 125, 75, 0.1) !important;
+}
+
+.btn-wheel-cancel:hover {
+  background: linear-gradient(
+    135deg, 
+    rgba(250, 248, 244, 0.98) 0%, 
+    rgba(238, 233, 226, 0.92) 100%
+  ) !important;
+  color: #1a1a1a !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 5px 14px rgba(0, 0, 0, 0.08),
+    0 0 12px rgba(184, 125, 75, 0.18) !important;
+}
+
+.btn-wheel-cancel:active {
+  transform: scale(0.96) !important;
+}
+
+/* 2. TOMBOL DONE: GRADASI COPPER MUDA GLASSMORPHISM + GLOW */
+.btn-wheel-done {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Inner rim highlight + glow copper lembut */
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.85),
+    0 4px 14px rgba(184, 125, 75, 0.35),
+    0 0 12px rgba(212, 155, 106, 0.3) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+}
+
+.btn-wheel-done:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 6px 18px rgba(184, 125, 75, 0.45),
+    0 0 16px rgba(223, 169, 123, 0.45) !important;
+}
+
+.btn-wheel-done:active {
+  transform: scale(0.96) !important;
+}
+
+/* Area Wadah Roda Drum */
+.wheel-picker-body {
+  position: relative;
+  display: flex;
+  height: 220px;
+  overflow: hidden;
+  margin-top: 10px;
+  /* Masking gradasi pudar di atas & bawah */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+}
+
+/* Baris Penentu Tanggal: Copper Muda Hangat & Berkilau */
+.wheel-selection-indicator {
+  position: absolute !important;
+  top: 50% !important;
+  left: 12px !important;
+  right: 12px !important;
+  height: 46px !important;
+  transform: translateY(-50%) !important;
+  border-radius: 14px !important;
+
+  /* Gradasi Copper Muda Mengalir (Warm Amber / Sand Gold) */
+  background: linear-gradient(
+    135deg, 
+    rgba(223, 169, 123, 0.32) 0%, 
+    rgba(184, 125, 75, 0.22) 100%
+  ) !important;
+
+  /* Garis Bingkai Copper Halus */
+  border: 1.5px solid rgba(212, 155, 106, 0.65) !important;
+
+  /* Efek Kilau Atas + Ambient Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 4px 14px rgba(184, 125, 75, 0.2),
+    0 0 14px rgba(212, 155, 106, 0.35) !important;
+
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Kolom Gulir Tiap Satuan */
+.wheel-column {
+  flex: 1;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.wheel-column::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel-scroll-track {
+  padding: 88px 0; /* Ruang agar item awal & akhir bisa berhenti di tengah */
+}
+
+/* 1. FONT ANGKA TIDAK BOLD (REGULER / MEDIUM) */
+.wheel-item {
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 500 !important; /* Dibuat normal/sedang, tidak bold */
+  color: #1a1a1a !important;
+  scroll-snap-align: center !important;
+  user-select: none !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* 2. TOMBOL CANCEL: MERAH MUDA (SOFT ROSE) GRADASI GLASSMORPHISM */
+.btn-wheel-cancel {
+  color: #be123c !important; /* Teks rose pekat agar jelas terbaca */
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 228, 230, 0.95) 0%, 
+    rgba(254, 205, 211, 0.85) 100%
+  ) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+
+  /* Pantulan highlight putih + ambient glow pink lembut */
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 4px 12px rgba(244, 63, 94, 0.2),
+    0 0 10px rgba(254, 205, 211, 0.4) !important;
+}
+
+.btn-wheel-cancel:hover {
+  background: linear-gradient(
+    135deg, 
+    #fff1f2 0%, 
+    #fecdd3 100%
+  ) !important;
+  color: #9f1239 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 6px 16px rgba(244, 63, 94, 0.3),
+    0 0 14px rgba(254, 205, 211, 0.6) !important;
+}
+
+.btn-wheel-cancel:active {
+  transform: scale(0.96) !important;
+}
+
+/* 3. BARIS PENENTU TANGGAL: MURNI COPPER MUDA HANGAT (BEBAS DARI NUANSA PINK) */
+.wheel-selection-indicator {
+  position: absolute !important;
+  top: 50% !important;
+  left: 12px !important;
+  right: 12px !important;
+  height: 46px !important;
+  transform: translateY(-50%) !important;
+  border-radius: 14px !important;
+
+  /* Gradasi Copper Muda / Warm Sand Amber */
+  background: linear-gradient(
+    135deg, 
+    rgba(245, 232, 218, 0.85) 0%, 
+    rgba(235, 214, 192, 0.75) 100%
+  ) !important;
+
+  /* Garis border tembaga muda */
+  border: 1.5px solid rgba(184, 125, 75, 0.55) !important;
+
+  /* Pantulan cahaya atas + ambient glow copper */
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    0 4px 14px rgba(184, 125, 75, 0.15),
+    0 0 12px rgba(212, 155, 106, 0.25) !important;
+
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Penyesuaian Padding Rel Agar Berhenti Presisi di Tengah */
+.wheel-scroll-track {
+  padding: 87px 0 !important;
+}
+/* ========================================================
+   MODAL LUPA PASSWORD: CREAM GADING GRADASI & COPPER GLOW
+   ======================================================== */
+
+/* Backdrop Overlay Gelap Lembut */
+#forgot-modal.modal-overlay {
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 100005 !important;
+}
+
+/* Wadah Utama Pop-up Lupa Password */
+#forgot-modal .modal-box {
+  background: linear-gradient(
+    145deg, 
+    #ffffff 0%, 
+    #fcfaf6 50%, 
+    #f8f4ed 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 28px !important;
+  padding: 30px 22px 24px !important;
+  max-width: 380px !important;
+  width: 100% !important;
+
+  /* Ambient Glow Copper & Inner Rim Highlight */
+  box-shadow: 
+    inset 0 1.5px 2px #ffffff,
+    inset 0 -1.5px 2px rgba(184, 125, 75, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 0 24px rgba(184, 125, 75, 0.22) !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+}
+
+/* Garis Pendaran Tembaga di Bibir Atas Pop-up */
+#forgot-modal .modal-box::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2.5px !important;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent) !important;
+  box-shadow: 0 0 14px var(--copper-glow) !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* Tombol Tutup X Copper Kaca */
+#forgot-modal .modal-close-btn {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  outline: none !important;
+  z-index: 10 !important;
+
+  background: linear-gradient(135deg, rgba(223, 169, 123, 0.28) 0%, rgba(184, 125, 75, 0.18) 100%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(212, 155, 106, 0.5) !important;
+  color: var(--accent-gold-light) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  box-shadow: 
+    inset 0 1px 1.5px #ffffff,
+    0 2px 8px rgba(184, 125, 75, 0.25),
+    0 0 10px rgba(212, 155, 106, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#forgot-modal .modal-close-btn:hover {
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 
+    inset 0 1px 2px #ffffff,
+    0 4px 14px rgba(184, 125, 75, 0.45),
+    0 0 14px rgba(212, 155, 106, 0.6) !important;
+}
+
+/* ========================================================
+   TOMBOL KIRIM OTP: COPPER MUDA GRADASI GLASS + GLOW
+   ======================================================== */
+#btn-send-otp,
+#btn-reset-pass {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 16px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.8px !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+  margin-top: 10px !important;
+
+  /* Gradasi Copper Muda */
+  background: linear-gradient(135deg, #d49b6a 0%, #b87d4b 100%) !important;
+
+  /* Glassmorphism */
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+
+  /* Pantulan Cahaya Atas + Ambient Glow Copper */
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    0 8px 24px rgba(212, 155, 106, 0.45),
+    0 0 16px rgba(212, 155, 106, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(90, 50, 20, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#btn-send-otp:hover,
+#btn-reset-pass:hover {
+  background: linear-gradient(135deg, #dfa97b 0%, #c48957 100%) !important;
+  box-shadow: 
+    inset 0 1.5px 2.5px #ffffff,
+    0 12px 28px rgba(212, 155, 106, 0.55),
+    0 0 20px rgba(223, 169, 123, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+#btn-send-otp:active,
+#btn-reset-pass:active {
+  transform: scale(0.98) !important;
+}
+
+/* Pastikan kotak popup kalender lama tidak akan muncul lagi */
+#edit-calendar-popup,
+.custom-calendar-popup.glass-calendar {
+  display: none !important;
+}
+
+/* Letakkan Wheel Picker di atas modal Edit Profil */
+#wheel-picker-overlay.wheel-picker-overlay {
+  z-index: 200005 !important;
+}
+
+#wheel-picker-sheet.wheel-picker-sheet {
+  z-index: 200010 !important;
+}
+
   </style>
 </head>
 <body>
@@ -4351,11 +4784,11 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
         <div class="error-text" id="error-reg-nohp">Nomor Telepon tidak valid.</div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
-        <div class="custom-datepicker-wrapper">
-          <input type="text" id="reg-dob-display" class="form-input" placeholder="Pilih Tanggal Lahir" readonly onclick="toggleCustomCalendar()">
-          <input type="hidden" id="reg-dob" value="">
+<div class="form-group">
+  <label class="form-label" for="reg-dob-display">Tanggal Lahir</label>
+  <div class="custom-datepicker-wrapper">
+    <input type="text" id="reg-dob-display" class="form-input" placeholder="Pilih Tanggal Lahir" readonly onclick="openWheelDatePicker('reg')">
+    <input type="hidden" id="reg-dob" value="">
 
           <div class="custom-calendar-popup" id="custom-calendar-popup">
             <div class="calendar-header">
@@ -4768,13 +5201,16 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
       </main>
     </div>
 
-    <!-- 6. HALAMAN REVIEW US (AUTO-SAVE REALTIME & KONDISIONAL TOMBOL KLAIM) -->
+<!-- 6. HALAMAN REVIEW US (STAR RATING + POPUP GOOGLE + OCR VALIDATION + TIKET REWARD) -->
     <div id="page-review-us" class="page-view">
       <main class="card">
-        <div id="review-form-wrapper">
-		<h2 class="card-headline">Review <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span></h2>        
+        
+        <!-- STEP 1: FORM UTAMA RATING BINTANG & NOTIFIKASI REWARD -->
+        <div id="review-main-flow">
+          <h2 class="card-headline">Review <span style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px;">SAJIVA</span></h2>        
           <p class="card-subtitle">Berikan penilaian Anda untuk layanan dan produk kami:</p>
           
+          <!-- BINTANG 1 - 5 -->
           <div class="star-rating-box" id="stars-container">
             <svg class="star-icon" data-rating="1" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             <svg class="star-icon" data-rating="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -4784,24 +5220,102 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
           </div>
           <div class="rating-note" id="rating-text">Pilih Bintang</div>
           
-          <div id="action-container">
+          <!-- BANNER PEMBERITAHUAN REWARD VOUCHER -->
+          <div id="reward-notice-box" style="display: block; width: 100%; margin: 4px 0 16px; padding: 13px 15px; border-radius: 16px; background: linear-gradient(135deg, rgba(255, 248, 235, 0.95) 0%, rgba(247, 233, 218, 0.85) 100%); border: 1.5px solid rgba(212, 155, 106, 0.55); box-shadow: inset 0 1px 2px #ffffff, 0 6px 16px rgba(184, 125, 75, 0.15); text-align: left;">
+            <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.86rem; color: #8c5828; margin-bottom: 4px;">
+              <span>✨</span>
+              <span>Ulas &amp; Dapatkan Reward</span>
+            </div>
+            <div style="font-size: 0.77rem; color: #4a3e35; line-height: 1.5;">
+              Berikan ulasan bintang 5 di Google Review dan nikmati e-voucher diskon hingga <strong>Rp 100.000</strong>.
+            </div>
+          </div>
+
+          <!-- CONTAINER TOMBOL AKSI BERDASARKAN BINTANG -->
+          <div id="action-container" style="display: none; width: 100%; flex-direction: column; gap: 10px;">
             <button id="action-btn" class="btn-action">
               <span class="action-icon" id="action-icon-svg"></span>
               <span id="action-text">Lanjutkan</span>
             </button>
 
-            <!-- TOMBOL KLAIM VOUCHER: DISEMBUNYIKAN SECARA DEFAULT -->
-            <button id="btn-claim-voucher" class="btn-action btn-claim" style="display: none;">
+            <!-- TOMBOL HITUNG MUNDUR / KLAIM -->
+            <button id="btn-claim-voucher" class="btn-action btn-claim" style="display: none;" onclick="openProofUploadSection()">
               <span>Klaim e-Voucher Diskon Rp 100k</span>
+            </button>
+          </div>
+
+          <!-- STEP 2: AREA UPLOAD BUKTI (MUNCUL SETELAH TIMER SELESAI DAN TOMBOL KLAIM DIKLIK) -->
+          <div id="proof-upload-wrapper" style="display: none; margin-top: 16px; padding: 16px; border-radius: 18px; background: rgba(255, 255, 255, 0.75); border: 1.5px dashed rgba(184, 125, 75, 0.5); text-align: left;">
+            <div style="font-weight: 700; font-size: 0.86rem; color: #8c5828; margin-bottom: 6px;">📷 Upload Bukti Ulasan Bintang 5</div>
+            <p style="font-size: 0.76rem; color: #555; margin-bottom: 12px; line-height: 1.45;">
+              Upload tangkapan layar (screenshot) ulasan Google Anda yang menampilkan rating <strong>5 Bintang</strong> untuk verifikasi otomatis.
+            </p>
+
+            <input type="file" id="review-proof-input" accept="image/*" style="display: none;" onchange="processAndExtractReview(this)">
+            <button type="button" class="btn-action" style="background: rgba(184, 125, 75, 0.15); color: #8c5828; border: 1.5px solid rgba(184, 125, 75, 0.6);" onclick="document.getElementById('review-proof-input').click()">
+              <span>Pilih Foto Screenshot</span>
+            </button>
+
+            <!-- Preview & Status Scan OCR -->
+            <div id="scan-status-box" style="display: none; margin-top: 12px; padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.03); text-align: center;">
+              <img id="guest-preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 140px; border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(184,125,75,0.3);">
+              <div id="scan-status-text" style="font-size: 0.78rem; font-weight: 700; color: #8c5828;">Memeriksa bukti...</div>
+            </div>
+
+            <!-- Nama Akun Terdeteksi -->
+            <div id="extracted-account-box" style="display: none; margin-top: 10px; padding: 10px; border-radius: 10px; background: rgba(22, 163, 74, 0.1); border: 1px solid rgba(22, 163, 74, 0.3);">
+              <div style="font-size: 0.7rem; color: #16a34a; font-weight: 700;">NAMA AKUN REVIEW TERDETEKSI:</div>
+              <div id="account-name-display" style="font-size: 0.88rem; font-weight: 800; color: #2b1f17;">-</div>
+            </div>
+
+            <!-- Tombol Cetak Voucher (Muncul Setelah Lolos OCR) -->
+            <button id="btn-print-voucher" class="btn-action btn-claim" style="display: none; margin-top: 14px;" onclick="claimRewardVoucherFromBackend()">
+              <span>🎁 Cetak e-Voucher Diskon Rp 100k</span>
             </button>
           </div>
         </div>
 
-        <div id="review-already-claimed" style="display: none; padding: 10px 0;">
-          <h2 class="card-headline">Voucher Sudah Diklaim</h2>
-          <p class="card-subtitle" style="margin-bottom: 16px;">Anda telah berhasil mengklaim voucher ulasan sebelumnya. Terima kasih atas dukungan Anda!</p>
-          <button onclick="navigateTo('page-my-voucher')" class="btn-submit" style="background: var(--accent-gold);">Lihat Voucher Saya</button>
+        <!-- STEP 3: KARTU TIKET REWARD VOUCHER RESMI (BISA DIUNDUH) -->
+        <div id="voucher-result-view" style="display: none;">
+          <div class="voucher-card" id="voucher-reward-card-print">
+            <div class="voucher-header">SAJIVA</div>
+            <div class="voucher-title">REWARD VOUCHER</div>
+
+            <!-- Akun Pengklaim -->
+            <div style="font-size: 0.75rem; font-weight: 700; color: #8c5828; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+              DIBERIKAN KEPADA: <br><span id="ticket-reviewer-name" style="font-size: 0.95rem; color: #1a1a1a;">-</span>
+            </div>
+
+            <!-- Value Diskon -->
+            <div style="display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin-bottom: 8px; font-family: 'Cinzel', serif; color: var(--accent-gold);">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1;">
+                <span style="font-size: 0.75rem; font-style: italic; font-weight: 400; font-family: sans-serif; color: var(--text-secondary);">Up To</span>
+                <span style="font-size: 1.8rem; font-weight: 500;">Rp.</span>
+              </div>
+              <span style="font-size: 2.5rem; font-weight: 600; line-height: 0.9;">100.000</span>
+            </div>
+
+            <div style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 4px; font-weight: 600;">Enjoy 10% Discount</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 16px;">No Minimum Spending <br> Before Tax &amp; Service</div>
+
+            <div class="qr-container">
+              <div class="qr-box" id="reward-qrcode-box"></div>
+            </div>
+
+            <div class="voucher-code-box">
+              <span class="voucher-code-label">KODE VOUCHER ANDA:</span>
+              <div class="voucher-code" id="display-reward-code">-</div>
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px;">Tunjukkan Voucher Ini Ke Kasir</div>
+            <div style="font-size: 0.82rem; font-weight: bold; color: var(--error-red);" id="reward-claim-before">Claim Before: -</div>
+          </div>
+
+          <button type="button" onclick="downloadRewardVoucherDirect()" id="btn-download-reward-card" class="btn-download">
+            Unduh Voucher
+          </button>
         </div>
+
       </main>
     </div>
 
@@ -4989,23 +5503,8 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
 <div class="form-group">
   <label class="form-label">Date of Birth</label>
   <div class="custom-datepicker-wrapper">
-    <input type="text" id="edit-dob-display" class="form-input" placeholder="Select Date of Birth" readonly onclick="toggleEditCalendar()">
+    <input type="text" id="edit-dob-display" class="form-input" placeholder="Select Date of Birth" readonly onclick="openWheelDatePicker('edit')">
     <input type="hidden" id="edit-dob-input" value="">
-
-    <div class="custom-calendar-popup glass-calendar" id="edit-calendar-popup">
-      <div class="calendar-header">
-        <button type="button" class="calendar-title-btn" id="edit-cal-title-btn" onclick="switchEditCalendarView()">Okt 2026</button>
-        <div class="calendar-nav-group">
-          <button type="button" class="calendar-nav-btn" onclick="prevEditCalendarStep()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button type="button" class="calendar-nav-btn" onclick="nextEditCalendarStep()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
-        </div>
-      </div>
-      <div id="edit-calendar-content"></div>
-    </div>
   </div>
 </div>
         <div class="form-group">
@@ -5048,26 +5547,42 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
         <button type="submit" id="btn-send-otp" class="btn-submit" style="background: var(--accent-gold);">Kirim Kode OTP ke Email</button>
       </form>
 
-      <form id="form-forgot-step2" style="text-align: left; display: none;">
-        <div class="form-group">
-          <label class="form-label">Masukkan Kode OTP dari Email</label>
-          <input type="text" id="forgot-otp-input" class="form-input" placeholder="4 Digit Kode OTP di Email" maxlength="4">
-          <div class="error-text" id="error-forgot-otp">Kode OTP salah! Cek Inbox atau folder Spam Email Anda.</div>
-        </div>
+ <form id="form-forgot-step2" style="text-align: left; display: none;">
+  <div class="form-group">
+    <label class="form-label">Masukkan Kode OTP dari Email</label>
+    <input type="text" id="forgot-otp-input" class="form-input" placeholder="4 Digit Kode OTP di Email" maxlength="4">
+    <div class="error-text" id="error-forgot-otp">Kode OTP salah! Cek Inbox atau folder Spam Email Anda.</div>
+  </div>
 
-        <div class="form-group">
-          <label class="form-label">Password Baru</label>
-          <input type="password" id="forgot-new-pass" class="form-input" placeholder="Kombinasi Kapital, Kecil, &amp; Angka">
-        </div>
+  <div class="form-group">
+    <label class="form-label">Password Baru</label>
+    <div class="password-input-wrapper">
+      <input type="password" id="forgot-new-pass" class="form-input" placeholder="Kombinasi Kapital, Kecil, &amp; Angka">
+      <button type="button" id="btn-toggle-forgot-new" class="toggle-password-btn" onclick="toggleForgotNewPass(event)">
+        <svg id="svg-forgot-new" viewBox="0 0 24 24">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
 
-        <div class="form-group">
-          <label class="form-label">Konfirmasi Password Baru</label>
-          <input type="password" id="forgot-confirm-pass" class="form-input" placeholder="Ulangi Password Baru">
-          <div class="error-text" id="error-forgot-pass">Password tidak cocok atau tidak memenuhi syarat.</div>
-        </div>
+  <div class="form-group">
+    <label class="form-label">Konfirmasi Password Baru</label>
+    <div class="password-input-wrapper">
+      <input type="password" id="forgot-confirm-pass" class="form-input" placeholder="Ulangi Password Baru">
+      <button type="button" id="btn-toggle-forgot-confirm" class="toggle-password-btn" onclick="toggleForgotConfirmPass(event)">
+        <svg id="svg-forgot-confirm" viewBox="0 0 24 24">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="error-text" id="error-forgot-pass">Password tidak cocok atau tidak memenuhi syarat.</div>
+  </div>
 
-        <button type="submit" id="btn-reset-pass" class="btn-submit" style="background: var(--text-main);">Simpan Password Baru</button>
-      </form>
+  <button type="submit" id="btn-reset-pass" class="btn-submit">Simpan Password Baru</button>
+</form>
     </div>
   </div>
   
@@ -5212,6 +5727,36 @@ function toggleRegPass(e) {
   if (e) e.preventDefault();
   const input = document.getElementById('reg-pass');
   const svg = document.getElementById('svg-reg-pass');
+  if (!input || !svg) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  } else {
+    input.type = 'password';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  }
+}
+
+function toggleForgotNewPass(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('forgot-new-pass');
+  const svg = document.getElementById('svg-forgot-new');
+  if (!input || !svg) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  } else {
+    input.type = 'password';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  }
+}
+
+function toggleForgotConfirmPass(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('forgot-confirm-pass');
+  const svg = document.getElementById('svg-forgot-confirm');
   if (!input || !svg) return;
 
   if (input.type === 'password') {
@@ -5672,13 +6217,16 @@ function processGoogleEmail(email, accessToken) {
 
   // Mode Register
   if (googleAuthMode === 'register') {
-    sendDataToBackend('check_google_account', { email: cleanEmail }, (result) => {
+    sendDataToBackend('check_google_account', { email: cleanEmail, user: cleanEmail }, (result) => {
       if (result && result.status === "success" && result.existingHp && result.existingHp !== "NOT_REGISTERED") {
         showElegantAlert(
           "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
           "Sudah Terdaftar",
           "✦",
-          () => { navigateTo('page-auth-login'); }
+          () => { 
+            closeRegisterModal();
+            openLoginModal(); 
+          }
         );
       } else {
         populateEmailOnly(cleanEmail);
@@ -5689,7 +6237,7 @@ function processGoogleEmail(email, accessToken) {
 
   // Mode Login
   if (googleAuthMode === 'login') {
-    sendDataToBackend('check_google_account', { email: cleanEmail, googleAccessToken: accessToken || "" }, (result) => {
+    sendDataToBackend('check_google_account', { email: cleanEmail, user: cleanEmail, googleAccessToken: accessToken || "" }, (result) => {
       if (result && result.status === "success" && result.existingHp && result.existingHp !== "NOT_REGISTERED") {
         customerData.token = result.token || "";
         customerData.nama = result.existingName || "";
@@ -5699,17 +6247,23 @@ function processGoogleEmail(email, accessToken) {
         customerData.photo = result.photo || "";
         customerData.dob = result.dob || "";
         customerData.gender = result.gender || "";
+        customerData.loginTime = Date.now();
 
         localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
-        document.getElementById('welcome-user-text').innerText = `👋 Hello, ${escapeHtml(customerData.nama)}!`;
+        setGreetingText(customerData.nama);
+        
+        // Tutup modal agar tidak menumpuk di layar
+        closeLoginModal();
+        closeAuthChoiceModal();
         navigateTo('page-promo');
       } else {
         showElegantAlert(
-          "Akun Anda belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
+          "Akun Anda (" + cleanEmail + ") belum terdaftar di sistem. Silakan lengkapi pendaftaran terlebih dahulu.",
           "Belum Terdaftar",
           "✦",
           () => {
-            navigateTo('page-auth-register');
+            closeLoginModal();
+            openRegisterModal();
             populateEmailOnly(cleanEmail);
           }
         );
@@ -5717,7 +6271,6 @@ function processGoogleEmail(email, accessToken) {
     });
   }
 }
-
 // 3. Fungsi Pengisian Otomatis Kolom Email Saja (Persis Union)
 function populateEmailOnly(email) {
   const inEmail = document.getElementById('reg-email');
@@ -5934,7 +6487,9 @@ function navigateTo(pageId, isBackAction = false) {
     targetPage.classList.add('active');
     targetPage.style.display = 'block';
   }
-
+if (pageId === 'page-review-us' && typeof updateReviewPageView === 'function') {
+    updateReviewPageView();
+  }
   // Atur Top Bar dan Branding Header
   const brandHeader = document.getElementById('main-brand-header');
   const topAppBar = document.getElementById('top-app-bar');
@@ -6364,17 +6919,155 @@ let calCurrentMonth = maxAllowedDob.getMonth();
 let calSelectedDate = null;
 let calViewMode = "days"; // 'days' | 'months' | 'decades'
 
-function toggleCustomCalendar() {
-  const popup = document.getElementById("custom-calendar-popup");
-  if (!popup) return;
-  const isShown = popup.classList.contains("show");
-  if (isShown) {
-    popup.classList.remove("show");
-  } else {
-    popup.classList.add("show");
-    calViewMode = "days";
-    renderCalendar();
+// ========================================================
+// LOGIKA IOS WHEEL ROLLER PICKER
+// ========================================================
+let activeDatePickerTarget = 'reg'; // 'reg' | 'edit'
+const ITEM_HEIGHT = 44;
+
+// Buat opsi roda
+function initWheelPickerElements() {
+  const trackDay = document.getElementById('wheel-track-day');
+  const trackMonth = document.getElementById('wheel-track-month');
+  const trackYear = document.getElementById('wheel-track-year');
+
+  if (!trackDay || !trackMonth || !trackYear) return;
+
+  // 1. Hari (1 - 31)
+  trackDay.innerHTML = '';
+  for (let d = 1; d <= 31; d++) {
+    const val = String(d).padStart(2, '0');
+    trackDay.innerHTML += `<div class="wheel-item" data-val="${val}">${val}</div>`;
   }
+
+  // 2. Bulan (1 - 12)
+  trackMonth.innerHTML = '';
+  for (let m = 1; m <= 12; m++) {
+    const val = String(m).padStart(2, '0');
+    trackMonth.innerHTML += `<div class="wheel-item" data-val="${val}">${val}</div>`;
+  }
+
+  // 3. Tahun (1950 - batas usia 17 tahun)
+  const currentMaxYear = new Date().getFullYear() - 17;
+  trackYear.innerHTML = '';
+  for (let y = 1950; y <= currentMaxYear; y++) {
+    trackYear.innerHTML += `<div class="wheel-item" data-val="${y}">${y}</div>`;
+  }
+}
+
+function openWheelDatePicker(target = 'reg') {
+  activeDatePickerTarget = target;
+  initWheelPickerElements();
+
+  const overlay = document.getElementById('wheel-picker-overlay');
+  const sheet = document.getElementById('wheel-picker-sheet');
+
+  if (overlay) overlay.classList.add('show');
+  if (sheet) sheet.classList.add('show');
+
+  // Ambil nilai tanggal aktif
+  let currentVal = '';
+  if (target === 'reg') {
+    const valEl = document.getElementById('reg-dob');
+    currentVal = valEl ? valEl.value : '';
+  } else {
+    const valEl = document.getElementById('edit-dob-input');
+    currentVal = valEl ? valEl.value : (customerData ? customerData.dob : '');
+  }
+
+  let d = 26, m = 6, y = 1995;
+  if (currentVal && currentVal.includes('-')) {
+    const parts = currentVal.split('-');
+    y = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10);
+    d = parseInt(parts[2], 10);
+  } else if (currentVal && currentVal.includes('/')) {
+    const parts = currentVal.split('/');
+    d = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10);
+    y = parseInt(parts[2], 10);
+  }
+
+  setTimeout(() => {
+    scrollToWheelIndex('wheel-col-day', d - 1);
+    scrollToWheelIndex('wheel-col-month', m - 1);
+    scrollToWheelIndex('wheel-col-year', y - 1950);
+  }, 60);
+}
+
+function scrollToWheelIndex(colId, index) {
+  const col = document.getElementById(colId);
+  if (col) {
+    col.scrollTop = Math.max(0, index * WHEEL_ITEM_HEIGHT);
+  }
+}
+
+function getSelectedWheelValue(colId) {
+  const col = document.getElementById(colId);
+  if (!col) return '';
+  // Menggunakan tinggi 46px sesuai ukuran CSS baris tengah
+  const itemHeight = typeof WHEEL_ITEM_HEIGHT !== 'undefined' ? WHEEL_ITEM_HEIGHT : 46;
+  const index = Math.round(col.scrollTop / itemHeight);
+  const items = col.querySelectorAll('.wheel-item');
+  if (!items || items.length === 0) return '';
+  
+  // Pastikan indeks selalu valid dan berada dalam rentang item
+  const validIndex = Math.max(0, Math.min(index, items.length - 1));
+  const selectedItem = items[validIndex];
+  return selectedItem ? selectedItem.getAttribute('data-val') : '';
+}
+
+// Tutup Picker
+function closeWheelPicker() {
+  const overlay = document.getElementById('wheel-picker-overlay');
+  const sheet = document.getElementById('wheel-picker-sheet');
+  if (overlay) overlay.classList.remove('show');
+  if (sheet) sheet.classList.remove('show');
+}
+
+// Konfirmasi Pilihan (Tombol Done)
+function confirmWheelPicker() {
+  const day = getSelectedWheelValue('wheel-col-day');
+  const month = getSelectedWheelValue('wheel-col-month');
+  const year = getSelectedWheelValue('wheel-col-year');
+
+  if (!day || !month || !year) {
+    closeWheelPicker();
+    return;
+  }
+
+  const isoDate = `${year}-${month}-${day}`;
+  const displayDate = `${day}/${month}/${year}`;
+
+if (activeDatePickerTarget === 'reg') {
+  const regDisplay = document.getElementById('reg-dob-display');
+  const regValue = document.getElementById('reg-dob');
+  if (regDisplay) regDisplay.value = displayDate;
+  if (regValue) regValue.value = isoDate;
+  
+  const err = document.getElementById('error-reg-dob');
+  if (err) err.style.display = 'none';
+  } else {
+    const editDisplay = document.getElementById('edit-dob-display');
+    const editValue = document.getElementById('edit-dob-input');
+    if (editDisplay) editDisplay.value = displayDate;
+    if (editValue) editValue.value = isoDate;
+    
+    // Perbarui variabel customerData agar tersinkron saat disimpan ke database
+    if (typeof customerData !== 'undefined') {
+      customerData.dob = isoDate;
+    }
+  }
+
+  closeWheelPicker();
+}
+
+// Sambungkan klik input ke openWheelDatePicker
+function toggleCustomCalendar() {
+  openWheelDatePicker('reg');
+}
+function toggleEditCalendar() {
+  openWheelDatePicker('edit');
 }
 
 // Tutup pop-up jika pengguna klik di luar kalender
@@ -6932,38 +7625,46 @@ function logoutUser() {
     }
 
 // GANTI BAGIAN PEMBUATAN PAYLOAD DI DALAM sendDataToBackend:
-	async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
-	try {
+async function sendDataToBackend(action, paramData, callback, feedbackText = "", pass = "", dob = "", gender = "") {
+  try {
     let savedUserSession = {};
     try {
       savedUserSession = JSON.parse(localStorage.getItem('sajiva_crm_user') || "{}");
     } catch(e) {
       savedUserSession = {};
     }
-	let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
+
+    let loginIdentifier = (paramData && paramData.user) ? String(paramData.user).trim() : "";
+    let targetEmail = "";
+    if (paramData && paramData.email) {
+      targetEmail = String(paramData.email).trim().toLowerCase();
+    } else if (loginIdentifier && loginIdentifier.includes('@')) {
+      targetEmail = loginIdentifier.toLowerCase();
+    } else if (customerData && customerData.email) {
+      targetEmail = String(customerData.email).trim().toLowerCase();
+    }
+
     let currentActiveToken = (typeof customerData !== 'undefined' && customerData.token) ? customerData.token : (savedUserSession.token || "");
 
-let payload = {
-  action: action,
-  token: currentActiveToken,
-  user: loginIdentifier,
-  nama: loginIdentifier || customerData.nama || "",
-  email: (loginIdentifier && loginIdentifier.includes('@')) ? loginIdentifier.toLowerCase() : (customerData.email || ""),
-  nohp: loginIdentifier || customerData.nohp || "",
-  // Tambahkan baris ini untuk menangani oldHp saat update profil:
-  oldHp: (paramData && paramData.oldHp) ? paramData.oldHp : customerData.nohp,
-  rating: customerData.rating || "",
-  feedback: feedbackText || "",
-  password: pass || "",
-  otp: (paramData && paramData.otp) ? paramData.otp : "",
-  photo: customerData.photo || "",
-  dob: typeof dob !== 'undefined' && dob !== "" ? dob : (customerData.dob || ""),
-  gender: typeof gender !== 'undefined' && gender !== "" ? gender : (customerData.gender || "")
-};
+    let payload = {
+      action: action,
+      token: currentActiveToken,
+      user: loginIdentifier || targetEmail || customerData.nohp || "",
+      nama: (paramData && paramData.nama) ? paramData.nama : (customerData.nama || loginIdentifier || ""),
+      email: targetEmail,
+      nohp: (paramData && paramData.nohp) ? paramData.nohp : (customerData.nohp || ""),
+      oldHp: (paramData && paramData.oldHp) ? paramData.oldHp : (customerData.nohp || ""),
+      rating: customerData.rating || "",
+      feedback: feedbackText || "",
+      password: pass || "",
+      otp: (paramData && paramData.otp) ? String(paramData.otp).trim() : "",
+      photo: customerData.photo || "",
+      dob: typeof dob !== 'undefined' && dob !== "" ? dob : (customerData.dob || ""),
+      gender: typeof gender !== 'undefined' && gender !== "" ? gender : (customerData.gender || "")
+    };
 
-    // Penanganan khusus aksi akun Google
     if (action === "check_google_account" && paramData) {
-      payload.email = paramData.email || "";
+      payload.email = targetEmail;
       payload.googleAccessToken = paramData.googleAccessToken || "";
     }
 
@@ -6971,7 +7672,12 @@ let payload = {
       payload.voucher = paramData;
     }
 
-    // 1. Prioritaskan google.script.run jika running di Apps Script Web App
+    // Jika action adalah claim_guest_voucher, sertakan reviewerName dengan aman
+    if (action === "claim_guest_voucher" && paramData) {
+      payload.reviewerName = paramData.reviewerName || "";
+    }
+
+    // Prioritaskan google.script.run jika running di Apps Script Web App
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
         .withSuccessHandler(function(res) {
@@ -6986,11 +7692,12 @@ let payload = {
       return;
     }
 
-    // 2. Fetch HTTP POST ke Google Script /exec
+    // Gunakan Fetch POST dengan mode redirect 'follow'
     const response = await fetch(scriptURL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      redirect: 'follow'
     });
 
     if (!response.ok) {
@@ -7003,7 +7710,6 @@ let payload = {
   } catch (err) {
     console.error("Backend Connection Error Detail:", err);
     
-    // Buka kembali status tombol submit agar tidak macet
     const btnSubmit = document.getElementById('btn-submit-login');
     if (btnSubmit) {
       btnSubmit.disabled = false;
@@ -7019,7 +7725,6 @@ let payload = {
     if (callback) callback({ status: "error", message: err.message });
   }
 }
-
     // ==========================================
     // LOGIKA RATING REALTIME & KLAIM KONDISIONAL
     // ==========================================
@@ -7041,6 +7746,25 @@ function setGreetingText(name) {
     <span>Hello, ${escapeHtml(userName)}!</span>
   `;
 }
+
+let detectedReviewerName = "";
+let currentSelectedRating = 0;
+let reviewCountdownInterval = null;
+
+// 1. Fungsi Membuka Popup Window Google Review Terpusat di Layar
+function openGoogleReviewPopup() {
+  const width = 600;
+  const height = 700;
+  const left = (window.screen.width - width) / 2;
+  const top = (window.screen.height - height) / 2;
+  window.open(
+    googleReviewURL,
+    'GoogleReviewPopup',
+    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+  );
+}
+
+// 2. Fungsi Rating Bintang & Percabangan Alur Tombol (1-3 WA, 4-5 Google Review)
 function setupStarRating() {
   const stars = document.querySelectorAll('#stars-container .star-icon');
   const ratingText = document.getElementById('rating-text');
@@ -7049,12 +7773,14 @@ function setupStarRating() {
   const actionIcon = document.getElementById('action-icon-svg');
   const actionText = document.getElementById('action-text');
   const btnClaim = document.getElementById('btn-claim-voucher');
+  const proofWrapper = document.getElementById('proof-upload-wrapper');
 
   const notes = ["Sangat Buruk", "Buruk", "Cukup", "Bagus", "Sangat Bagus!"];
 
   stars.forEach(star => {
     star.addEventListener('click', () => {
-      const rating = parseInt(star.getAttribute('data-rating'));
+      const rating = parseInt(star.getAttribute('data-rating'), 10);
+      currentSelectedRating = rating;
       customerData.rating = rating;
 
       stars.forEach((s, idx) => {
@@ -7065,59 +7791,60 @@ function setupStarRating() {
       ratingText.innerText = notes[rating - 1];
       actionContainer.style.display = 'flex';
 
-      // Reset timer dan sembunyikan tombol klaim jika pengguna mengubah rating bintang
-      if (countdownInterval) clearInterval(countdownInterval);
-      btnClaim.style.display = 'none';
+      // Reset timer klaim & wrapper bukti jika rating diganti
+      if (reviewCountdownInterval) clearInterval(reviewCountdownInterval);
+      if (btnClaim) btnClaim.style.display = 'none';
+      if (proofWrapper) proofWrapper.style.display = 'none';
 
-      // Auto-save rating realtime ke Google Sheets
-      sendDataToBackend('save_rating', null, (res) => {
-        console.log("Realtime rating saved:", res);
-      });
+      // Auto-save rating jika terhubung ke backend
+      if (typeof sendDataToBackend === 'function') {
+        sendDataToBackend('save_rating', null);
+      }
 
-      if (rating >= 4) {
+      if (rating === 5) {
+        // BINTANG 5: Tombol Google Review + Timer 5 Detik Menuju Klaim
         actionBtn.className = "btn-action btn-google";
         actionIcon.innerHTML = "⭐";
         actionText.innerText = "Tulis Ulasan di Google Review";
 
         actionBtn.onclick = () => {
-          // 1. Kirim tracking ulasan Google
-          sendDataToBackend('google_review', null);
-          
-          // 2. Buka link Google Review di tab baru
-          window.open(googleReviewURL, '_blank');
+          openGoogleReviewPopup();
 
-          // 3. Jika Rating 5, jalankan hitung mundur 5 detik sebelum menampilkan tombol klaim
-          if (rating === 5) {
-            let timeLeft = 5;
-            
-            // Tampilkan tombol klaim dengan kondisi disabled dan teks timer
-            btnClaim.style.display = 'flex';
-            btnClaim.disabled = true;
-            btnClaim.innerHTML = `<span>Tunggu (${timeLeft}s) untuk Klaim Voucher...</span>`;
+          let timeLeft = 5;
+          btnClaim.style.display = 'flex';
+          btnClaim.disabled = true;
+          btnClaim.innerHTML = `<span>Tunggu (${timeLeft}s) untuk Klaim Voucher...</span>`;
 
-            if (countdownInterval) clearInterval(countdownInterval);
-
-            countdownInterval = setInterval(() => {
-              timeLeft -= 1;
-              if (timeLeft > 0) {
-                btnClaim.innerHTML = `<span>Tunggu (${timeLeft}s) untuk Klaim Voucher...</span>`;
-              } else {
-                clearInterval(countdownInterval);
-                btnClaim.disabled = false;
-                btnClaim.innerHTML = "<span>Klaim e-Voucher Anda</span>";
-                btnClaim.onclick = handleVoucherClaimSubmission;
-              }
-            }, 1000);
-          }
+          if (reviewCountdownInterval) clearInterval(reviewCountdownInterval);
+          reviewCountdownInterval = setInterval(() => {
+            timeLeft -= 1;
+            if (timeLeft > 0) {
+              btnClaim.innerHTML = `<span>Tunggu (${timeLeft}s) untuk Klaim Voucher...</span>`;
+            } else {
+              clearInterval(reviewCountdownInterval);
+              btnClaim.disabled = false;
+              btnClaim.innerHTML = "<span>Klaim e-Voucher Diskon Rp 100k</span>";
+              btnClaim.onclick = openProofUploadSection;
+            }
+          }, 1000);
+        };
+      } else if (rating === 4) {
+        // BINTANG 4: Buka Popup Google Review (Tanpa Reward Bintang 5)
+        actionBtn.className = "btn-action btn-google";
+        actionIcon.innerHTML = "⭐";
+        actionText.innerText = "Tulis Ulasan di Google Review";
+        actionBtn.onclick = () => {
+          openGoogleReviewPopup();
         };
       } else {
-        // Rating 1, 2, atau 3
+        // BINTANG 1, 2, atau 3: Alihkan ke WhatsApp CS / Pengaduan
         actionBtn.className = "btn-action btn-wa";
         actionIcon.innerHTML = "💬";
         actionText.innerText = "Hubungi CS / WhatsApp Pengaduan";
-
         actionBtn.onclick = () => {
-          sendDataToBackend('cs_pengaduan', null);
+          if (typeof sendDataToBackend === 'function') {
+            sendDataToBackend('cs_pengaduan', null);
+          }
           const msg = encodeURIComponent(`Halo Sajiva Coffee, saya memberikan penilaian ${rating}/5. Masukan saya: `);
           window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank');
         };
@@ -7126,40 +7853,275 @@ function setupStarRating() {
   });
 }
 
-    function handleVoucherClaimSubmission() {
-      const btnClaim = document.getElementById('btn-claim-voucher');
-      btnClaim.disabled = true;
-      btnClaim.innerHTML = "<span>Memproses Klaim Voucher...</span>";
+// 3. Membuka Area Upload Bukti Setelah Timer Selesai
+function openProofUploadSection() {
+  const proofWrapper = document.getElementById('proof-upload-wrapper');
+  if (proofWrapper) {
+    proofWrapper.style.display = 'block';
+    proofWrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
 
-      // Panggil backend untuk mengambil voucher berstatus "Belum Terpakai" dari sheet OdooCodes
-      sendDataToBackend('claim_voucher', null, (result) => {
-        if (result && result.status === "success" && result.voucherCode) {
-          customerData.voucherCode = result.voucherCode;
-          localStorage.setItem('sajiva_crm_user', JSON.stringify(customerData));
+// 4. Pembacaan OCR & Validasi 5 Bintang Penuh
+function processAndExtractReview(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
 
-          renderVoucherTicket(result.voucherCode);
-          document.getElementById('review-form-wrapper').style.display = 'none';
-          document.getElementById('review-already-claimed').style.display = 'block';
+    reader.onload = function(e) {
+      const imgBase64 = e.target.result;
 
-          navigateTo('page-my-voucher');
-        } else {
-          alert(result.message || "Gagal mengklaim voucher. Silakan hubungi Kasir / CS.");
-          btnClaim.disabled = false;
-          btnClaim.innerHTML = "<span>Klaim e-Voucher Diskon Rp 100k</span>";
+      const previewImg = document.getElementById('guest-preview-img');
+      const scanBox = document.getElementById('scan-status-box');
+      const scanText = document.getElementById('scan-status-text');
+      const accBox = document.getElementById('extracted-account-box');
+      const btnPrint = document.getElementById('btn-print-voucher');
+
+      if (previewImg) previewImg.src = imgBase64;
+      if (scanBox) scanBox.style.display = 'block';
+      if (scanText) scanText.innerHTML = "⏳ Menyiapkan pemindai teks (OCR)...";
+      if (accBox) accBox.style.display = 'none';
+      if (btnPrint) btnPrint.style.display = 'none';
+
+      Tesseract.recognize(
+        imgBase64,
+        'eng',
+        {
+          workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+          corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js',
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              const pct = Math.round((m.progress || 0) * 100);
+              if (scanText) scanText.innerText = `🔍 Memeriksa jumlah bintang (${pct}%)...`;
+            }
+          }
         }
-      });
-    }
+      ).then(({ data: { text } }) => {
+        console.log("OCR Result Text:", text);
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const fullTextLower = text.toLowerCase();
 
-    function submitFeedback() {
-      const text = document.getElementById('feedback-text').value.trim();
-      if (!text) {
-        alert("Mohon tuliskan masukan Anda terlebih dahulu.");
-        return;
+        // 1. Identifikasi Apakah Rating Bukan Bintang 5 (1 - 4 Bintang)
+        const isNotStar5 = fullTextLower.includes('far from great') || // Bintang 1
+                           fullTextLower.includes('not great') ||      // Bintang 2
+                           fullTextLower.includes('good') ||           // Bintang 3
+                           (fullTextLower.includes('great') && !fullTextLower.includes('not great') && !fullTextLower.includes('far from great')); // Bintang 4
+
+        // 2. Identifikasi 5 Bintang Penuh
+        const isStar5 = fullTextLower.includes('exceptional') || fullTextLower.includes('luar biasa');
+
+        if (isNotStar5 && !isStar5) {
+          if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Belum Bintang 5</span>";
+          showElegantAlert(
+            "Anda belum memberikan review bintang 5, ubah untuk dapatkan voucher.",
+            "Review Belum Bintang 5",
+            "✕"
+          );
+          return;
+        }
+
+        if (isStar5) {
+          // Ekstrak nama akun dari baris di atas "Posting publicly"
+          let foundName = "Pelanggan Sajiva";
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].toLowerCase().includes('posting publicly') && i > 0) {
+              foundName = lines[i - 1].replace(/[^a-zA-Z\s]/g, '').trim();
+              break;
+            }
+          }
+
+          if (!foundName || foundName.length < 3) {
+            foundName = lines[0] ? lines[0].replace(/[^a-zA-Z\s]/g, '').trim() : "Pelanggan Sajiva";
+          }
+
+          detectedReviewerName = foundName;
+
+          if (scanText) scanText.innerHTML = "<span style='color: #16a34a;'>✓ Bukti Bintang 5 Terverifikasi!</span>";
+          const nameDisp = document.getElementById('account-name-display');
+          if (nameDisp) nameDisp.innerText = detectedReviewerName;
+          if (accBox) accBox.style.display = 'block';
+          if (btnPrint) btnPrint.style.display = 'flex';
+
+          showElegantAlert(
+            `Terima kasih atas ulasan bintang 5 Anda, ${detectedReviewerName}! Klik Cetak e-Voucher di bawah.`,
+            "Verifikasi Berhasil",
+            "✓"
+          );
+        } else {
+          if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Gambar tidak valid</span>";
+          showElegantAlert(
+            "Pastikan screenshot memperlihatkan rating bintang dan ulasan Google Review dengan jelas.",
+            "Validasi Gagal",
+            "✕"
+          );
+        }
+      }).catch(err => {
+        console.error("OCR Error:", err);
+        if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>Gagal membaca screenshot. Silakan coba lagi.</span>";
+      });
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+function claimRewardVoucherFromBackend() {
+  const btnPrint = document.getElementById('btn-print-voucher');
+  if (btnPrint) {
+    btnPrint.disabled = true;
+    btnPrint.innerHTML = "<span>Menghubungi Server Odoo...</span>";
+  }
+
+  const payload = {
+    action: 'claim_guest_voucher',
+    reviewerName: detectedReviewerName || "Pelanggan Sajiva"
+  };
+
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(result => {
+    if (result && result.status === "success" && result.voucherCode) {
+      const finalCode = result.voucherCode;
+      const expiryText = result.expiredDate; // Tanggal +30 hari dari server
+
+      customerData.voucherCode = finalCode;
+      customerData.reviewerName = detectedReviewerName;
+
+      // Simpan di local storage khusus guest
+      localStorage.setItem('sajiva_guest_voucher', JSON.stringify({
+        voucherCode: finalCode,
+        guestToken: result.guestToken,
+        reviewerName: detectedReviewerName,
+        expiredDate: expiryText
+      }));
+
+      // Render tampilan tiket voucher
+      renderRewardVoucherTicket(finalCode, detectedReviewerName, expiryText);
+
+      // Sembunyikan alur form ulasan, tampilkan tiket cetak
+      const mainFlow = document.getElementById('review-main-flow');
+      const resultView = document.getElementById('voucher-result-view');
+      if (mainFlow) mainFlow.style.display = 'none';
+      if (resultView) resultView.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      showElegantAlert("e-Voucher resmi dari Odoo berhasil diterbitkan!", "Klaim Berhasil", "✓");
+    } else {
+      if (btnPrint) {
+        btnPrint.disabled = false;
+        btnPrint.innerHTML = "<span>🎁 Cetak e-Voucher Diskon Rp 100k</span>";
       }
-      const msg = encodeURIComponent(`Halo Sajiva Coffee, masukan saya: ${text}`);
-      window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank');
-      document.getElementById('feedback-text').value = "";
+      showElegantAlert(result.message || "Voucher belum tersedia di tab OdooCodesGuest.", "Gagal Mengambil Voucher", "✕");
     }
+  })
+  .catch(err => {
+    console.error("Gagal klaim guest voucher:", err);
+    if (btnPrint) {
+      btnPrint.disabled = false;
+      btnPrint.innerHTML = "<span>🎁 Cetak e-Voucher Diskon Rp 100k</span>";
+    }
+    showElegantAlert("Gagal terhubung ke database. Periksa koneksi internet.", "Koneksi Gagal", "✕");
+  });
+}
+
+function renderRewardVoucherTicket(code, reviewerName, expiryDate) {
+  const nameEl = document.getElementById('ticket-reviewer-name');
+  const codeEl = document.getElementById('display-reward-code');
+  const claimBeforeEl = document.getElementById('reward-claim-before');
+
+  if (nameEl) nameEl.innerText = reviewerName || "Pelanggan Sajiva";
+  if (codeEl) codeEl.innerText = code;
+
+  // Render QR Code dari kode asli Odoo (misal: 044a-35fd-4010)
+  const qrBox = document.getElementById('reward-qrcode-box');
+  if (qrBox && typeof QRCode !== 'undefined') {
+    qrBox.innerHTML = "";
+    new QRCode(qrBox, { text: code, width: 120, height: 120 });
+  }
+
+  // Set teks tanggal kadaluarsa (+30 hari)
+  if (claimBeforeEl) {
+    if (expiryDate) {
+      claimBeforeEl.innerText = `Claim Before: ${expiryDate}`;
+    } else {
+      const d = new Date();
+      d.setDate(d.getDate() + 30);
+      claimBeforeEl.innerText = `Claim Before: ${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+    }
+  }
+}
+
+// 7. Unduh Tiket Voucher Langsung ke Galeri HP
+function downloadRewardVoucherDirect() {
+  const btn = document.getElementById('btn-download-reward-card');
+  const voucherCard = document.getElementById('voucher-reward-card-print');
+  if (!voucherCard) return;
+
+  btn.innerText = "Memproses Unduhan...";
+
+  if (typeof html2canvas !== 'undefined') {
+    html2canvas(voucherCard, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true
+    }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = imgData;
+      link.download = `Voucher-Reward-Sajiva-${detectedReviewerName || 'Guest'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      btn.innerText = "Unduh Voucher";
+    }).catch(err => {
+      console.error("Gagal unduh voucher:", err);
+      showElegantAlert("Gagal mengunduh gambar. Silakan lakukan screenshot layar HP Anda.", "Gagal Unduh", "✕");
+      btn.innerText = "Unduh Voucher";
+    });
+  }
+}
+
+// 8. Pengatur Tampilan Halaman Review
+function updateReviewPageView() {
+  const mainFlow = document.getElementById('review-main-flow');
+  const resultView = document.getElementById('voucher-result-view');
+  if (!mainFlow || !resultView) return;
+
+  // Cek apakah ada voucher guest tersimpan
+  let guestVoucher = null;
+  try {
+    guestVoucher = JSON.parse(localStorage.getItem('sajiva_guest_voucher'));
+  } catch (e) {}
+
+  const activeCode = (guestVoucher && guestVoucher.voucherCode) || customerData.voucherCode;
+  const activeName = (guestVoucher && guestVoucher.reviewerName) || customerData.reviewerName || customerData.nama;
+
+  if (activeCode && activeCode.trim() !== "" && activeCode.trim() !== "-") {
+    renderRewardVoucherTicket(activeCode, activeName);
+    mainFlow.style.display = 'none';
+    resultView.style.display = 'block';
+  } else {
+    mainFlow.style.display = 'block';
+    resultView.style.display = 'none';
+  }
+}
+
+// 9. Feedback CS WhatsApp
+function submitFeedback() {
+  const textEl = document.getElementById('feedback-text');
+  const text = textEl ? textEl.value.trim() : "";
+  if (!text) {
+    showElegantAlert("Mohon tuliskan masukan Anda terlebih dahulu.", "Pemberitahuan", "✦");
+    return;
+  }
+  const msg = encodeURIComponent(`Halo Sajiva Coffee, masukan saya: ${text}`);
+  window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank');
+  if (textEl) textEl.value = "";
+}
 
     // SLIDER FUNCTIONS
     let currentSlide = 0;
@@ -7724,11 +8686,10 @@ if (regEmailInput) {
           customerData = JSON.parse(savedUser);
           
           // Validasi keamanan: Token wajib ada untuk sesi login
-          if (!customerData.token) {
-            console.warn("Sesi tidak memiliki token kriptografi yang sah. Membersihkan sesi lokal.");
-            logoutUser();
-            return;
-          }
+if (!customerData.token) {
+  localStorage.removeItem('sajiva_crm_user');
+  customerData = { nama: "", email: "", nohp: "", rating: 0, voucherCode: "", photo: "", dob: "", gender: "" };
+}
         } catch(err) {
           logoutUser();
           return;
@@ -8032,24 +8993,34 @@ btnSubmit.innerText = isEn ? "Registering Account..." : "Mendaftarkan Akun...";
 // ============================================================================
 document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
   e.preventDefault();
-  const emailInput = document.getElementById('forgot-email-input').value.trim();
+  const emailInput = document.getElementById('forgot-email-input').value.trim().toLowerCase();
+  const btnSendOtp = document.getElementById('btn-send-otp');
+  
   if (!emailInput) {
     document.getElementById('error-forgot-email').style.display = 'block';
     return;
   }
   document.getElementById('error-forgot-email').style.display = 'none';
 
-  // Kirim permintaan OTP; server hanya mengembalikan status "success" tanpa membocorkan kode OTP
-  sendDataToBackend('send_otp_email', { email: emailInput }, (res) => {
+  if (btnSendOtp) {
+    btnSendOtp.disabled = true;
+    btnSendOtp.innerText = "Mengirim Kode...";
+  }
+
+  sendDataToBackend('send_otp_email', { email: emailInput, user: emailInput }, (res) => {
+    if (btnSendOtp) {
+      btnSendOtp.disabled = false;
+      btnSendOtp.innerText = "Kirim Kode OTP ke Email";
+    }
+
     if (res && res.status === "success") {
       tempForgotData.email = emailInput;
-      // PENTING: Jangan pernah menerima atau menyimpan res.otp di memori browser!
       document.getElementById('form-forgot-step1').style.display = 'none';
       document.getElementById('form-forgot-step2').style.display = 'block';
       document.getElementById('forgot-step-desc').innerText = 
-        `Kode OTP telah dikirimkan ke Email terdaftar Anda (berlaku 5 menit).`;
+        `Kode OTP telah dikirimkan ke Email (${emailInput}). Berlaku 5 menit.`;
     } else {
-      showElegantAlert(res.message || "Permintaan gagal diproses.", "Pemberitahuan", "✕");
+      showElegantAlert(res.message || "Email tidak ditemukan di database member Sajiva.", "Pemberitahuan", "✕");
     }
   });
 });
@@ -8060,6 +9031,7 @@ document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
         const otpInput = document.getElementById('forgot-otp-input').value.trim();
         const newPass = document.getElementById('forgot-new-pass').value.trim();
         const confirmPass = document.getElementById('forgot-confirm-pass').value.trim();
+        const btnReset = document.getElementById('btn-reset-pass');
 
         if (!otpInput || otpInput.length !== 4) {
           document.getElementById('error-forgot-otp').style.display = 'block';
@@ -8075,19 +9047,40 @@ document.getElementById('form-forgot-step1').addEventListener('submit', (e) => {
           document.getElementById('error-forgot-pass').style.display = 'none';
         }
 
+        if (btnReset) {
+          btnReset.disabled = true;
+          btnReset.innerText = "Memverifikasi...";
+        }
+
         customerData.email = tempForgotData.email;
         
-        // Panggil backend dengan menyertakan otpInput
-        sendDataToBackend('reset_password', { otp: otpInput }, (res) => {
+        // Panggil backend dengan menyertakan otpInput dan identitas email
+        sendDataToBackend('reset_password', { otp: otpInput, email: tempForgotData.email, user: tempForgotData.email }, (res) => {
+          if (btnReset) {
+            btnReset.disabled = false;
+            btnReset.innerText = "Simpan Password Baru";
+          }
+
           if (res && res.status === "success") {
-            alert("Password berhasil diperbarui! Silakan login kembali.");
-            closeForgotPasswordModal();
+            showElegantAlert(
+              "Password berhasil diperbarui! Silakan masuk kembali dengan password baru Anda.",
+              "Berhasil",
+              "✓",
+              () => {
+                closeForgotPasswordModal();
+                openLoginModal();
+              }
+            );
           } else {
-            alert(res.message || "Gagal memperbarui password.");
+            showElegantAlert(
+              res.message || "Kode OTP salah atau telah kedaluwarsa. Silakan periksa kembali.",
+              "Verifikasi Gagal",
+              "✕"
+            );
           }
         }, "", newPass);
       });
-	  });
+    });
 // ========================================================
 // HANDLER TOMBOL BACK HP / SMARTPHONE (MENCEGAH KELUAR APLIKASI)
 // ========================================================
@@ -8424,5 +9417,36 @@ window.addEventListener('popstate', function(event) {
     </div>
   </div>
 </div>
+<!-- BOTTOM SHEET WHEEL DATE PICKER (IOS STYLE) -->
+<div class="wheel-picker-overlay" id="wheel-picker-overlay" onclick="closeWheelPicker()"></div>
+<div class="wheel-picker-sheet" id="wheel-picker-sheet">
+  <!-- Baris Header: Cancel & Done -->
+  <div class="wheel-picker-header">
+    <button type="button" class="btn-wheel-action btn-wheel-cancel" onclick="closeWheelPicker()">Cancel</button>
+    <button type="button" class="btn-wheel-action btn-wheel-done" onclick="confirmWheelPicker()">Done</button>
+  </div>
+
+  <!-- Area Drum Scroll 3 Kolom (Tanggal - Bulan - Tahun) -->
+  <div class="wheel-picker-body">
+    <!-- Garis Sorot Pilihan Tengah (Highlight Frame) -->
+    <div class="wheel-selection-indicator"></div>
+
+    <!-- Kolom 1: Tanggal -->
+    <div class="wheel-column" id="wheel-col-day">
+      <div class="wheel-scroll-track" id="wheel-track-day"></div>
+    </div>
+
+    <!-- Kolom 2: Bulan -->
+    <div class="wheel-column" id="wheel-col-month">
+      <div class="wheel-scroll-track" id="wheel-track-month"></div>
+    </div>
+
+    <!-- Kolom 3: Tahun -->
+    <div class="wheel-column" id="wheel-col-year">
+      <div class="wheel-scroll-track" id="wheel-track-year"></div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
