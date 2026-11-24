@@ -2,6 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sajiva CRM - Admin Dashboard</title>
   
@@ -408,10 +411,10 @@
           .withSuccessHandler(function(res) {
             btn.disabled = false;
             btn.innerText = "LOGIN ADMIN";
-            if (res && res.status === "success") {
-              adminSecretKey = res.adminKey || "SAJIVA_SECURE_ADMIN_2026";
-              localStorage.setItem('sajiva_admin_logged', 'true');
-              localStorage.setItem('sajiva_admin_key', adminSecretKey);
+            if (res && res.status === "success" && (res.adminToken || res.adminKey)) {
+              adminSecretKey = res.adminToken || res.adminKey;
+              sessionStorage.setItem('sajiva_admin_logged', 'true');
+              sessionStorage.setItem('sajiva_admin_key', adminSecretKey);
               showDashboard();
             } else {
               errEl.innerText = res.message || "Username atau Password salah!";
@@ -437,10 +440,10 @@
         .then(res => {
           btn.disabled = false;
           btn.innerText = "LOGIN ADMIN";
-          if (res && res.status === "success") {
-            adminSecretKey = res.adminKey || "SAJIVA_SECURE_ADMIN_2026";
-            localStorage.setItem('sajiva_admin_logged', 'true');
-            localStorage.setItem('sajiva_admin_key', adminSecretKey);
+          if (res && res.status === "success" && (res.adminToken || res.adminKey)) {
+            adminSecretKey = res.adminToken || res.adminKey;
+            sessionStorage.setItem('sajiva_admin_logged', 'true');
+            sessionStorage.setItem('sajiva_admin_key', adminSecretKey);
             showDashboard();
           } else {
             errEl.innerText = res.message || "Username atau Password salah!";
@@ -457,8 +460,9 @@
     });
 
     function checkAdminSession() {
-if (localStorage.getItem('sajiva_admin_logged') === 'true') {        
-adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
+      const savedToken = sessionStorage.getItem('sajiva_admin_key');
+      if (sessionStorage.getItem('sajiva_admin_logged') === 'true' && savedToken) {        
+        adminSecretKey = savedToken;
         showDashboard();
       }
     }
@@ -475,18 +479,24 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
     }
 
     function logoutAdmin() {
+      sessionStorage.removeItem('sajiva_admin_logged');
+      sessionStorage.removeItem('sajiva_admin_key');
       localStorage.removeItem('sajiva_admin_logged');
       localStorage.removeItem('sajiva_admin_key');
       window.location.reload();
     }
 
-    // FETCH REALTIME DATA DENGAN API KEY & AMAN CORS
+    // FETCH REALTIME DATA DENGAN TOKEN ADMIN VIA POST (H5)
     async function fetchRealtimeCRMData() {
       const tableBody = document.getElementById('member-table-body');
       tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-gold); padding: 20px;">🔄 Mengambil data dari server...</td></tr>`;
 
       if (!adminSecretKey) {
-        adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMIN_2026";
+        adminSecretKey = sessionStorage.getItem('sajiva_admin_key') || "";
+      }
+      if (!adminSecretKey) {
+        logoutAdmin();
+        return;
       }
 
       try {
@@ -503,12 +513,16 @@ adminSecretKey = localStorage.getItem('sajiva_admin_key') || "SAJIVA_SECURE_ADMI
             .withFailureHandler(function(err) {
               tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--error-red);">Gagal koneksi script server.</td></tr>`;
             })
-            .getAllCustomers();
+            .processCustomerSubmission({ action: "get_all_customers", adminToken: adminSecretKey });
           return;
         }
 
-        const targetUrl = scriptURL + "?action=getAllCustomers&key=" + encodeURIComponent(adminSecretKey);
-        const response = await fetch(targetUrl, { redirect: 'follow' });
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: "get_all_customers", adminToken: adminSecretKey }),
+          redirect: 'follow'
+        });
         const json = await response.json();
 
         if (json && json.status === "success" && Array.isArray(json.data)) {
