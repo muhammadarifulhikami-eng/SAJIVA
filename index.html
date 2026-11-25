@@ -9986,6 +9986,20 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
   // Simpan data lama untuk rollback jika jaringan gagal
   const oldDataSnapshot = { ...customerData };
 
+  // M6: Wajibkan konfirmasi password saat ini jika mengubah Email atau Nomor HP
+  const normHpLocal = v => String(v || "").replace(/\D/g, "").replace(/^0|^62/, "");
+  const isChangingEmailOrHp = Boolean(
+    (newEmail && oldDataSnapshot.email && newEmail.toLowerCase() !== oldDataSnapshot.email.toLowerCase()) ||
+    (newNohp && oldDataSnapshot.nohp && normHpLocal(newNohp) !== normHpLocal(oldDataSnapshot.nohp))
+  );
+  let currentPasswordForUpdate = "";
+  if (isChangingEmailOrHp) {
+    currentPasswordForUpdate = window.prompt("Demi keamanan, masukkan Password akun Anda saat ini untuk mengubah Email atau Nomor WhatsApp:") || "";
+    if (!currentPasswordForUpdate) {
+      return;
+    }
+  }
+
   // Terapkan foto baru dari tempEditPhoto jika pengguna mengunggah foto
   const finalPhoto = (tempEditPhoto && tempEditPhoto.trim() !== "") ? tempEditPhoto : (customerData.photo || "");
 
@@ -10019,7 +10033,8 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
   // Kirim ke database spreadsheet
   sendDataToBackend('update_profile', {
     oldHp: oldDataSnapshot.nohp,
-    photo: finalPhoto
+    photo: finalPhoto,
+    currentPassword: currentPasswordForUpdate
   }, (res) => {
     if (btnSave) {
       btnSave.disabled = false;
@@ -10730,6 +10745,7 @@ let payload = {
       rating: (typeof customerData !== 'undefined' && customerData.rating) ? customerData.rating : "",
       feedback: feedbackText || "",
       password: pass || "",
+      currentPassword: paramObj.currentPassword || "",
       otp: paramObj.otp ? String(paramObj.otp).trim() : "",
       photo: paramObj.photo || ((typeof customerData !== 'undefined' && customerData.photo) ? customerData.photo : ""),
       referralCodeInput: paramObj.referralCodeInput || "",
@@ -10749,6 +10765,7 @@ let payload = {
 
     if (action === "claim_guest_voucher") {
       payload.reviewerName = paramObj.reviewerName || (typeof detectedReviewerName !== 'undefined' ? detectedReviewerName : "Pelanggan Sajiva");
+      payload.deviceId = paramObj.deviceId || (localStorage.getItem('sajiva_device_id') || (function(){ const id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('dev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10)); localStorage.setItem('sajiva_device_id', id); return id; })());
     }
 
     // 1. Jalur Utama: Google Apps Script Web App (google.script.run)
