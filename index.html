@@ -9785,56 +9785,77 @@ function handleProfileBackNav(e) {
 
 let tempEditPhoto = "";
 
-// 1. Kompresi Foto Otomatis & Sinkronisasi Preview (Layar Edit + Kartu Member)
-function handleAvatarUpload(input) {
+// Validasi Magic Bytes & Re-encode Gambar Asli (CDR Anti-Tampering)
+async function verifyAndReencodeImageFile(file, opts) {
+  const maxBytes = (opts && opts.maxBytes) || (10 * 1024 * 1024);
+  const maxDim = (opts && opts.maxDim) || 1280;
+  const quality = (opts && opts.quality) || 0.85;
+  if (!file || file.size < 64 || file.size > maxBytes) {
+    throw new Error("Ukuran berkas gambar tidak valid (maks. 10 MB).");
+  }
+  const headBuf = await file.slice(0, 16).arrayBuffer();
+  const b = new Uint8Array(headBuf);
+  const isPng  = (b.length >= 8  && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47 && b[4] === 0x0D && b[5] === 0x0A && b[6] === 0x1A && b[7] === 0x0A);
+  const isJpeg = (b.length >= 3  && b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF);
+  const isWebp = (b.length >= 12 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50);
+  if (!isPng && !isJpeg && !isWebp) {
+    throw new Error("Berkas ditolak: signature file (magic bytes) bukan gambar PNG, JPEG, atau WebP asli.");
+  }
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((resolve, reject) => {
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => reject(new Error("Gambar rusak atau tidak dapat didekode."));
+      im.src = objectUrl;
+    });
+    if (!img.naturalWidth || !img.naturalHeight) {
+      throw new Error("Dimensi gambar tidak valid.");
+    }
+    let width = img.naturalWidth;
+    let height = img.naturalHeight;
+    if (width > height) {
+      if (width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; }
+    } else {
+      if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; }
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL('image/jpeg', quality);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+// 1. Kompresi & Sanitasi CDR Foto Otomatis (Layar Edit + Kartu Member)
+async function handleAvatarUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const maxDim = 320;
-        let width = img.width;
-        let height = img.height;
+    try {
+      const compressedBase64 = await verifyAndReencodeImageFile(file, { maxDim: 320, quality: 0.7 });
+      tempEditPhoto = compressedBase64;
 
-        if (width > height) {
-          if (width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          }
-        } else {
-          if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-        tempEditPhoto = compressedBase64;
-
-        // 1. Tampilkan preview di lingkaran layar Edit Profile
-        const editPreview = document.getElementById('edit-avatar-preview');
-        const editIcon = document.getElementById('edit-avatar-icon');
-        if (editPreview) {
-          editPreview.src = compressedBase64;
-          editPreview.style.display = 'block';
-        }
-        if (editIcon) {
-          editIcon.style.display = 'none';
-        }
-
-        // 2. Perbarui langsung foto di frame Kartu Member
-        renderCardAvatar(compressedBase64);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+      const editPreview = document.getElementById('edit-avatar-preview');
+      const editIcon = document.getElementById('edit-avatar-icon');
+      if (editPreview) {
+        editPreview.src = compressedBase64;
+        editPreview.style.display = 'block';
+      }
+      if (editIcon) {
+        editIcon.style.display = 'none';
+      }
+      renderCardAvatar(compressedBase64);
+    } catch (err) {
+      input.value = "";
+      if (typeof showElegantAlert === 'function') {
+        showElegantAlert(err.message || "File foto tidak valid.", "Upload Ditolak", "✕");
+      } else {
+        alert(err.message || "File foto tidak valid.");
+      }
+    }
   }
 }
 
@@ -10963,106 +10984,109 @@ function openProofUploadSection() {
   }
 }
 
-// 4. Pembacaan OCR & Validasi 5 Bintang Penuh
-function processAndExtractReview(input) {
+// 4. Pembacaan OCR & Validasi 5 Bintang Penuh (Dengan Validasi Magic Bytes + CDR)
+async function processAndExtractReview(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
-    const reader = new FileReader();
+    const scanBox = document.getElementById('scan-status-box');
+    const scanText = document.getElementById('scan-status-text');
+    const accBox = document.getElementById('extracted-account-box');
+    const btnPrint = document.getElementById('btn-print-voucher');
 
-    reader.onload = function(e) {
-      const imgBase64 = e.target.result;
-
-      const previewImg = document.getElementById('guest-preview-img');
-      const scanBox = document.getElementById('scan-status-box');
-      const scanText = document.getElementById('scan-status-text');
-      const accBox = document.getElementById('extracted-account-box');
-      const btnPrint = document.getElementById('btn-print-voucher');
-
-      if (previewImg) previewImg.src = imgBase64;
+    let imgBase64 = "";
+    try {
+      imgBase64 = await verifyAndReencodeImageFile(file, { maxDim: 1600, quality: 0.9 });
+    } catch (err) {
+      input.value = "";
       if (scanBox) scanBox.style.display = 'block';
-      if (scanText) scanText.innerHTML = "⏳ Menyiapkan pemindai teks (OCR)...";
-      if (accBox) accBox.style.display = 'none';
-      if (btnPrint) btnPrint.style.display = 'none';
+      if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Berkas gambar tidak valid</span>";
+      showElegantAlert(err.message || "File yang diunggah bukan gambar PNG/JPEG/WebP asli.", "Upload Ditolak", "✕");
+      return;
+    }
 
-      Tesseract.recognize(
-        imgBase64,
-        'eng',
-        {
-          workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
-          corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js',
-          logger: m => {
-            if (m.status === 'recognizing text') {
-              const pct = Math.round((m.progress || 0) * 100);
-              if (scanText) scanText.innerText = `🔍 Memeriksa jumlah bintang (${pct}%)...`;
-            }
+    const previewImg = document.getElementById('guest-preview-img');
+    if (previewImg) previewImg.src = imgBase64;
+    if (scanBox) scanBox.style.display = 'block';
+    if (scanText) scanText.innerHTML = "⏳ Menyiapkan pemindai teks (OCR)...";
+    if (accBox) accBox.style.display = 'none';
+    if (btnPrint) btnPrint.style.display = 'none';
+
+    Tesseract.recognize(
+      imgBase64,
+      'eng',
+      {
+        workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
+        corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1/tesseract-core.wasm.js',
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            const pct = Math.round((m.progress || 0) * 100);
+            if (scanText) scanText.innerText = `🔍 Memeriksa jumlah bintang (${pct}%)...`;
           }
         }
-      ).then(({ data: { text } }) => {
-        // OCR text log dihapus untuk produksi (L6)
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        const fullTextLower = text.toLowerCase();
+      }
+    ).then(({ data: { text } }) => {
+      // OCR text log dihapus untuk produksi (L6)
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const fullTextLower = text.toLowerCase();
 
-        // 1. Identifikasi Apakah Rating Bukan Bintang 5 (1 - 4 Bintang)
-        const isNotStar5 = fullTextLower.includes('far from great') || // Bintang 1
-                           fullTextLower.includes('not great') ||      // Bintang 2
-                           fullTextLower.includes('good') ||           // Bintang 3
-                           (fullTextLower.includes('great') && !fullTextLower.includes('not great') && !fullTextLower.includes('far from great')); // Bintang 4
+      // 1. Identifikasi Apakah Rating Bukan Bintang 5 (1 - 4 Bintang)
+      const isNotStar5 = fullTextLower.includes('far from great') || // Bintang 1
+                         fullTextLower.includes('not great') ||      // Bintang 2
+                         fullTextLower.includes('good') ||           // Bintang 3
+                         (fullTextLower.includes('great') && !fullTextLower.includes('not great') && !fullTextLower.includes('far from great')); // Bintang 4
 
-        // 2. Identifikasi 5 Bintang Penuh
-        const isStar5 = fullTextLower.includes('exceptional') || fullTextLower.includes('luar biasa');
+      // 2. Identifikasi 5 Bintang Penuh
+      const isStar5 = fullTextLower.includes('exceptional') || fullTextLower.includes('luar biasa');
 
-        if (isNotStar5 && !isStar5) {
-          if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Belum Bintang 5</span>";
-          showElegantAlert(
-            "Anda belum memberikan review bintang 5, ubah untuk dapatkan voucher.",
-            "Review Belum Bintang 5",
-            "✕"
-          );
-          return;
+      if (isNotStar5 && !isStar5) {
+        if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Belum Bintang 5</span>";
+        showElegantAlert(
+          "Anda belum memberikan review bintang 5, ubah untuk dapatkan voucher.",
+          "Review Belum Bintang 5",
+          "✕"
+        );
+        return;
+      }
+
+      if (isStar5) {
+        // Ekstrak nama akun dari baris di atas "Posting publicly"
+        let foundName = "Pelanggan Sajiva";
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].toLowerCase().includes('posting publicly') && i > 0) {
+            foundName = lines[i - 1].replace(/[^a-zA-Z\s]/g, '').trim();
+            break;
+          }
         }
 
-        if (isStar5) {
-          // Ekstrak nama akun dari baris di atas "Posting publicly"
-          let foundName = "Pelanggan Sajiva";
-          for (let i = 0; i < lines.length; i++) {
-            if (lines[i].toLowerCase().includes('posting publicly') && i > 0) {
-              foundName = lines[i - 1].replace(/[^a-zA-Z\s]/g, '').trim();
-              break;
-            }
-          }
-
-          if (!foundName || foundName.length < 3) {
-            foundName = lines[0] ? lines[0].replace(/[^a-zA-Z\s]/g, '').trim() : "Pelanggan Sajiva";
-          }
-
-          detectedReviewerName = foundName;
-
-          if (scanText) scanText.innerHTML = "<span style='color: #16a34a;'>✓ Bukti Bintang 5 Terverifikasi!</span>";
-          const nameDisp = document.getElementById('account-name-display');
-          if (nameDisp) nameDisp.innerText = detectedReviewerName;
-          if (accBox) accBox.style.display = 'block';
-          if (btnPrint) btnPrint.style.display = 'flex';
-
-          showElegantAlert(
-            `Terima kasih atas ulasan bintang 5 Anda, ${detectedReviewerName}! Klik Cetak e-Voucher di bawah.`,
-            "Verifikasi Berhasil",
-            "✓"
-          );
-        } else {
-          if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Gambar tidak valid</span>";
-          showElegantAlert(
-            "Pastikan screenshot memperlihatkan rating bintang dan ulasan Google Review dengan jelas.",
-            "Validasi Gagal",
-            "✕"
-          );
+        if (!foundName || foundName.length < 3) {
+          foundName = lines[0] ? lines[0].replace(/[^a-zA-Z\s]/g, '').trim() : "Pelanggan Sajiva";
         }
-      }).catch(err => {
-        console.error("OCR Error:", err);
-        if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>Gagal membaca screenshot. Silakan coba lagi.</span>";
-      });
-    };
 
-    reader.readAsDataURL(file);
+        detectedReviewerName = foundName;
+
+        if (scanText) scanText.innerHTML = "<span style='color: #16a34a;'>✓ Bukti Bintang 5 Terverifikasi!</span>";
+        const nameDisp = document.getElementById('account-name-display');
+        if (nameDisp) nameDisp.innerText = detectedReviewerName;
+        if (accBox) accBox.style.display = 'block';
+        if (btnPrint) btnPrint.style.display = 'flex';
+
+        showElegantAlert(
+          `Terima kasih atas ulasan bintang 5 Anda, ${detectedReviewerName}! Klik Cetak e-Voucher di bawah.`,
+          "Verifikasi Berhasil",
+          "✓"
+        );
+      } else {
+        if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>✕ Gambar tidak valid</span>";
+        showElegantAlert(
+          "Pastikan screenshot memperlihatkan rating bintang dan ulasan Google Review dengan jelas.",
+          "Validasi Gagal",
+          "✕"
+        );
+      }
+    }).catch(err => {
+      console.error("OCR Error:", err);
+      if (scanText) scanText.innerHTML = "<span style='color: #dc2626;'>Gagal membaca screenshot. Silakan coba lagi.</span>";
+    });
   }
 }
 
