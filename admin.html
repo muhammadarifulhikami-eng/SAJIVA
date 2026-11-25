@@ -351,24 +351,7 @@
   </div>
 
   <script>
-    // ==========================================
-    // PERTAHANAN ANTI-HACKER & ANTI-INSPECT KLIEN
-    // ==========================================
-    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) { e.preventDefault(); return false; }
-      if (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
-    });
-    (function () {
-      function blockDevTools() {
-        setInterval(function () {
-          (function () {}.constructor("debugger")());
-        }, 200);
-      }
-      try { blockDevTools(); } catch (err) {}
-    })();
+    // L1: Anti-DevTools / blokir klik kanan dinonaktifkan (bukan kontrol keamanan nyata dan memicu EvalError di CSP ketat).
 
     // ROUTING & API BRIDGE AMAN
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwpS_zpFzUo5-LJkv9FDVviPOY9CTceNvuZHgONZZ3SbZKLSd7FcPmh4l9Xf-AukTnj2w/exec';
