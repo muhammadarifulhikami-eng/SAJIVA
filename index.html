@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://images.unsplash.com https://i.imgur.com https://script.google.com https://script.googleusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://accounts.google.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://lh3.googleusercontent.com https://images.unsplash.com https://i.imgur.com https://api.qrserver.com https://*.googleusercontent.com https://raw.githubusercontent.com https://cdn.jsdelivr.net; connect-src 'self' blob: data: https://cdn.jsdelivr.net https://tessdata.projectnaptha.com https://script.google.com https://script.googleusercontent.com https://www.googleapis.com;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<script>(function(){if(window.top!==window.self&&!/(\.googleusercontent\.com|script\.google\.com)$/i.test(window.location.hostname)){try{window.top.location.replace(window.self.location.href);}catch(e){document.documentElement.style.display='none';}}})();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F" crossorigin="anonymous"></script>
 <!-- Google Identity Services SDK -->
@@ -7810,11 +7811,11 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
 
         <!-- TOMBOL AKSI -->
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya..." target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-wa">
+          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya..." target="_blank" rel="noopener noreferrer" class="btn-action btn-wa" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-wa">
             💬 Hubungi via WhatsApp
           </a>
 
-          <a href="https://www.google.com/maps/place/Sajiva+Coffee+%26+Ceramics/data=!4m2!3m1!1s0x0:0xc4c4dad4c9d8a5f1?sa=X&ved=1t:2428&ictx=111" target="_blank" class="btn-action btn-google" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-maps">
+          <a href="https://www.google.com/maps/place/Sajiva+Coffee+%26+Ceramics/data=!4m2!3m1!1s0x0:0xc4c4dad4c9d8a5f1?sa=X&ved=1t:2428&ictx=111" target="_blank" rel="noopener noreferrer" class="btn-action btn-google" style="text-decoration: none; padding: 13px; font-size: 0.85rem;" id="about-btn-maps">
             🗺️ Petunjuk Arah (Google Maps)
           </a>
         </div>
@@ -7835,7 +7836,7 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
             <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
               📅 03 October 2026 | ⏰ 10.00 - Finish
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%203D%20Ocean%20Painting" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%203D%20Ocean%20Painting" target="_blank" rel="noopener noreferrer" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
               Book Slot via WhatsApp
             </a>
           </div>
@@ -8016,7 +8017,7 @@ button[onclick="navigateTo('page-my-voucher')"]:active {
 			Untuk informasi ketersediaan tempat dan reservasi acara, tim kami siap membantu segala kebutuhan Anda.        
 		</p>
 
-        <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya%20mengenai%20Reservasi%20/%20Private%20Event" target="_blank" class="btn-action btn-wa" style="text-decoration: none;">
+        <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20bertanya%20mengenai%20Reservasi%20/%20Private%20Event" target="_blank" rel="noopener noreferrer" class="btn-action btn-wa" style="text-decoration: none;">
           💬 Hubungi via WhatsApp
         </a>
       </main>
@@ -9115,7 +9116,7 @@ function processGoogleEmail(email, accessToken) {
 
   // Mode Register
   if (googleAuthMode === 'register') {
-    sendDataToBackend('check_google_account', { email: cleanEmail, user: cleanEmail }, (result) => {
+    sendDataToBackend('check_google_account', { email: cleanEmail, user: cleanEmail, googleAccessToken: accessToken || "", authMode: "register" }, (result) => {
       if (result && result.status === "success" && result.existingHp && result.existingHp !== "NOT_REGISTERED") {
         showElegantAlert(
           "Email ini sudah terdaftar. Silakan masuk melalui menu Login.",
@@ -10778,6 +10779,7 @@ let payload = {
     if (action === "check_google_account") {
       payload.email = targetEmail;
       payload.googleAccessToken = paramObj.googleAccessToken || "";
+      payload.authMode = paramObj.authMode || "";
     }
 
     if (action === "claim_voucher") {
@@ -10882,7 +10884,7 @@ function openGoogleReviewPopup() {
   window.open(
     googleReviewURL,
     'GoogleReviewPopup',
-    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes,noopener,noreferrer`
   );
 }
 
@@ -10968,7 +10970,7 @@ function setupStarRating() {
             sendDataToBackend('cs_pengaduan', null);
           }
           const msg = encodeURIComponent(`Halo Sajiva Coffee, saya memberikan penilaian ${rating}/5. Masukan saya: `);
-          window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank');
+          window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank', 'noopener,noreferrer');
         };
       }
     });
@@ -11263,7 +11265,7 @@ function submitFeedback() {
     return;
   }
   const msg = encodeURIComponent(`Halo Sajiva Coffee, masukan saya: ${text}`);
-  window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank');
+  window.open(`https://api.whatsapp.com/send/?phone=${waKasirNumber}&text=${msg}`, '_blank', 'noopener,noreferrer');
   if (textEl) textEl.value = "";
 }
 
@@ -11374,9 +11376,10 @@ function initAuthSlider() {
     function formatDirectUrl(url) {
       if (!url) return '';
       let clean = String(url).trim();
+      if (/^(javascript|vbscript|data:text\/html)/i.test(clean)) return '';
       if (clean.includes('imgur.com') && !clean.includes('i.imgur.com')) {
-        const id = clean.split('/').pop().replace(/\.[^/.]+$/, "");
-        return `https://i.imgur.com/${id}.jpg`;
+        const id = clean.split('/').pop().replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9_-]/g, "");
+        return id ? `https://i.imgur.com/${id}.jpg` : '';
       }
       return clean;
     }
@@ -11419,7 +11422,9 @@ function initAuthSlider() {
         const el = document.createElement('div');
         el.className = 'gallery-item-app';
         el.onclick = () => openLightboxIndex(index);
-        el.innerHTML = '<img src="' + directImg + '" alt="' + labelText + '" loading="lazy" onerror="this.onerror=null; this.src=\'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600\';"><div class="gallery-item-info-app"><span>' + labelText + '</span></div>';
+        const safeImgUrl = escapeHtml(directImg || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600');
+        const safeLabelText = escapeHtml(labelText);
+        el.innerHTML = '<img src="' + safeImgUrl + '" alt="' + safeLabelText + '" loading="lazy" onerror="this.onerror=null; this.src=\'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600\';"><div class="gallery-item-info-app"><span>' + safeLabelText + '</span></div>';
         container.appendChild(el);
       });
     }
@@ -11725,7 +11730,7 @@ async function loadDynamicContent() {
           </div>
           <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${escapeHtml(ev.title)}</div>
           <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">📅 ${escapeHtml(ev.date)}</div>
-          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(ev.title)}" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+          <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(ev.title)}" target="_blank" rel="noopener noreferrer" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
             Book Slot via WhatsApp
           </a>
         </div>
@@ -11877,7 +11882,7 @@ async function fetchDynamicContentForUser() {
               📅 ${escapeHtml(item.date)}
             </div>
             <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 10px;">${escapeHtml(item.desc)}</p>
-            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(item.title)}" target="_blank" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
+            <a href="https://api.whatsapp.com/send/?phone=628111289940&text=Halo%20Sajiva%20Coffee,%20saya%20ingin%20mendaftar%20Event%20${encodeURIComponent(item.title)}" target="_blank" rel="noopener noreferrer" class="btn-action btn-wa" style="text-decoration: none; padding: 10px; font-size: 0.8rem;">
               Book Slot via WhatsApp
             </a>
           </div>
@@ -12515,7 +12520,7 @@ function shareReferralWA() {
   const code = customerData.referralCode || '';
   if (!code) return;
   const msg = encodeURIComponent(`Halo! Yuk gabung jadi member Sajiva+ menggunakan kode referral saya: ${code} dan nikmati Voucher Free Americano serta 10 Poin gratis!`);
-  window.open(`https://api.whatsapp.com/send/?text=${msg}`, '_blank');
+  window.open(`https://api.whatsapp.com/send/?text=${msg}`, '_blank', 'noopener,noreferrer');
 }
 
 // ==========================================
