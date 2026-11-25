@@ -10578,8 +10578,9 @@ function renderVoucherTicket(code) {
 function getOrGenerateBogoCode() {
   let bogoCode = localStorage.getItem('sajiva_bogo_code');
   if (!bogoCode) {
-    const part1 = Math.floor(1000 + Math.random() * 9000);
-    const part2 = Math.floor(1000 + Math.random() * 9000);
+    const rnd = new Uint32Array(2); if (window.crypto && crypto.getRandomValues) { crypto.getRandomValues(rnd); } else { rnd[0] = Date.now(); rnd[1] = Date.now() ^ 0x5a5a; }
+    const part1 = 1000 + (rnd[0] % 9000);
+    const part2 = 1000 + (rnd[1] % 9000);
     bogoCode = `${part1}-${part2}`;
     localStorage.setItem('sajiva_bogo_code', bogoCode);
   }
@@ -12549,7 +12550,7 @@ function loadMyVouchersList() {
           </div>
         `;
       }).join('');
-      container.querySelectorAll('.btn-use-voucher[data-vcode]:not([disabled])').forEach(btn => { btn.addEventListener('click', () => { openMultiVoucherDetail(btn.dataset.vcode, btn.dataset.vtitle, btn.dataset.vvalue, btn.dataset.vexpiry); }); });
+      sliderBox.querySelectorAll('.btn-use-voucher[data-vcode]:not([disabled])').forEach(btn => { btn.addEventListener('click', () => { openMultiVoucherDetail(btn.dataset.vcode, btn.dataset.vtitle, btn.dataset.vvalue, btn.dataset.vexpiry); }); });
       return true;
     };
 
